@@ -1,0 +1,15 @@
+.mobileFooter {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: whitesmoke;
+    text-align: center;
+}
+
+.mobileFooterDark {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #333333;
+    text-align: center;
+}
