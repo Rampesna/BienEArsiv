@@ -40,7 +40,10 @@ class ProductService extends BaseService
 
         if ($keyword) {
             $products->where(function ($query) use ($keyword) {
-                $query->where('name', 'like', '%' . $keyword . '%');
+                $query->where('name', 'like', '%' . $keyword . '%')
+                    ->orWhere('code', 'like', '%' . $keyword . '%')
+                    ->orWhere('price', 'like', '%' . $keyword . '%')
+                    ->orWhere('description', 'like', '%' . $keyword . '%');
             });
         }
 
@@ -67,13 +70,28 @@ class ProductService extends BaseService
 
     /**
      * @param int $customerId
+     * @param string $code
+     * @param string $name
+     * @param int $unitId
+     * @param double $price
+     * @param double $vatRate
      */
     public function create(
         $customerId,
+        $code,
+        $name,
+        $unitId,
+        $price,
+        $vatRate
     )
     {
         $product = new Product;
         $product->customer_id = $customerId;
+        $product->code = $code;
+        $product->name = $name;
+        $product->unit_id = $unitId;
+        $product->price = $price;
+        $product->vat_Rate = $vatRate;
         $product->save();
 
         return $product;

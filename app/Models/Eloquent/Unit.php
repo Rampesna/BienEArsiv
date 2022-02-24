@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Product extends Model
+class Unit extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public function unit()
+    public function products()
     {
-        return $this->belongsTo(Unit::class);
+        return $this->hasMany(Product::class);
     }
 }

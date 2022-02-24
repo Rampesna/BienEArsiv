@@ -39,6 +39,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\TransactionTypeController::class, 'getAll'])->name('api.user.transactionType.getAll');
     });
 
+    Route::prefix('unit')->group(function () {
+        Route::get('getAll', [\App\Http\Controllers\Api\User\UnitController::class, 'getAll'])->name('api.user.unit.getAll');
+    });
+
     Route::prefix('country')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\CountryController::class, 'getAll'])->name('api.user.country.getAll');
     });

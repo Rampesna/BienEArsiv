@@ -10,15 +10,15 @@ class TransactionTypeController extends Controller
 {
     use Response;
 
-    private $safeboxTypeService;
+    private $transactionTypeService;
 
     public function __construct()
     {
-        $this->safeboxTypeService = new TransactionTypeService;
+        $this->transactionTypeService = new TransactionTypeService;
     }
 
     public function getAll()
     {
-        return $this->success('Transaction types', $this->safeboxTypeService->getAll());
+        return $this->success('Transaction types', $this->transactionTypeService->getAll());
     }
 }

@@ -50,6 +50,11 @@ class ProductController extends Controller
     {
         return $this->success('Product created successfully', $this->productService->create(
             $request->user()->customer_id,
+            $request->code,
+            $request->name,
+            $request->unitId,
+            $request->price,
+            $request->vatRate
         ));
     }
 }

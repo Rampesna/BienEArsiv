@@ -96,14 +96,7 @@
                             <th class="min-w-125px text-end">Bakiye</th>
                         </tr>
                         </thead>
-                        <tbody class="fw-bold text-gray-600" id="safeboxes">
-                        <tr>
-                            <td></td>
-                            <td>Hesap Adı</td>
-                            <td>Hesap Türü</td>
-                            <td>Bakiye</td>
-                        </tr>
-                        </tbody>
+                        <tbody class="fw-bold text-gray-600" id="safeboxes"></tbody>
                     </table>
                 </div>
             </div>

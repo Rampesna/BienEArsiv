@@ -25,7 +25,9 @@ class CreateRequest extends BaseApiRequest
     {
         return [
             'name' => 'required',
-            'typeId' => 'required',
+            'unitId' => 'required',
+            'price' => 'required',
+            'vatRate' => 'required',
         ];
     }
 }
