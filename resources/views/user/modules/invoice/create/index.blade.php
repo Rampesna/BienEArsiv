@@ -20,7 +20,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-12 d-grid">
-                            <button class="btn btn-sm btn-success">Kaydet</button>
+                            <button class="btn btn-sm btn-success" id="CreateInvoiceButton">Kaydet</button>
                         </div>
                     </div>
                     <hr class="text-muted">
@@ -52,7 +52,7 @@
                                 <label for="create_invoice_type_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span class="required">Fatura Türü</span>
                                 </label>
-                                <select id="create_invoice_type_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fatura Türü"></select>
+                                <select id="create_invoice_type_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fatura Türü" data-hide-search="true"></select>
                             </div>
                         </div>
                     </div>

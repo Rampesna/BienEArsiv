@@ -10,4 +10,26 @@ class TransactionTypeService extends BaseService
     {
         parent::__construct(new TransactionType);
     }
+
+    /**
+     * @param int $direction
+     * @param int $invoice
+     */
+    public function index(
+        $direction,
+        $invoice
+    )
+    {
+        $transactionTypes = TransactionType::with([]);
+
+        if ($direction) {
+            $transactionTypes->where('direction', $direction);
+        }
+
+        if ($invoice) {
+            $transactionTypes->where('invoice', $invoice);
+        }
+
+        return $transactionTypes->get();
+    }
 }

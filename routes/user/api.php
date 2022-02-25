@@ -37,6 +37,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('transactionType')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\TransactionTypeController::class, 'getAll'])->name('api.user.transactionType.getAll');
+        Route::get('index', [\App\Http\Controllers\Api\User\TransactionTypeController::class, 'index'])->name('api.user.transactionType.index');
     });
 
     Route::prefix('unit')->group(function () {
@@ -56,6 +57,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('company')->group(function () {
+        Route::get('all', [\App\Http\Controllers\Api\User\CompanyController::class, 'all'])->name('api.user.company.all');
         Route::get('index', [\App\Http\Controllers\Api\User\CompanyController::class, 'index'])->name('api.user.company.index');
         Route::get('getById', [\App\Http\Controllers\Api\User\CompanyController::class, 'getById'])->name('api.user.company.getById');
         Route::post('create', [\App\Http\Controllers\Api\User\CompanyController::class, 'create'])->name('api.user.company.create');

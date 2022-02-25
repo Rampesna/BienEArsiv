@@ -13,6 +13,16 @@ class CompanyService extends BaseService
 
     /**
      * @param int $customerId
+     */
+    public function all(
+        $customerId
+    )
+    {
+        return Company::where('customer_id', $customerId)->get();
+    }
+
+    /**
+     * @param int $customerId
      * @param int $pageIndex
      * @param int $pageSize
      * @param string $keyword

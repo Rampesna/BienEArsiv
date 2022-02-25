@@ -1,8 +1,59 @@
 <script>
 
+    var CreateInvoiceButton = $('#CreateInvoiceButton');
+
     var products = `<option value="" selected hidden></option>`;
     var units = `<option value="" selected hidden></option>`;
     var invoiceProducts = $('#invoiceProducts');
+
+    var create_invoice_company_id = $('#create_invoice_company_id');
+    var create_invoice_type_id = $('#create_invoice_type_id');
+
+    function getCompanies() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.company.all') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                create_invoice_company_id.empty().append(`<option value="" selected hidden></option>`);
+                $.each(response.response, function (i, company) {
+                    create_invoice_company_id.append(`<option value="${company.id}">${company.title}</option>`);
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Cari Listesi Alınırken Serviste Bir Sorun Oluştu!');
+            }
+        });
+    }
+
+    function getTransactionTypes() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.transactionType.index') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                invoice: 1
+            },
+            success: function (response) {
+                create_invoice_type_id.empty().append(`<option value="" selected hidden></option>`);
+                $.each(response.response, function (i, transactionType) {
+                    create_invoice_type_id.append(`<option value="${transactionType.id}">${transactionType.name}</option>`);
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Fatura Türleri Alınırken Serviste Bir Sorun Oluştu!');
+            }
+        });
+    }
 
     function getProducts() {
         $.ajax({
@@ -47,6 +98,8 @@
     }
 
     function initializePage() {
+        getCompanies();
+        getTransactionTypes();
         getProducts();
         getUnits();
         newInvoiceProduct();
@@ -93,9 +146,7 @@
                             </div>
                         </div>
                         <div class="col-xl-2 text-end">
-                            <div class="form-group">
-                                <i class="fas fa-ellipsis-v fa-lg cursor-pointer mt-3 invoiceProductEditor"></i>
-                            </div>
+                            <i class="fas fa-trash-alt text-danger cursor-pointer mt-3 deleteInvoiceProductRow" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="dropdown"></i>
                         </div>
                     </div>
                 </div>
@@ -115,5 +166,48 @@
     });
 
     initializePage();
+
+    $(document).delegate('.deleteInvoiceProductRow', 'click', function (e) {
+        e.preventDefault();
+        rows = $('.invoiceProductRow');
+
+        if (rows.length > 1) {
+            $(this).closest('.invoiceProductRow').remove();
+        } else {
+            toastr.warning('En az bir ürün olmalıdır.');
+        }
+    });
+
+    CreateInvoiceButton.click(function () {
+        var taxNumber = $('#create_invoice_tax_number').val();
+        var companyId = create_invoice_company_id.val();
+        var typeId = create_invoice_type_id.val();
+        var companyStatementDescription = $('#create_invoice_company_statement_description').val();
+        var datetime = $('#create_invoice_datetime').val();
+        var number = $('#create_invoice_number').val();
+        var vatIncluded = $('#create_invoice_vat_included').is(':checked');
+        var waybillNumber = $('#create_invoice_waybill_number').val();
+        var waybillDatetime = $('#create_invoice_waybill_datetime').val();
+        var orderNumber = $('#create_invoice_order_number').val();
+        var orderDatetime = $('#create_invoice_order_datetime').val();
+
+        var invoiceProducts = [];
+        var invoiceProductRows = $('.invoiceProductRow');
+
+        $.each(invoiceProductRows, function (i, invoiceProductRow) {
+            var productId = $(this).find('.invoiceProductProductId').val();
+            console.log(productId);
+        });
+
+        // if (!companyId) {
+        //     toastr.warning('Cari Seçmediniz!');
+        // } else if (!typeId) {
+        //     toastr.warning('Fatura Türü Seçmediniz!');
+        // } else if (!datetime) {
+        //     toastr.warning('Fatura Tarihi Seçmediniz!');
+        // } else {
+        //
+        // }
+    });
 
 </script>

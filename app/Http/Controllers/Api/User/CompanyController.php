@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\User\CompanyController\AllRequest;
 use App\Http\Requests\Api\User\CompanyController\IndexRequest;
 use App\Http\Requests\Api\User\CompanyController\GetByIdRequest;
 use App\Http\Requests\Api\User\CompanyController\CreateRequest;
@@ -18,6 +19,13 @@ class CompanyController extends Controller
     public function __construct()
     {
         $this->companyService = new CompanyService;
+    }
+
+    public function all(AllRequest $request)
+    {
+        return $this->success('Companies', $this->companyService->all(
+            $request->user()->customer_id
+        ));
     }
 
     public function index(IndexRequest $request)
