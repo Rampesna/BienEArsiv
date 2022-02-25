@@ -29,7 +29,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::get('show', [\App\Http\Controllers\Api\User\UserController::class, 'show'])->name('api.user.show');
-    Route::put('updateTheme', [\App\Http\Controllers\Api\User\UserController::class, 'updateTheme'])->name('api.user.updateTheme');
+    Route::post('updateTheme', [\App\Http\Controllers\Api\User\UserController::class, 'updateTheme'])->name('api.user.updateTheme');
 
     Route::prefix('safeboxType')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\SafeboxTypeController::class, 'getAll'])->name('api.user.safeboxType.getAll');

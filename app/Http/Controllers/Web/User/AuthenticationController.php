@@ -25,6 +25,15 @@ class AuthenticationController extends Controller
         return view('user.modules.auth.login.index');
     }
 
+    public function logout()
+    {
+        if (auth()->check()) {
+            auth()->logout();
+        }
+
+        return view('user.modules.auth.login.index');
+    }
+
     public function register()
     {
         return view('user.modules.auth.register.index');

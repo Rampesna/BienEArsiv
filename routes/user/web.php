@@ -23,6 +23,7 @@ Route::get('/', function () {
 
 Route::prefix('authentication')->group(function () {
     Route::get('login', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'login'])->name('web.user.authentication.login');
+    Route::get('logout', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'logout'])->name('web.user.authentication.logout');
     Route::get('oAuth', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'oAuth'])->name('web.user.authentication.oAuth');
     Route::get('register', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'register'])->name('web.user.authentication.register');
     Route::get('forgotPassword', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'forgotPassword'])->name('web.user.authentication.forgotPassword');

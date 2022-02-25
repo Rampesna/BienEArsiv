@@ -106,7 +106,7 @@
                         </div>
                     </div>
                     <hr class="text-muted">
-                    <table class="table align-middle table-row-dashed fs-6 gy-5">
+                    <table class="table table-responsive align-middle table-row-dashed fs-6 gy-5">
                         <thead>
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
                             <th class="w-10px pe-2"></th>

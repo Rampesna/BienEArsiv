@@ -18,7 +18,9 @@ class ProductService extends BaseService
         $customerId
     )
     {
-        return Product::where('customer_id', $customerId)->get();
+        return Product::with([
+            'unit'
+        ])->where('customer_id', $customerId)->get();
     }
 
     /**
