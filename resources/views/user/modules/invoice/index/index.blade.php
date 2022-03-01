@@ -25,6 +25,43 @@
         <br>
     </div>
 
+    <div class="row mb-5">
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-5">
+                        <h5>Filtreleme Seçenekleri</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="form-group">
+                                <label for="filter_transaction_type_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">İşlem Türü</span>
+                                </label>
+                                <select id="filter_transaction_type_id" class="form-select form-select-solid filterInput" data-control="select2" data-hide-search="true"></select>
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="form-group">
+                                <label for="filter_datetime_start" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Başlangıç Tarihi</span>
+                                </label>
+                                <input id="filter_datetime_start" type="datetime-local" class="form-control form-control-solid filterInput">
+                            </div>
+                        </div>
+                        <div class="col-xl-4">
+                            <div class="form-group">
+                                <label for="filter_datetime_end" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Bitiş Tarihi</span>
+                                </label>
+                                <input id="filter_datetime_end" type="datetime-local" class="form-control form-control-solid filterInput">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
@@ -58,11 +95,10 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5">
                         <thead>
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
-                            <th class="w-10px pe-2"></th>
-                            <th class="min-w-400px">Fatura Bilgisi</th>
-                            <th class="min-w-150px">Tarih</th>
-                            <th class="min-w-155px">Tutar</th>
-                            <th class="min-w-125px text-end">İşlemler</th>
+                            <th>Fatura Bilgisi</th>
+                            <th>Tarih</th>
+                            <th>Tutar</th>
+                            <th class="text-end">İşlemler</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600" id="invoices"></tbody>

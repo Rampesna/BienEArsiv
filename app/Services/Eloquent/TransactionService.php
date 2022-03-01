@@ -89,6 +89,7 @@ class TransactionService extends BaseService
     /**
      * @param int $customerId
      * @param int|null $companyId
+     * @param int|null $invoiceId
      * @param string $datetime
      * @param int $typeId
      * @param string|null $receiptNumber
@@ -100,6 +101,7 @@ class TransactionService extends BaseService
     public function create(
         $customerId,
         $companyId,
+        $invoiceId,
         $datetime,
         $typeId,
         $receiptNumber,
@@ -112,6 +114,7 @@ class TransactionService extends BaseService
         $transaction = new Transaction;
         $transaction->customer_id = $customerId;
         $transaction->company_id = $companyId;
+        $transaction->invoice_id = $invoiceId;
         $transaction->datetime = $datetime;
         $transaction->type_id = $typeId;
         $transaction->receipt_number = $receiptNumber;

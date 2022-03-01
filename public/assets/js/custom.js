@@ -16,17 +16,21 @@ Inputmask({
     }
 }).mask(".emailMask");
 
-Inputmask({
-    mask: "*{1,20}.*{1,4}",
-    definitions: {
-        "*": {
-            validator: '[0-9]',
-            cardinality: 1,
-            casing: "lower"
+function initializeMoneyInputMask() {
+    Inputmask({
+        mask: "*{1,20}.*{2,4}",
+        definitions: {
+            "*": {
+                validator: '[0-9]',
+                cardinality: 1,
+                casing: "lower"
+            },
         },
-    },
-    placeholder: "0.00",
-}).mask(".moneyMask");
+        placeholder: "0",
+    }).mask(".moneyMask");
+}
+
+initializeMoneyInputMask();
 
 $('.decimal').on("copy cut paste drop", function () {
     return false;
@@ -72,9 +76,30 @@ function reformatDateForCalendar(date) {
         String(formattedDate.getMinutes()).padStart(2, '0') + ':00';
 }
 
+function reformatDatetime(date) {
+    var formattedDate = new Date(date);
+    return formattedDate.getFullYear() + '-' +
+        String(formattedDate.getMonth() + 1).padStart(2, '0') + '-' +
+        String(formattedDate.getDate()).padStart(2, '0') + ' ' +
+        String(formattedDate.getHours()).padStart(2, '0') + ':' +
+        String(formattedDate.getMinutes()).padStart(2, '0') + ':00';
+}
+
+function reformatInvoiceNumber(datetime, number) {
+    return (new Date(datetime)).getFullYear() + '-' + number.padStart(9, '0');
+}
+
 $(window).on('load', function () {
     $("#loader").fadeOut(250);
 });
+
+$.sum = function (arr) {
+    var r = 0;
+    $.each(arr, function (i, v) {
+        r += +v;
+    });
+    return r;
+}
 
 function reformatNumberToMoney(number) {
     return parseFloat(number).toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, "$1,")

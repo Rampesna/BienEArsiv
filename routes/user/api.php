@@ -86,4 +86,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('createEarn', [\App\Http\Controllers\Api\User\TransactionController::class, 'createEarn'])->name('api.user.transaction.createEarn');
         Route::post('createExpense', [\App\Http\Controllers\Api\User\TransactionController::class, 'createExpense'])->name('api.user.transaction.createExpense');
     });
+
+    Route::prefix('invoice')->group(function () {
+        Route::get('index', [\App\Http\Controllers\Api\User\InvoiceController::class, 'index'])->name('api.user.invoice.index');
+        Route::post('create', [\App\Http\Controllers\Api\User\InvoiceController::class, 'create'])->name('api.user.invoice.create');
+    });
+
+    Route::prefix('invoiceProduct')->group(function () {
+        Route::post('create', [\App\Http\Controllers\Api\User\InvoiceProductController::class, 'create'])->name('api.user.invoiceProduct.create');
+    });
 });

@@ -14,13 +14,15 @@
 
 @section('content')
 
+    @include('user.modules.invoice.create.modals.createInvoice')
+
     <div class="row">
         <div class="col-xl-3 mb-5">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-12 d-grid">
-                            <button class="btn btn-sm btn-success" id="CreateInvoiceButton">Kaydet</button>
+                            <button class="btn btn-sm btn-success" id="CreateButton">Kaydet</button>
                         </div>
                     </div>
                     <hr class="text-muted">
@@ -30,7 +32,7 @@
                                 <label for="create_invoice_tax_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>VKN/TCKN</span>
                                 </label>
-                                <input id="create_invoice_tax_number" type="text" class="form-control form-control-sm form-control-solid" placeholder="VKN/TCKN">
+                                <input id="create_invoice_tax_number" type="text" class="form-control form-control-sm form-control-solid onlyNumber" maxlength="11" placeholder="VKN/TCKN">
                             </div>
                         </div>
                     </div>
@@ -85,7 +87,7 @@
                                 <label for="create_invoice_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>Fatura Numarası</span>
                                 </label>
-                                <input id="create_invoice_number" type="text" class="form-control form-control-sm form-control-solid" data-placeholder="Fatura Numarası">
+                                <input id="create_invoice_number" type="text" class="form-control form-control-sm form-control-solid onlyNumber" maxlength="9" data-placeholder="Fatura Numarası">
                             </div>
                         </div>
                         <div class="col-xl-6">
@@ -142,69 +144,116 @@
             </div>
         </div>
         <div class="col-xl-9 mb-5">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-xl-12">
-                            <div class="row">
-                                <div class="col-xl-3">
-                                    <div class="form-group">
-                                        <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                            <span>Ürün Adı</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-2">
-                                    <div class="form-group">
-                                        <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                            <span>Miktar</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-2">
-                                    <div class="form-group">
-                                        <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                            <span>Birim</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-2">
-                                    <div class="form-group">
-                                        <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                            <span>Birim Fiyat</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-1">
-                                    <div class="form-group">
-                                        <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                            <span>KDV</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-xl-2">
+            <div class="row mb-5">
+                <div class="col-xl-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-xl-12">
                                     <div class="row">
-                                        <div class="col-xl-10">
+                                        <div class="col-xl-3">
                                             <div class="form-group">
                                                 <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                                    <span>Tutar</span>
+                                                    <span>Ürün Adı</span>
                                                 </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <div class="form-group">
+                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                                    <span>Miktar</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <div class="form-group">
+                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                                    <span>Birim</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <div class="form-group">
+                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                                    <span>Birim Fiyat</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-1">
+                                            <div class="form-group">
+                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                                    <span>KDV</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <div class="row">
+                                                <div class="col-xl-10">
+                                                    <div class="form-group">
+                                                        <label class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                                            <span>Tutar (KDV Hariç)</span>
+                                                        </label>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xl-12" id="invoiceProducts">
+                            <div class="row">
+                                <div class="col-xl-12" id="invoiceProducts">
 
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <button id="NewInvoiceProductButton" class="btn btn-sm btn-success">Yeni Ürün</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-xl-12">
-                            <button id="NewInvoiceProductButton" class="btn btn-sm btn-success">Yeni Ürün</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-8"></div>
+                <div class="col-xl-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row mb-10">
+                                <div class="col-xl-5">
+                                    <label for="subtotalSpan" class="fw-bolder">Ara Toplam: </label>
+                                </div>
+                                <div class="col-xl-7">
+                                    <div class="input-group input-group-sm input-group-solid">
+                                        <input id="subtotalSpan" type="text" class="form-control form-control-sm form-control-solid text-end" value="0.00" disabled>
+                                        <span class="input-group-text">₺</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-10">
+                                <div class="col-xl-5">
+                                    <label for="vatTotalSpan" class="fw-bolder">KDV Toplam: </label>
+                                </div>
+                                <div class="col-xl-7">
+                                    <div class="input-group input-group-sm input-group-solid">
+                                        <input id="vatTotalSpan" type="text" class="form-control form-control-sm form-control-solid text-end" value="0.00" disabled>
+                                        <span class="input-group-text">₺</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="mb-10 text-muted">
+                            <div class="row">
+                                <div class="col-xl-5">
+                                    <label for="generalTotalSpan" class="fw-bolder">Genel Toplam: </label>
+                                </div>
+                                <div class="col-xl-7">
+                                    <div class="input-group input-group-sm input-group-solid">
+                                        <input id="generalTotalSpan" type="text" class="form-control form-control-sm form-control-solid text-end" value="0.00" disabled>
+                                        <span class="input-group-text">₺</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

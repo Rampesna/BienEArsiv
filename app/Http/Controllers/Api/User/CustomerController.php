@@ -25,4 +25,5 @@ class CustomerController extends Controller
             email: $request->email,
         ));
     }
+
 }

@@ -324,6 +324,7 @@
                 data: {
                     companyId: companyId,
                     datetime: datetime,
+                    typeId: 1,
                     amount: amount,
                     safeboxId: safeboxId,
                     description: description,
@@ -372,6 +373,7 @@
                 data: {
                     companyId: companyId,
                     datetime: datetime,
+                    typeId: 2,
                     amount: amount,
                     safeboxId: safeboxId,
                     description: description,

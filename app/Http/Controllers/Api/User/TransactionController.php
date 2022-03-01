@@ -58,6 +58,7 @@ class TransactionController extends Controller
         return $this->success('Transaction created successfully', $this->transactionService->create(
             $request->user()->customer_id,
             $company->id,
+            null,
             $request->datetime,
             5,
             '',
@@ -83,6 +84,7 @@ class TransactionController extends Controller
         return $this->success('Transaction created successfully', $this->transactionService->create(
             $request->user()->customer_id,
             $company->id,
+            null,
             $request->datetime,
             6,
             '',
@@ -108,8 +110,9 @@ class TransactionController extends Controller
         return $this->success('Transaction created successfully', $this->transactionService->create(
             $request->user()->customer_id,
             $company->id,
+            $request->invoiceId,
             $request->datetime,
-            1,
+            $request->typeId,
             '',
             $request->description,
             $request->safeboxId,
@@ -141,8 +144,9 @@ class TransactionController extends Controller
         return $this->success('Transaction created successfully', $this->transactionService->create(
             $request->user()->customer_id,
             $company->id,
+            null,
             $request->datetime,
-            2,
+            $request->typeId,
             '',
             $request->description,
             $request->safeboxId,
@@ -165,6 +169,7 @@ class TransactionController extends Controller
 
         return $this->success('Transaction created successfully', $this->transactionService->create(
             $request->user()->customer_id,
+            null,
             null,
             $request->datetime,
             3,
@@ -190,6 +195,7 @@ class TransactionController extends Controller
 
         return $this->success('Transaction created successfully', $this->transactionService->create(
             $request->user()->customer_id,
+            null,
             null,
             $request->datetime,
             4,

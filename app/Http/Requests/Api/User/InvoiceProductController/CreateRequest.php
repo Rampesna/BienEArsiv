@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\User\TransactionController;
+namespace App\Http\Requests\Api\User\InvoiceProductController;
 
 use App\Http\Requests\Api\BaseApiRequest;
 
-class CreateCollectionRequest extends BaseApiRequest
+class CreateRequest extends BaseApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,11 +24,12 @@ class CreateCollectionRequest extends BaseApiRequest
     public function rules()
     {
         return [
-            'companyId' => 'required',
-            'datetime' => 'required',
-            'typeId' => 'required',
-            'amount' => 'required|numeric',
-            'safeboxId' => 'required',
+            'invoiceId' => 'required',
+            'productId' => 'required',
+            'quantity' => 'required',
+            'unitId' => 'required',
+            'unitPrice' => 'required',
+            'vatRate' => 'required',
         ];
     }
 }

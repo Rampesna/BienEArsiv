@@ -26,6 +26,7 @@ class CreatePaymentRequest extends BaseApiRequest
         return [
             'companyId' => 'required',
             'datetime' => 'required',
+            'typeId' => 'required',
             'amount' => 'required|numeric',
             'safeboxId' => 'required',
         ];

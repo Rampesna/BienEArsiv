@@ -4,7 +4,7 @@
     <title>@yield('title'){{ config('app.name') }}</title>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="{{ asset('assets/media/logos/favicon.ico') }}" />
-
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
 
     @if(auth()->user()->theme() == 1)
@@ -21,7 +21,10 @@
 </head>
 
 
-<body id="kt_body" class="header-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
+
+<body id="kt_body" class="dark-mode dark-theme header-fixed toolbar-enabled toolbar-fixed aside-enabled aside-fixed" style="--kt-toolbar-height:55px;--kt-toolbar-height-tablet-and-mobile:55px">
+
+<div id="loader"></div>
 
 <div class="d-flex flex-column flex-root">
     <div class="page d-flex flex-row flex-column-fluid">
@@ -43,9 +46,14 @@
     </div>
 </div>
 
+@if(auth()->user()->theme() == 1)
+    <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+@else
+    <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
+    <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+@endif
 
-<script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
-<script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 <script src="{{ asset('assets/js/custom.js') }}"></script>
 
 <script>
@@ -54,6 +62,7 @@
     var toggleDarkTheme = $('#toggleDarkTheme');
 
     toggleDarkTheme.change(function () {
+        $('#loader').fadeIn(250);
         var theme = toggleDarkTheme.is(':checked') ? 1 : 0;
         $.ajax({
             type: 'post',
@@ -66,19 +75,12 @@
                 theme: theme
             },
             success: function () {
-                if (theme === 1) {
-                    $('#themePlugin').attr('href', '{{ asset('assets/plugins/global/plugins.dark.bundle.css') }}');
-                    $('#themeBundle').attr('href', '{{ asset('assets/css/style.dark.bundle.css') }}');
-                    $('.mobileFooter').addClass('mobileFooterDark').removeClass('mobileFooter');
-                } else {
-                    $('#themePlugin').attr('href', '{{ asset('assets/plugins/global/plugins.bundle.css') }}');
-                    $('#themeBundle').attr('href', '{{ asset('assets/css/style.bundle.css') }}');
-                    $('.mobileFooterDark').addClass('mobileFooter').removeClass('mobileFooterDark');
-                }
+                location.reload();
             },
             error: function (error) {
                 console.log(error);
                 toastr.error('Tema Değiştirilirken Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+                $('#loader').fadeOut(250);
             }
         });
     });

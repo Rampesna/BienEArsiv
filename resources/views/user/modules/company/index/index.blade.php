@@ -109,12 +109,12 @@
                     <table class="table table-responsive align-middle table-row-dashed fs-6 gy-5">
                         <thead>
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
-                            <th class="w-10px pe-2"></th>
-                            <th class="min-w-125px">Cari Bilgisi</th>
-                            <th class="min-w-125px">E-posta</th>
-                            <th class="min-w-125px">Telefon</th>
-                            <th class="min-w-125px">Bakiye</th>
-                            <th class="min-w-125px text-end">İşlemler</th>
+                            <th></th>
+                            <th>Cari Bilgisi</th>
+                            <th>E-posta</th>
+                            <th>Telefon</th>
+                            <th>Bakiye</th>
+                            <th>İşlemler</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600" id="companies"></tbody>

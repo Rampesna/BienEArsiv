@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->bigInteger('customer_id')->unsigned();
             $table->bigInteger('company_id')->unsigned()->nullable();
+            $table->bigInteger('invoice_id')->unsigned()->nullable();
             $table->dateTime('datetime');
             $table->bigInteger('type_id')->unsigned();
             $table->string('receipt_number')->nullable();

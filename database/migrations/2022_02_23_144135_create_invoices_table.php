@@ -15,7 +15,6 @@ return new class extends Migration {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('customer_id')->unsigned();
-            $table->bigInteger('transaction_id')->unsigned()->nullable();
             $table->string('tax_number')->nullable();
             $table->bigInteger('company_id')->unsigned();
             $table->tinyInteger('type_id')->unsigned();

@@ -12,10 +12,10 @@
     </div>
 </div>
 
-<div id="mobileFooter" style="display: none; margin-top: 175px">
+<div id="mobileFooterr" style="display: none; margin-top: 175px">
     <div class="{{ auth()->user()->theme() == 1 ? 'mobileFooterDark' : 'mobileFooter' }} py-5">
-        <div class="row d-flex flex-lg-column">
-            <a href="{{ route('web.user.dashboard.index') }}" class="col text-dark">
+        <div class="row">
+            <a href="{{ route('web.user.dashboard.index') }}" class="col-md-2 text-dark">
                 <span class="svg-icon {{ request()->segment(1) == 'dashboard' ? 'svg-icon-primary' : '' }} svg-icon-5x">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path opacity="0.3" d="M18 10V20C18 20.6 18.4 21 19 21C19.6 21 20 20.6 20 20V10H18Z" fill="black"/>
@@ -30,7 +30,7 @@
                 </span><br>
                 <span style="font-size: 24px">Anasayfa</span>
             </a>
-            <a href="{{ route('web.user.company.index') }}" class="col text-dark">
+            <a href="{{ route('web.user.company.index') }}" class="col-md-2 text-dark">
                 <span class="svg-icon {{ request()->segment(1) == 'company' ? 'svg-icon-primary' : '' }} svg-icon-5x">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M20 14H18V10H20C20.6 10 21 10.4 21 11V13C21 13.6 20.6 14 20 14ZM21 19V17C21 16.4 20.6 16 20 16H18V20H20C20.6 20 21 19.6 21 19ZM21 7V5C21 4.4 20.6 4 20 4H18V8H20C20.6 8 21 7.6 21 7Z" fill="black"/>
@@ -40,14 +40,14 @@
                 <br>
                 <span style="font-size: 24px">Cariler</span>
             </a>
-            <div class="col">
+            <div class="col-md-2">
                 <div class="btn btn-icon btn-circle btn-primary mt-n16" style="width: 120px; height: 120px">
                     <span style="font-size: 50px">
                         +
                     </span>
                 </div>
             </div>
-            <a href="{{ route('web.user.invoice.index') }}" class="col text-dark">
+            <a href="{{ route('web.user.invoice.index') }}" class="col-md-2 text-dark">
                 <span class="svg-icon {{ request()->segment(1) == 'invoice' ? 'svg-icon-primary' : '' }} svg-icon-5x">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path opacity="0.3" d="M18 22C19.7 22 21 20.7 21 19C21 18.5 20.9 18.1 20.7 17.7L15.3 6.30005C15.1 5.90005 15 5.5 15 5C15 3.3 16.3 2 18 2H6C4.3 2 3 3.3 3 5C3 5.5 3.1 5.90005 3.3 6.30005L8.7 17.7C8.9 18.1 9 18.5 9 19C9 20.7 7.7 22 6 22H18Z" fill="black"/>
@@ -58,7 +58,7 @@
                 <br>
                 <span style="font-size: 24px">Faturalar</span>
             </a>
-            <a href="{{ route('web.user.transaction.index') }}" class="col text-dark">
+            <a href="{{ route('web.user.transaction.index') }}" class="col-md-2 text-dark">
                 <span class="svg-icon {{ request()->segment(1) == 'transaction' ? 'svg-icon-primary' : '' }} svg-icon-5x">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M22 7H2V11H22V7Z" fill="black"/>
