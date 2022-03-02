@@ -82,7 +82,7 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-xl-6">
+                        <div class="col-xl-6 mb-8">
                             <div class="form-group">
                                 <label for="create_invoice_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>Fatura Numarası</span>
@@ -104,7 +104,7 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-xl-6">
+                        <div class="col-xl-6 mb-8">
                             <div class="form-group">
                                 <label for="create_invoice_waybill_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>İrsaliye Numarası</span>
@@ -123,7 +123,7 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-xl-6">
+                        <div class="col-xl-6 mb-8">
                             <div class="form-group">
                                 <label for="create_invoice_order_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>Sipariş Numarası</span>

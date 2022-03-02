@@ -77,7 +77,7 @@
             success: function (response) {
                 create_invoice_type_id.empty().append(`<option value="" selected hidden></option>`);
                 $.each(response.response, function (i, transactionType) {
-                    create_invoice_type_id.append(`<option value="${transactionType.id}" data-parent-id="${transactionType.parent_id}">${transactionType.name}</option>`);
+                    create_invoice_type_id.append(`<option value="${transactionType.id}" data-parent-id="${transactionType.parent_id}" data-direction="${transactionType.direction}">${transactionType.name}</option>`);
                 });
             },
             error: function (error) {
@@ -280,6 +280,7 @@
         var companyId = create_invoice_company_id.val();
         var typeId = create_invoice_type_id.val();
         var parentTypeId = create_invoice_type_id.find(':selected').data('parent-id');
+        var direction = create_invoice_type_id.find(':selected').data('direction');
         var companyStatementDescription = $('#create_invoice_company_statement_description').val();
         var datetime = $('#create_invoice_datetime').val();
         var number = $('#create_invoice_number').val();
@@ -314,6 +315,7 @@
                         companyId: companyId,
                         typeId: typeId,
                         parentTypeId: parentTypeId,
+                        direction: direction,
                         companyStatementDescription: companyStatementDescription,
                         datetime: datetime,
                         number: number,
@@ -439,7 +441,7 @@
                 if (createTransaction === 1) {
                     $.ajax({
                         type: 'post',
-                        url: '{{ route('api.user.transaction.createCollection') }}',
+                        url: '{{ route('api.user.transaction.create') }}',
                         headers: {
                             'Accept': 'application/json',
                             'Authorization': token
@@ -448,29 +450,7 @@
                             companyId: newInvoice.companyId,
                             datetime: reformatDatetime(transactionDatetime),
                             typeId: newInvoice.parentTypeId,
-                            amount: $.sum($.map(newInvoiceProducts, function (product) {
-                                return (product.quantity * product.unitPrice) + (product.quantity * product.unitPrice * product.vatRate / 100);
-                            })),
-                            safeboxId: transactionSafeboxId,
-                        },
-                        error: function (error) {
-                            console.log(error);
-                            toastr.error('Tahsilat Makbuzu Oluşturulurken Serviste Bir Hata Oluştu!');
-                            return false;
-                        }
-                    });
-
-                    $.ajax({
-                        type: 'post',
-                        url: '{{ route('api.user.transaction.createCollection') }}',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Authorization': token
-                        },
-                        data: {
-                            companyId: newInvoice.companyId,
-                            datetime: reformatDatetime(transactionDatetime),
-                            typeId: newInvoice.parentTypeId,
+                            direction: newInvoice.direction,
                             amount: $.sum($.map(newInvoiceProducts, function (product) {
                                 return (product.quantity * product.unitPrice) + (product.quantity * product.unitPrice * product.vatRate / 100);
                             })),

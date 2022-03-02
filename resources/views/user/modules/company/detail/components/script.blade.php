@@ -1,5 +1,9 @@
 <script>
 
+    var allCountries = [];
+    var allProvinces = [];
+    var allDistricts = [];
+
     var transactions = $('#transactions');
 
     var page = $('#page');
@@ -9,6 +13,11 @@
 
     var new_collection_safebox_id = $('#new_collection_safebox_id');
     var new_payment_safebox_id = $('#new_payment_safebox_id');
+
+    var update_company_types = $('#update_company_types');
+    var update_company_country_id = $('#update_company_country_id');
+    var update_company_province_id = $('#update_company_province_id');
+    var update_company_district_id = $('#update_company_district_id');
 
     var NewCreditButton = $('#NewCreditButton');
     var NewDebitButton = $('#NewDebitButton');
@@ -134,7 +143,7 @@
                             ${transaction.description ?? ``}
                         </td>
                         <td>
-                            ${transaction.amount} ₺
+                            ${reformatNumberToMoney(transaction.amount)} ₺
                         </td>
                         <td class="text-end">
                             <button class="btn btn-icon btn-sm btn-primary" title="Düzenle"><i class="fas fa-edit"></i></button>
@@ -187,14 +196,120 @@
         $('#NewPaymentModal').modal('show');
     }
 
-    function editCompany() {
-        $('#EditCompanyModal').modal('show');
+    function updateCompany() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.company.getById') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                id: '{{ $id }}'
+            },
+            success: function (response) {
+                var types = [];
+                if (response.response.is_customer === 1) types.push('1');
+                if (response.response.is_supplier === 1) types.push('2');
+                update_company_types.val(types).select2();
+                $('#update_company_tax_number').val(response.response.tax_number);
+                $('#update_company_tax_office').val(response.response.tax_office);
+                $('#update_company_title').val(response.response.title);
+                $('#update_company_manager_name').val(response.response.manager_name);
+                $('#update_company_manager_surname').val(response.response.manager_surname);
+                $('#update_company_email').val(response.response.email);
+                $('#update_company_phone').val(response.response.phone);
+                update_company_country_id.empty().append($('<option>', {
+                    value: null,
+                    text: null
+                }));
+                $.each(allCountries, function (i, country) {
+                    update_company_country_id.append($('<option>', {
+                        value: country.id,
+                        text: country.name
+                    }));
+                });
+                update_company_country_id.val(response.response.country_id).select2();
+                update_company_country_id.trigger('change');
+                update_company_province_id.val(response.response.province_id).select2();
+                update_company_province_id.trigger('change');
+                update_company_district_id.val(response.response.district_id).select2();
+                $('#update_company_postcode').val(response.response.post_code);
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+        $('#UpdateCompanyModal').modal('show');
     }
 
     function deleteCompany() {
         $('#DeleteCompanyModal').modal('show');
     }
 
+    function getCountries() {
+        $.ajax({
+            async: false,
+            type: 'get',
+            url: '{{ route('api.user.country.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                allCountries = response.response;
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Ülke Listesi Alınırken Serviste Hata Oluştu.');
+            }
+        });
+    }
+
+    function getProvinces() {
+        $.ajax({
+            async: false,
+            type: 'get',
+            url: '{{ route('api.user.province.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                allProvinces = response.response;
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Şehir Listesi Alınırken Serviste Hata Oluştu.');
+            }
+        });
+    }
+
+    function getDistricts() {
+        $.ajax({
+            async: false,
+            type: 'get',
+            url: '{{ route('api.user.district.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                allDistricts = response.response;
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('İlçe Listesi Alınırken Serviste Hata Oluştu.');
+            }
+        });
+    }
+
+    getCountries();
+    getProvinces();
+    getDistricts();
     getCompanyById();
     getTransactions();
 
@@ -225,16 +340,21 @@
         } else {
             $.ajax({
                 type: 'post',
-                url: '{{ route('api.user.transaction.createCredit') }}',
+                url: '{{ route('api.user.transaction.create') }}',
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': token
                 },
                 data: {
                     companyId: companyId,
+                    invoiceId: null,
                     datetime: datetime,
-                    amount: amount,
+                    typeId: 5,
+                    receiptNumber: '',
                     description: description,
+                    safeboxId: null,
+                    direction: 0,
+                    amount: amount,
                 },
                 success: function () {
                     $('#NewCreditModal').modal('hide');
@@ -269,16 +389,21 @@
         } else {
             $.ajax({
                 type: 'post',
-                url: '{{ route('api.user.transaction.createDebit') }}',
+                url: '{{ route('api.user.transaction.create') }}',
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': token
                 },
                 data: {
                     companyId: companyId,
+                    invoiceId: null,
                     datetime: datetime,
-                    amount: amount,
+                    typeId: 6,
+                    receiptNumber: '',
                     description: description,
+                    safeboxId: null,
+                    direction: 1,
+                    amount: amount,
                 },
                 success: function () {
                     $('#NewDebitModal').modal('hide');
@@ -316,18 +441,21 @@
         } else {
             $.ajax({
                 type: 'post',
-                url: '{{ route('api.user.transaction.createCollection') }}',
+                url: '{{ route('api.user.transaction.create') }}',
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': token
                 },
                 data: {
                     companyId: companyId,
+                    invoiceId: null,
                     datetime: datetime,
                     typeId: 1,
-                    amount: amount,
-                    safeboxId: safeboxId,
+                    receiptNumber: '',
                     description: description,
+                    safeboxId: safeboxId,
+                    direction: 0,
+                    amount: amount,
                 },
                 success: function () {
                     $('#NewCollectionModal').modal('hide');
@@ -365,18 +493,21 @@
         } else {
             $.ajax({
                 type: 'post',
-                url: '{{ route('api.user.transaction.createPayment') }}',
+                url: '{{ route('api.user.transaction.create') }}',
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': token
                 },
                 data: {
                     companyId: companyId,
+                    invoiceId: null,
                     datetime: datetime,
                     typeId: 2,
-                    amount: amount,
-                    safeboxId: safeboxId,
+                    receiptNumber: '',
                     description: description,
+                    safeboxId: safeboxId,
+                    direction: 1,
+                    amount: amount,
                 },
                 success: function () {
                     $('#NewPaymentModal').modal('hide');
@@ -394,6 +525,140 @@
                 }
             });
         }
+    });
+
+    update_company_country_id.change(function () {
+        update_company_province_id.empty().append($('<option>', {
+            value: null,
+            text: null
+        }));
+        update_company_district_id.empty();
+        $.each(allProvinces, function (i, province) {
+            if (parseInt(update_company_country_id.val()) === parseInt(province.country_id)) {
+                update_company_province_id.append($('<option>', {
+                    value: province.id,
+                    text: province.name
+                }));
+            }
+        });
+    });
+
+    update_company_province_id.change(function () {
+        update_company_district_id.empty().append($('<option>', {
+            value: null,
+            text: null
+        }));
+        $.each(allDistricts, function (i, district) {
+            if (parseInt(update_company_province_id.val()) === parseInt(district.province_id)) {
+                update_company_district_id.append($('<option>', {
+                    value: district.id,
+                    text: district.name
+                }));
+            }
+        });
+    });
+
+    UpdateCompanyButton.click(function () {
+        var id = '{{ $id }}';
+        var types = update_company_types.val();
+        var tax_number = $('#update_company_tax_number').val();
+        var tax_office = $('#update_company_tax_office').val();
+        var title = $('#update_company_title').val();
+        var manager_name = $('#update_company_manager_name').val();
+        var manager_surname = $('#update_company_manager_surname').val();
+        var email = $('#update_company_email').val();
+        var phone = $('#update_company_phone').val();
+        var country_id = $('#update_company_country_id').val();
+        var province_id = $('#update_company_province_id').val();
+        var district_id = $('#update_company_district_id').val();
+        var postCode = $('#update_company_postcode').val();
+        var isCustomer = $.inArray('1', types) !== -1 ? 1 : 0;
+        var isSupplier = $.inArray('2', types) !== -1 ? 1 : 0;
+
+        if (!title) {
+            toastr.warning('Firma Adı Boş Olamaz.');
+        } else {
+            $.ajax({
+                type: 'put',
+                url: '{{ route('api.user.company.update') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    id: id,
+                    taxNumber: tax_number,
+                    taxOffice: tax_office,
+                    title: title,
+                    managerName: manager_name,
+                    managerSurname: manager_surname,
+                    email: email,
+                    phone: phone,
+                    countryId: country_id,
+                    provinceId: province_id,
+                    districtId: district_id,
+                    postCode: postCode,
+                    isCustomer: isCustomer,
+                    isSupplier: isSupplier
+                },
+                success: function () {
+                    $('#UpdateCompanyModal').modal('hide');
+                    toastr.success('Başarıyla Güncellendi');
+                    getCompanyById();
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Cari Güncellenirken Serviste Bir Hata Oluştu.');
+                }
+            });
+        }
+    });
+
+    DeleteCompanyButton.click(function () {
+        var id = '{{ $id }}';
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.transaction.count') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                id: id
+            },
+            success: function (response) {
+                if (response.response > 0) {
+                    toastr.warning('İşlem Görmüş Cari Silinemez.');
+                } else {
+                    $('#loader').fadeIn(250);
+                    $('#DeleteCompanyModal').modal('hide');
+                    $.ajax({
+                        type: 'delete',
+                        url: '{{ route('api.user.company.delete') }}',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Authorization': token
+                        },
+                        data: {
+                            id: id
+                        },
+                        success: function () {
+                            toastr.success('Başarıyla Silindi');
+                            window.location.href = '{{ route('web.user.company.index') }}';
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            toastr.error('Cari Silinirken Serviste Bir Hata Oluştu.');
+                            $('#loader').fadeOut(250);
+                        }
+                    });
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Cari Silinirken Serviste Bir Hata Oluştu.');
+            }
+        });
     });
 
 </script>

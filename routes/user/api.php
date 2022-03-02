@@ -49,10 +49,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('province')->group(function () {
+        Route::get('getAll', [\App\Http\Controllers\Api\User\ProvinceController::class, 'getAll'])->name('api.user.province.getAll');
         Route::get('getByCountryId', [\App\Http\Controllers\Api\User\ProvinceController::class, 'getByCountryId'])->name('api.user.province.getByCountryId');
     });
 
     Route::prefix('district')->group(function () {
+        Route::get('getAll', [\App\Http\Controllers\Api\User\DistrictController::class, 'getAll'])->name('api.user.district.getAll');
         Route::get('getByProvinceId', [\App\Http\Controllers\Api\User\DistrictController::class, 'getByProvinceId'])->name('api.user.district.getByProvinceId');
     });
 
@@ -61,6 +63,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('index', [\App\Http\Controllers\Api\User\CompanyController::class, 'index'])->name('api.user.company.index');
         Route::get('getById', [\App\Http\Controllers\Api\User\CompanyController::class, 'getById'])->name('api.user.company.getById');
         Route::post('create', [\App\Http\Controllers\Api\User\CompanyController::class, 'create'])->name('api.user.company.create');
+        Route::put('update', [\App\Http\Controllers\Api\User\CompanyController::class, 'update'])->name('api.user.company.update');
+        Route::delete('delete', [\App\Http\Controllers\Api\User\CompanyController::class, 'delete'])->name('api.user.company.delete');
     });
 
     Route::prefix('safebox')->group(function () {
@@ -78,13 +82,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     Route::prefix('transaction')->group(function () {
+        Route::get('all', [\App\Http\Controllers\Api\User\TransactionController::class, 'all'])->name('api.user.transaction.all');
+        Route::get('count', [\App\Http\Controllers\Api\User\TransactionController::class, 'count'])->name('api.user.transaction.count');
         Route::get('index', [\App\Http\Controllers\Api\User\TransactionController::class, 'index'])->name('api.user.transaction.index');
-        Route::post('createCredit', [\App\Http\Controllers\Api\User\TransactionController::class, 'createCredit'])->name('api.user.transaction.createCredit');
-        Route::post('createDebit', [\App\Http\Controllers\Api\User\TransactionController::class, 'createDebit'])->name('api.user.transaction.createDebit');
-        Route::post('createCollection', [\App\Http\Controllers\Api\User\TransactionController::class, 'createCollection'])->name('api.user.transaction.createCollection');
-        Route::post('createPayment', [\App\Http\Controllers\Api\User\TransactionController::class, 'createPayment'])->name('api.user.transaction.createPayment');
-        Route::post('createEarn', [\App\Http\Controllers\Api\User\TransactionController::class, 'createEarn'])->name('api.user.transaction.createEarn');
-        Route::post('createExpense', [\App\Http\Controllers\Api\User\TransactionController::class, 'createExpense'])->name('api.user.transaction.createExpense');
+        Route::post('create', [\App\Http\Controllers\Api\User\TransactionController::class, 'create'])->name('api.user.transaction.create');
     });
 
     Route::prefix('invoice')->group(function () {

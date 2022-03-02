@@ -2,6 +2,10 @@
 
 <script>
 
+    var allCountries = [];
+    var allProvinces = [];
+    var allDistricts = [];
+
     var companies = $('#companies');
 
     var page = $('#page');
@@ -9,14 +13,36 @@
     var pageDownButton = $('#pageDown');
     var pageSizeSelector = $('#pageSize');
 
+    var create_company_types = $('#create_company_types');
     var create_company_country_id = $('#create_company_country_id');
     var create_company_province_id = $('#create_company_province_id');
     var create_company_district_id = $('#create_company_district_id');
 
     var CreateCompanyButton = $('#CreateCompanyButton');
 
+
     function createCompany() {
-        create_company_country_id.val(223).select2();
+        create_company_types.val([]).select2();
+        $('#create_company_tax_number').val('');
+        $('#create_company_tax_office').val('');
+        $('#create_company_title').val('');
+        $('#create_company_manager_name').val('');
+        $('#create_company_manager_surname').val('');
+        $('#create_company_email').val('');
+        $('#create_company_phone').val('');
+        create_company_country_id.empty().append($('<option>', {
+            value: null,
+            text: null
+        }));
+        $.each(allCountries, function (i, country) {
+            create_company_country_id.append($('<option>', {
+                value: country.id,
+                text: country.name
+            }));
+        });
+        create_company_province_id.empty();
+        create_company_district_id.empty();
+        $('#create_company_postcode').val('');
         $('#CreateCompanyModal').modal('show');
     }
 
@@ -101,6 +127,7 @@
 
     function getCountries() {
         $.ajax({
+            async: false,
             type: 'get',
             url: '{{ route('api.user.country.getAll') }}',
             headers: {
@@ -109,12 +136,7 @@
             },
             data: {},
             success: function (response) {
-                create_company_country_id.empty();
-                $.each(response.response, function (i, country) {
-                    create_company_country_id.append(`
-                        <option value="${country.id}">${country.name}</option>
-                    `);
-                });
+                allCountries = response.response;
             },
             error: function (error) {
                 console.log(error);
@@ -123,8 +145,50 @@
         });
     }
 
+    function getProvinces() {
+        $.ajax({
+            async: false,
+            type: 'get',
+            url: '{{ route('api.user.province.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                allProvinces = response.response;
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Şehir Listesi Alınırken Serviste Hata Oluştu.');
+            }
+        });
+    }
+
+    function getDistricts() {
+        $.ajax({
+            async: false,
+            type: 'get',
+            url: '{{ route('api.user.district.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                allDistricts = response.response;
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('İlçe Listesi Alınırken Serviste Hata Oluştu.');
+            }
+        });
+    }
+
     getCompanies();
     getCountries();
+    getProvinces();
+    getDistricts();
 
     pageUpButton.click(function () {
         changePage(parseInt(page.html()) + 1);
@@ -159,8 +223,39 @@
         getCompanies();
     });
 
+    create_company_country_id.change(function () {
+        create_company_province_id.empty().append($('<option>', {
+            value: null,
+            text: null
+        }));
+        create_company_district_id.empty();
+        $.each(allProvinces, function (i, province) {
+            if (parseInt(create_company_country_id.val()) === parseInt(province.country_id)) {
+                create_company_province_id.append($('<option>', {
+                    value: province.id,
+                    text: province.name
+                }));
+            }
+        });
+    });
+
+    create_company_province_id.change(function () {
+        create_company_district_id.empty().append($('<option>', {
+            value: null,
+            text: null
+        }));
+        $.each(allDistricts, function (i, district) {
+            if (parseInt(create_company_province_id.val()) === parseInt(district.province_id)) {
+                create_company_district_id.append($('<option>', {
+                    value: district.id,
+                    text: district.name
+                }));
+            }
+        });
+    });
+
     CreateCompanyButton.click(function () {
-        var types = $('#create_company_types').val();
+        var types = create_company_types.val();
         var tax_number = $('#create_company_tax_number').val();
         var tax_office = $('#create_company_tax_office').val();
         var title = $('#create_company_title').val();
@@ -171,7 +266,7 @@
         var country_id = $('#create_company_country_id').val();
         var province_id = $('#create_company_province_id').val();
         var district_id = $('#create_company_district_id').val();
-        var postcode = $('#create_company_postcode').val();
+        var postCode = $('#create_company_postcode').val();
         var isCustomer = $.inArray('1', types) !== -1 ? 1 : 0;
         var isSupplier = $.inArray('2', types) !== -1 ? 1 : 0;
 
@@ -196,7 +291,7 @@
                     countryId: country_id,
                     provinceId: province_id,
                     districtId: district_id,
-                    postcode: postcode,
+                    postCode: postCode,
                     isCustomer: isCustomer,
                     isSupplier: isSupplier
                 },
@@ -212,5 +307,6 @@
             });
         }
     });
+
 
 </script>

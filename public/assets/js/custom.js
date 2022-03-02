@@ -132,7 +132,7 @@ function checkScreen() {
         $('#defaultFooter').hide();
         $('#mobileFooter').show();
     } else {
-        $('.showIfMobile').hide();
+        $('.showIfMobile').show();
         $('.hideIfMobile').show();
         $('#DashboardQuickActions').show();
         $('#defaultFooter').show();
@@ -360,3 +360,9 @@ function checkScreen() {
             }
         });
 })(jQuery);
+
+$('.modal').on('shown.bs.modal', function (e) {
+    $(this).find('.select2Input').select2({
+        dropdownParent: $(this).find('.modal-content')
+    });
+})

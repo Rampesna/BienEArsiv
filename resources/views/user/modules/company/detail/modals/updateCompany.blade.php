@@ -1,4 +1,4 @@
-<div class="modal fade show" id="CreateCompanyModal" aria-modal="true" role="dialog" data-bs-backdrop="static">
+<div class="modal fade show" id="UpdateCompanyModal" aria-modal="true" role="dialog" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered mw-900px">
         <div class="modal-content rounded">
             <div class="modal-header pb-0 border-0 justify-content-end">
@@ -14,16 +14,16 @@
             <div class="modal-body scroll-y px-10 px-lg-15 pt-0 pb-15">
                 <div class="form fv-plugins-bootstrap5 fv-plugins-framework">
                     <div class="mb-13 text-center">
-                        <h1 class="mb-3">Yeni Cari Oluştur</h1>
+                        <h1 class="mb-3">Cari Düzenle</h1>
                     </div>
                     <div class="d-flex flex-column mb-8 fv-row fv-plugins-icon-container">
                         <div class="row">
                             <div class="col-xl-4">
                                 <div class="form-group">
-                                    <label for="create_company_types" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Hesap Türü</span>
+                                    <label for="update_company_types" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Hesap Türü</span>
                                     </label>
-                                    <select multiple id="create_company_types" class="form-select form-select-solid select2Input" data-control="select2" aria-hidden="true">
+                                    <select multiple id="update_company_types" class="form-select form-select-solid select2Input" data-control="select2" data-hide-search="true" aria-hidden="true">
                                         <option value="1">Müşteri</option>
                                         <option value="2">Tedarikçi</option>
                                     </select>
@@ -31,18 +31,18 @@
                             </div>
                             <div class="col-xl-4">
                                 <div class="form-group">
-                                    <label for="create_company_tax_number" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <label for="update_company_tax_number" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">VKN/TCKN</span>
                                     </label>
-                                    <input id="create_company_tax_number" type="text" class="form-control form-control-solid" placeholder="VKN/TCKN" maxlength="11" aria-hidden="true">
+                                    <input id="update_company_tax_number" type="text" class="form-control form-control-solid" placeholder="VKN/TCKN" maxlength="11">
                                 </div>
                             </div>
                             <div class="col-xl-4">
                                 <div class="form-group">
-                                    <label for="create_company_tax_office" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Vergi Dairesi</span>
+                                    <label for="update_company_tax_office" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Vergi Dairesi</span>
                                     </label>
-                                    <input id="create_company_tax_office" type="text" class="form-control form-control-solid" placeholder="Vergi Dairesi" aria-hidden="true">
+                                    <input id="update_company_tax_office" type="text" class="form-control form-control-solid" placeholder="Vergi Dairesi">
                                 </div>
                             </div>
                         </div>
@@ -50,10 +50,10 @@
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="form-group">
-                                    <label for="create_company_title" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <label for="update_company_title" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Firma Ünvanı</span>
                                     </label>
-                                    <input id="create_company_title" type="text" class="form-control form-control-solid" placeholder="Firma Ünvanını Giriniz..." aria-hidden="true">
+                                    <input id="update_company_title" type="text" class="form-control form-control-solid" placeholder="Firma Ünvanını Giriniz...">
                                 </div>
                             </div>
                         </div>
@@ -61,18 +61,18 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label for="create_company_manager_name" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Yetkili Adı</span>
+                                    <label for="update_company_manager_name" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Yetkili Adı</span>
                                     </label>
-                                    <input id="create_company_manager_name" type="text" class="form-control form-control-solid" placeholder="Yetkili Adı" aria-hidden="true">
+                                    <input id="update_company_manager_name" type="text" class="form-control form-control-solid" placeholder="Yetkili Adı">
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label for="create_company_manager_surname" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Yetkili Soyadı</span>
+                                    <label for="update_company_manager_surname" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Yetkili Soyadı</span>
                                     </label>
-                                    <input id="create_company_manager_surname" type="text" class="form-control form-control-solid" placeholder="Yetkili Soyadı" aria-hidden="true">
+                                    <input id="update_company_manager_surname" type="text" class="form-control form-control-solid" placeholder="Yetkili Soyadı">
                                 </div>
                             </div>
                         </div>
@@ -80,39 +80,39 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label for="create_company_email" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>E-posta</span>
+                                    <label for="update_company_email" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">E-posta</span>
                                     </label>
-                                    <input id="create_company_email" type="text" class="form-control form-control-solid emailMask" placeholder="E-posta" aria-hidden="true">
+                                    <input id="update_company_email" type="text" class="form-control form-control-solid" placeholder="E-posta">
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label for="create_company_phone" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Telefon</span>
+                                    <label for="update_company_phone" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Telefon</span>
                                     </label>
-                                    <input id="create_company_phone" type="text" class="form-control form-control-solid phoneMask" placeholder="Telefon" aria-hidden="true">
+                                    <input id="update_company_phone" type="text" class="form-control form-control-solid" placeholder="Telefon">
                                 </div>
                             </div>
                         </div>
                         <hr class="text-muted">
                         <div class="row">
                             <div class="col-xl-6">
-                                <div class="form-group" id="country_container">
-                                    <label for="create_company_country_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Ülke</span>
+                                <div class="form-group">
+                                    <label for="update_company_country_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Ülke</span>
                                     </label>
-                                    <select id="create_company_country_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Ülke" aria-hidden="true">
+                                    <select id="update_company_country_id" class="form-select form-select-solid select2Input" data-control="select2" aria-hidden="true">
 
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label for="create_company_province_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Şehir</span>
+                                    <label for="update_company_province_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Şehir</span>
                                     </label>
-                                    <select id="create_company_province_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Şehir" aria-hidden="true">
+                                    <select id="update_company_province_id" class="form-select form-select-solid select2Input" data-control="select2" aria-hidden="true" data-placeholder="Şehir">
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -122,27 +122,27 @@
                         <div class="row">
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label for="create_company_district_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>İlçe</span>
+                                    <label for="update_company_district_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">İlçe</span>
                                     </label>
-                                    <select id="create_company_district_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="İlçe" aria-hidden="true">
+                                    <select id="update_company_district_id" class="form-select form-select-solid select2Input" data-control="select2" aria-hidden="true" data-placeholder="İlçe">
                                         <option value=""></option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-xl-6">
                                 <div class="form-group">
-                                    <label for="create_company_postcode" class="d-flex align-items-center fs-6 fw-bold mb-2">
-                                        <span>Posta Kodu</span>
+                                    <label for="update_company_postcode" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Posta Kodu</span>
                                     </label>
-                                    <input id="create_company_postcode" type="text" class="form-control form-control-solid" placeholder="Posta Kodu" aria-hidden="true">
+                                    <input id="update_company_postcode" type="text" class="form-control form-control-solid" placeholder="Posta Kodu">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="text-center">
                         <button type="button" data-bs-dismiss="modal" class="btn btn-light me-3">İptal</button>
-                        <button type="button" class="btn btn-primary" id="CreateCompanyButton">Oluştur</button>
+                        <button type="button" class="btn btn-primary" id="UpdateCompanyButton">Güncelle</button>
                     </div>
                 </div>
             </div>

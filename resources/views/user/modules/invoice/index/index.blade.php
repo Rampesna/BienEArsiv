@@ -16,7 +16,7 @@
 
     @include('user.modules.invoice.index.components.contextMenu')
 
-    <div class="showIfMobile" style="display: none">
+    <div class="showIfMobile">
         <div class="row">
             <div class="col-xl-12 text-end">
                 <button class="btn btn-primary" onclick="createInvoice()">Yeni Fatura Oluştur</button>
@@ -33,7 +33,7 @@
                         <h5>Filtreleme Seçenekleri</h5>
                     </div>
                     <div class="row">
-                        <div class="col-xl-4">
+                        <div class="col-xl-4 mb-10">
                             <div class="form-group">
                                 <label for="filter_transaction_type_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">İşlem Türü</span>
@@ -41,7 +41,7 @@
                                 <select id="filter_transaction_type_id" class="form-select form-select-solid filterInput" data-control="select2" data-hide-search="true"></select>
                             </div>
                         </div>
-                        <div class="col-xl-4">
+                        <div class="col-xl-4 mb-10">
                             <div class="form-group">
                                 <label for="filter_datetime_start" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Başlangıç Tarihi</span>
@@ -49,7 +49,7 @@
                                 <input id="filter_datetime_start" type="datetime-local" class="form-control form-control-solid filterInput">
                             </div>
                         </div>
-                        <div class="col-xl-4">
+                        <div class="col-xl-4 mb-10">
                             <div class="form-group">
                                 <label for="filter_datetime_end" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Bitiş Tarihi</span>

@@ -12,6 +12,26 @@ class TransactionService extends BaseService
     }
 
     /**
+     * @param int $customerId
+     */
+    public function all(
+        int $customerId
+    )
+    {
+        return Transaction::where('customer_id', $customerId)->get();
+    }
+
+    /**
+     * @param int $customerId
+     */
+    public function count(
+        int $customerId
+    )
+    {
+        return Transaction::where('customer_id', $customerId)->count();
+    }
+
+    /**
      * @param int $pageIndex
      * @param int $pageSize
      * @param int $customerId

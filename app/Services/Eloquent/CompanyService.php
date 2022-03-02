@@ -137,4 +137,77 @@ class CompanyService extends BaseService
 
         return $company;
     }
+
+    /**
+     * @param int $id
+     * @param int $customerId
+     * @param string $taxNumber
+     * @param string $taxOffice
+     * @param string $managerName
+     * @param string $managerSurname
+     * @param string $title
+     * @param string $email
+     * @param string $phone
+     * @param string $address
+     * @param string $countryId
+     * @param string $provinceId
+     * @param string $districtId
+     * @param string $postCode
+     * @param string $isCustomer
+     * @param string $isSupplier
+     */
+    public function update(
+        $id,
+        $customerId,
+        $taxNumber,
+        $taxOffice,
+        $managerName,
+        $managerSurname,
+        $title,
+        $email,
+        $phone,
+        $address,
+        $countryId,
+        $provinceId,
+        $districtId,
+        $postCode,
+        $isCustomer,
+        $isSupplier
+    )
+    {
+        $company = Company::find($id);
+
+        if (!$company) {
+            return false;
+        }
+
+        $company->customer_id = $customerId;
+        $company->tax_number = $taxNumber;
+        $company->tax_office = $taxOffice;
+        $company->manager_name = $managerName;
+        $company->manager_surname = $managerSurname;
+        $company->title = $title;
+        $company->email = $email;
+        $company->phone = $phone;
+        $company->address = $address;
+        $company->country_id = $countryId;
+        $company->province_id = $provinceId;
+        $company->district_id = $districtId;
+        $company->post_code = $postCode;
+        $company->is_customer = $isCustomer;
+        $company->is_supplier = $isSupplier;
+        $company->save();
+
+        return $company;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function delete(
+        $id
+    )
+    {
+        Company::find($id)->delete();
+    }
 }

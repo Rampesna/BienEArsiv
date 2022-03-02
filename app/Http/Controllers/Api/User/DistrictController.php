@@ -18,6 +18,11 @@ class DistrictController extends Controller
         $this->districtService = new DistrictService;
     }
 
+    public function getAll()
+    {
+        return $this->success('Districts', $this->districtService->getAll());
+    }
+
     public function getByProvinceId(GetByProvinceIdRequest $request)
     {
         return $this->success('Districts', $this->districtService->getByProvinceId($request->provinceId));

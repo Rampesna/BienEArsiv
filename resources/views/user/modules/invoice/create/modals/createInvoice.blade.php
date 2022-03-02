@@ -23,7 +23,7 @@
                                     <label for="create_invoice_transaction" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Tahsilat Makbuzu Oluşturulsun mu?</span>
                                     </label>
-                                    <select id="create_invoice_transaction" class="form-select form-select-solid" data-control="select2" data-placeholder="Tahsilat Durumu" data-hide-search="true">
+                                    <select id="create_invoice_transaction" class="form-select form-select-solid">
                                         <option value="0" selected>Hayır</option>
                                         <option value="1">Evet</option>
                                     </select>

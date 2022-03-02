@@ -18,8 +18,7 @@
     @include('user.modules.company.detail.modals.newDebit')
     @include('user.modules.company.detail.modals.newCollection')
     @include('user.modules.company.detail.modals.newPayment')
-    @include('user.modules.company.detail.modals.editCompany')
-    @include('user.modules.company.detail.modals.editCompany')
+    @include('user.modules.company.detail.modals.updateCompany')
     @include('user.modules.company.detail.modals.deleteCompany')
 
     <div class="row">
@@ -154,7 +153,7 @@
                                     </div>
                                     <div class="separator border-gray-200 mb-2"></div>
                                     <div class="menu-item px-3">
-                                        <a onclick="editCompany()" class="menu-link px-3">
+                                        <a onclick="updateCompany()" class="menu-link px-3">
                                             <i class="fas fa-edit text-primary"></i>
                                             <span class="ms-5">Cariyi Düzenle</span>
                                         </a>

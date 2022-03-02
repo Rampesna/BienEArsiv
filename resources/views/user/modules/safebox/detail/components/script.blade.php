@@ -173,16 +173,21 @@
         } else {
             $.ajax({
                 type: 'post',
-                url: '{{ route('api.user.transaction.createEarn') }}',
+                url: '{{ route('api.user.transaction.create') }}',
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': token
                 },
                 data: {
-                    safeboxId: safeboxId,
+                    companyId: null,
+                    invoiceId: null,
                     datetime: datetime,
-                    amount: amount,
+                    typeId: 3,
+                    receiptNumber: '',
                     description: description,
+                    safeboxId: safeboxId,
+                    direction: 0,
+                    amount: amount,
                 },
                 success: function () {
                     $('#NewEarnModal').modal('hide');
@@ -217,16 +222,21 @@
         } else {
             $.ajax({
                 type: 'post',
-                url: '{{ route('api.user.transaction.createExpense') }}',
+                url: '{{ route('api.user.transaction.create') }}',
                 headers: {
                     'Accept': 'application/json',
                     'Authorization': token
                 },
                 data: {
-                    safeboxId: safeboxId,
+                    companyId: null,
+                    invoiceId: null,
                     datetime: datetime,
-                    amount: amount,
+                    typeId: 4,
+                    receiptNumber: '',
                     description: description,
+                    safeboxId: safeboxId,
+                    direction: 1,
+                    amount: amount,
                 },
                 success: function () {
                     $('#NewExpenseModal').modal('hide');

@@ -18,6 +18,11 @@ class ProvinceController extends Controller
         $this->provinceService = new ProvinceService;
     }
 
+    public function getAll()
+    {
+        return $this->success('Provinces', $this->provinceService->getAll());
+    }
+
     public function getByCountryId(GetByCountryIdRequest $request)
     {
         return $this->success('Provinces', $this->provinceService->getByCountryId($request->countryId));

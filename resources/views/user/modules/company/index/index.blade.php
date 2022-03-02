@@ -18,7 +18,7 @@
 
     @include('user.modules.company.index.modals.createCompany')
 
-    <div class="showIfMobile" style="display: none">
+    <div class="showIfMobile">
         <div class="row">
             <div class="col-xl-12 text-end">
                 <button class="btn btn-primary" onclick="createCompany()">Yeni Cari Oluştur</button>
@@ -32,8 +32,8 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-12">
-                            <div class="form-group">
-                                <label for="filter_company_keyword" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                            <div class="form-group mb-2">
+                                <label for="filter_company_keyword" class="d-flex align-items-center fs-6 fw-bold">
                                     <span>Ara</span>
                                 </label>
                                 <input id="filter_company_keyword" type="text" class="form-control form-control-solid filterInput" placeholder="Anahtar Kelime...">
@@ -42,8 +42,8 @@
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-xl-6">
-                            <div class="form-group">
+                        <div class="col-xl-6 mb-5">
+                            <div class="form-group mb-5">
                                 <label for="filter_company_account_type" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Hesap Türü</span>
                                 </label>
@@ -57,7 +57,7 @@
                             </div>
                         </div>
                         <div class="col-xl-6">
-                            <div class="form-group">
+                            <div class="form-group mb-5">
                                 <label for="filter_company_balance_type" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Bakiye Durumu</span>
                                 </label>
@@ -114,7 +114,7 @@
                             <th>E-posta</th>
                             <th>Telefon</th>
                             <th>Bakiye</th>
-                            <th>İşlemler</th>
+                            <th class="text-end">İşlemler</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600" id="companies"></tbody>
