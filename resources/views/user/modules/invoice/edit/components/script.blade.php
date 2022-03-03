@@ -14,10 +14,10 @@
     var unitsForSelect = `<option value="" selected hidden></option>`;
     var invoiceProducts = $('#invoiceProducts');
 
-    var create_invoice_company_id = $('#create_invoice_company_id');
-    var create_invoice_type_id = $('#create_invoice_type_id');
-    var create_invoice_transaction_safebox_id = $('#create_invoice_transaction_safebox_id');
-    var create_invoice_transaction = $('#create_invoice_transaction');
+    var edit_invoice_company_id = $('#edit_invoice_company_id');
+    var edit_invoice_type_id = $('#edit_invoice_type_id');
+    var edit_invoice_transaction_safebox_id = $('#edit_invoice_transaction_safebox_id');
+    var edit_invoice_transaction = $('#edit_invoice_transaction');
 
     function getCompanies() {
         $.ajax({
@@ -29,9 +29,9 @@
             },
             data: {},
             success: function (response) {
-                create_invoice_company_id.empty().append(`<option value="" selected hidden></option>`);
+                edit_invoice_company_id.empty().append(`<option value="" selected hidden></option>`);
                 $.each(response.response, function (i, company) {
-                    create_invoice_company_id.append(`<option value="${company.id}">${company.title}</option>`);
+                    edit_invoice_company_id.append(`<option value="${company.id}">${company.title}</option>`);
                 });
             },
             error: function (error) {
@@ -51,9 +51,9 @@
             },
             data: {},
             success: function (response) {
-                create_invoice_transaction_safebox_id.append(`<option value="" selected disabled></option>`);
+                edit_invoice_transaction_safebox_id.append(`<option value="" selected disabled></option>`);
                 $.each(response.response, function (i, safebox) {
-                    create_invoice_transaction_safebox_id.append(`<option value="${safebox.id}">${safebox.name}</option>`);
+                    edit_invoice_transaction_safebox_id.append(`<option value="${safebox.id}">${safebox.name}</option>`);
                 });
             },
             error: function (error) {
@@ -75,9 +75,9 @@
                 invoice: 1
             },
             success: function (response) {
-                create_invoice_type_id.empty().append(`<option value="" selected hidden></option>`);
+                edit_invoice_type_id.empty().append(`<option value="" selected hidden></option>`);
                 $.each(response.response, function (i, transactionType) {
-                    create_invoice_type_id.append(`<option value="${transactionType.id}" data-parent-id="${transactionType.parent_id}" data-direction="${transactionType.direction}">${transactionType.name}</option>`);
+                    edit_invoice_type_id.append(`<option value="${transactionType.id}" data-parent-id="${transactionType.parent_id}" data-direction="${transactionType.direction}">${transactionType.name}</option>`);
                 });
             },
             error: function (error) {
@@ -131,13 +131,39 @@
         });
     }
 
+    function getInvoice() {
+        var id = '{{ $id }}';
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.invoice.getById') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                id: id,
+            },
+            success: function (response) {
+                console.log(response);
+                $('#edit_invoice_tax_number').val(response.response.tax_number);
+                $('#edit_invoice_company_id').val(response.response.company_id).select2();
+                $('#edit_invoice_type_id').val(response.response.type_id).select2();
+                $('#edit_invoice_company_statement_description').val(response.response.company_statement_description);
+                $('#edit_invoice_datetime').val(reformatDateForCalendar(response.response.datetime));
+            },
+            error: function () {
+
+            }
+        });
+    }
+
     function initializePage() {
         getCompanies();
         getSafeboxes();
         getTransactionTypes();
         getProducts();
         getUnits();
-        newInvoiceProduct();
+        getInvoice();
         calculateTotals();
     }
 
@@ -272,19 +298,19 @@
 
     CreateButton.click(function () {
         var create = 1;
-        var taxNumber = $('#create_invoice_tax_number').val();
-        var companyId = create_invoice_company_id.val();
-        var typeId = create_invoice_type_id.val();
-        var parentTypeId = create_invoice_type_id.find(':selected').data('parent-id');
-        var direction = create_invoice_type_id.find(':selected').data('direction');
-        var companyStatementDescription = $('#create_invoice_company_statement_description').val();
-        var datetime = $('#create_invoice_datetime').val();
-        var number = $('#create_invoice_number').val();
-        var vatIncluded = $('#create_invoice_vat_included').is(':checked');
-        var waybillNumber = $('#create_invoice_waybill_number').val();
-        var waybillDatetime = $('#create_invoice_waybill_datetime').val();
-        var orderNumber = $('#create_invoice_order_number').val();
-        var orderDatetime = $('#create_invoice_order_datetime').val();
+        var taxNumber = $('#edit_invoice_tax_number').val();
+        var companyId = edit_invoice_company_id.val();
+        var typeId = edit_invoice_type_id.val();
+        var parentTypeId = edit_invoice_type_id.find(':selected').data('parent-id');
+        var direction = edit_invoice_type_id.find(':selected').data('direction');
+        var companyStatementDescription = $('#edit_invoice_company_statement_description').val();
+        var datetime = $('#edit_invoice_datetime').val();
+        var number = $('#edit_invoice_number').val();
+        var vatIncluded = $('#edit_invoice_vat_included').is(':checked');
+        var waybillNumber = $('#edit_invoice_waybill_number').val();
+        var waybillDatetime = $('#edit_invoice_waybill_datetime').val();
+        var orderNumber = $('#edit_invoice_order_number').val();
+        var orderDatetime = $('#edit_invoice_order_datetime').val();
 
         if (!companyId) {
             toastr.warning('Cari Seçmediniz!');
@@ -355,21 +381,21 @@
         calculateRowTotal(this);
     });
 
-    create_invoice_transaction.change(function () {
+    edit_invoice_transaction.change(function () {
         if (parseInt($(this).val()) === 0) {
-            $('#create_invoice_transaction_inputs').hide();
+            $('#edit_invoice_transaction_inputs').hide();
         } else {
-            $('#create_invoice_transaction_inputs').show();
+            $('#edit_invoice_transaction_inputs').show();
         }
     });
 
     CreateInvoiceButton.click(function () {
         $('#loader').fadeIn(250);
         var createTransaction = 0;
-        if (parseInt(create_invoice_transaction.val()) === 1) {
+        if (parseInt(edit_invoice_transaction.val()) === 1) {
             createTransaction = 1;
-            var transactionSafeboxId = $('#create_invoice_transaction_safebox_id').val();
-            var transactionDatetime = $('#create_invoice_transaction_datetime').val();
+            var transactionSafeboxId = $('#edit_invoice_transaction_safebox_id').val();
+            var transactionDatetime = $('#edit_invoice_transaction_datetime').val();
 
             if (!transactionSafeboxId) {
                 toastr.warning('Kasa & Banka Seçmediniz!');

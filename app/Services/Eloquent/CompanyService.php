@@ -208,6 +208,6 @@ class CompanyService extends BaseService
         $id
     )
     {
-        Company::find($id)->delete();
+        return Company::find($id)->delete();
     }
 }

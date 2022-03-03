@@ -45,9 +45,9 @@ class CompanyController extends Controller
     public function getById(GetByIdRequest $request)
     {
         $company = $this->companyService->getById($request->id);
-        return $request->user()->customer_id == $company->customer_id
-            ? $this->success('Company details', $company)
-            : $this->error('Company not found', 404);
+        return !$company || ($request->user()->customer_id != $company->customer_id)
+            ? $this->error('Company not found', 404)
+            : $this->success('Company details', $company);
     }
 
     public function create(CreateRequest $request)
@@ -103,7 +103,7 @@ class CompanyController extends Controller
     {
         $company = $this->companyService->getById($request->id);
 
-        if ($request->user()->customer_id != $company->customer_id) {
+        if (!$company || ($request->user()->customer_id != $company->customer_id)) {
             return $this->error('Company not found', 404);
         }
 

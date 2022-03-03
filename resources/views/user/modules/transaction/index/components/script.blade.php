@@ -85,9 +85,6 @@
                             ${transaction.receipt_number ?? ``}
                         </td>
                         <td>
-                            ${transaction.description ?? ``}
-                        </td>
-                        <td>
                             ${transaction.amount} ₺
                         </td>
                         <td class="text-end">

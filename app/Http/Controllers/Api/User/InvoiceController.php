@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\InvoiceController\IndexRequest;
+use App\Http\Requests\Api\User\InvoiceController\GetByIdRequest;
 use App\Http\Requests\Api\User\InvoiceController\CreateRequest;
 use App\Services\Eloquent\InvoiceService;
 use App\Traits\Response;
@@ -31,6 +32,15 @@ class InvoiceController extends Controller
             $request->datetimeStart,
             $request->datetimeEnd
         ));
+    }
+
+    public function getById(GetByIdRequest $request)
+    {
+        $invoice = $this->invoiceService->getById($request->id);
+
+        return !$invoice || ($invoice->customer_id != $request->user()->customer_id)
+            ? $this->error('Invoice not found', 404)
+            : $this->success('Invoice details', $invoice);
     }
 
     public function create(CreateRequest $request)

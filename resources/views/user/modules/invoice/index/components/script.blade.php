@@ -1,5 +1,7 @@
 <script>
 
+    var editRoute = '{{ route('web.user.invoice.edit') }}';
+
     var invoices = $('#invoices');
 
     var page = $('#page');
@@ -83,15 +85,15 @@
                             <br>
                             ${invoice.type ? `<span class="badge badge-light-${invoice.type.class} ms-9">${invoice.type.name}</span>` : ``}
                         </td>
-                        <td>
+                        <td class="hideIfMobile">
                             ${invoice.datetime ?? ``}
                         </td>
                         <td>
                             ${reformatNumberToMoney(invoice.price ?? 0)} ₺
                         </td>
                         <td class="text-end">
-                            <button class="btn btn-icon btn-sm btn-primary" title="Düzenle"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-icon btn-sm btn-danger" title="Mutabakat"><i class="fas fa-trash-alt"></i></button>
+                            <a href="${editRoute}/${invoice.id}" class="btn btn-icon btn-sm btn-primary" title="Düzenle"><i class="fas fa-edit"></i></a>
+                            <a onclick="deleteInvoice(${invoice.id})" class="btn btn-icon btn-sm btn-danger" title="Mutabakat"><i class="fas fa-trash-alt"></i></a>
                         </td>
                     </tr>
                     `);
@@ -102,6 +104,8 @@
                 } else {
                     pageUpButton.attr('disabled', false);
                 }
+
+                checkScreen();
             },
             error: function (error) {
                 console.log(error);

@@ -84,11 +84,10 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5">
                         <thead>
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
-                            <th class="min-w-125px">İşlem Tarihi</th>
-                            <th class="min-w-125px">Dekont Numarası</th>
-                            <th class="min-w-125px">Açıklama</th>
-                            <th class="min-w-125px">Tutar</th>
-                            <th class="min-w-125px text-end">İşlemler</th>
+                            <th class="">İşlem Tarihi</th>
+                            <th class="">Dekont Numarası</th>
+                            <th class="">Tutar</th>
+                            <th class="text-end">İşlemler</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600" id="transactions"></tbody>

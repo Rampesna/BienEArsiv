@@ -44,6 +44,7 @@ Route::middleware([
     Route::prefix('invoice')->group(function () {
         Route::get('index', [\App\Http\Controllers\Web\User\InvoiceController::class, 'index'])->name('web.user.invoice.index');
         Route::get('create', [\App\Http\Controllers\Web\User\InvoiceController::class, 'create'])->name('web.user.invoice.create');
+        Route::get('edit/{id?}', [\App\Http\Controllers\Web\User\InvoiceController::class, 'edit'])->name('web.user.invoice.edit');
     });
 
     Route::prefix('eInvoice')->group(function () {

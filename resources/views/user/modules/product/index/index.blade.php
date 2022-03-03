@@ -18,7 +18,7 @@
 
     @include('user.modules.product.index.modals.createProduct')
 
-    <div class="showIfMobile" style="display: none">
+    <div class="">
         <div class="row">
             <div class="col-xl-12 text-end">
                 <button class="btn btn-primary" onclick="createProduct()">Yeni Ürün</button>
@@ -78,12 +78,12 @@
                     <table class="table align-middle table-row-dashed fs-6 gy-5">
                         <thead>
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
-                            <th class="min-w-125px">Ürün Kodu</th>
-                            <th class="min-w-150px">Ürün Adı</th>
-                            <th class="min-w-125px">Birim</th>
-                            <th class="min-w-125px">Fiyat</th>
-                            <th class="min-w-50px">KDV Oranı</th>
-                            <th class="min-w-125px text-end">İşlemler</th>
+                            <th class="">Ürün Kodu</th>
+                            <th class="">Ürün Adı</th>
+                            <th class="">Birim</th>
+                            <th class="">Fiyat</th>
+                            <th class="">KDV Oranı</th>
+                            <th class="text-end">İşlemler</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600" id="products"></tbody>

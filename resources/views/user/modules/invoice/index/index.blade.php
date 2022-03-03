@@ -16,7 +16,7 @@
 
     @include('user.modules.invoice.index.components.contextMenu')
 
-    <div class="showIfMobile">
+    <div class="">
         <div class="row">
             <div class="col-xl-12 text-end">
                 <button class="btn btn-primary" onclick="createInvoice()">Yeni Fatura Oluştur</button>
@@ -96,7 +96,7 @@
                         <thead>
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
                             <th>Fatura Bilgisi</th>
-                            <th>Tarih</th>
+                            <th class="hideIfMobile">Tarih</th>
                             <th>Tutar</th>
                             <th class="text-end">İşlemler</th>
                         </tr>

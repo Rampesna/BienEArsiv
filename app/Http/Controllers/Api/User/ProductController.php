@@ -41,9 +41,9 @@ class ProductController extends Controller
     public function getById(GetByIdRequest $request)
     {
         $product = $this->productService->getById($request->id);
-        return $request->user()->customer_id == $product->customer_id
-            ? $this->success('Product details', $product)
-            : $this->error('Product not found', 404);
+        return !$product || $request->user()->customer_id != $product->customer_id
+            ? $this->error('Product not found', 404)
+            : $this->success('Product details', $product);
     }
 
     public function create(CreateRequest $request)

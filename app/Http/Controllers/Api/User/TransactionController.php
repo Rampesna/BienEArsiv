@@ -27,14 +27,28 @@ class TransactionController extends Controller
     public function all(AllRequest $request)
     {
         return $this->success('Transactions', $this->transactionService->all(
-            $request->user()->customer_id
+            $request->user()->customer_id,
+            $request->companyId,
+            $request->typeId,
+            $request->safeboxId,
+            $request->direction,
+            $request->datetimeStart,
+            $request->datetimeEnd,
+            $request->amountMin,
+            $request->amountMax
         ));
     }
 
     public function count(CountRequest $request)
     {
+        $company = (new CompanyService)->getById($request->companyId);
+
+        if (!$company || $company->customer_id != $request->user()->customer_id) {
+            return $this->error('Company not found', 404);
+        }
+
         return $this->success('Transactions', $this->transactionService->count(
-            $request->user()->customer_id
+            $request->companyId
         ));
     }
 

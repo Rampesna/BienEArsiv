@@ -17116,7 +17116,7 @@
                 this.defaults = {
                     amdLanguageBase: "./i18n/",
                     autocomplete: "off",
-                    closeOnSelect: !1,
+                    closeOnSelect: !0,
                     debug: !1,
                     dropdownAutoWidth: !1,
                     escapeMarkup: c.escapeMarkup,

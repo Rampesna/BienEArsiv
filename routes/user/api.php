@@ -71,6 +71,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('all', [\App\Http\Controllers\Api\User\SafeboxController::class, 'all'])->name('api.user.safebox.all');
         Route::get('index', [\App\Http\Controllers\Api\User\SafeboxController::class, 'index'])->name('api.user.safebox.index');
         Route::get('getById', [\App\Http\Controllers\Api\User\SafeboxController::class, 'getById'])->name('api.user.safebox.getById');
+        Route::get('getTotalBalance', [\App\Http\Controllers\Api\User\SafeboxController::class, 'getTotalBalance'])->name('api.user.safebox.getTotalBalance');
         Route::post('create', [\App\Http\Controllers\Api\User\SafeboxController::class, 'create'])->name('api.user.safebox.create');
     });
 
@@ -90,6 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('invoice')->group(function () {
         Route::get('index', [\App\Http\Controllers\Api\User\InvoiceController::class, 'index'])->name('api.user.invoice.index');
+        Route::get('getById', [\App\Http\Controllers\Api\User\InvoiceController::class, 'getById'])->name('api.user.invoice.getById');
         Route::post('create', [\App\Http\Controllers\Api\User\InvoiceController::class, 'create'])->name('api.user.invoice.create');
     });
 

@@ -15,4 +15,11 @@ class InvoiceController extends Controller
     {
         return view('user.modules.invoice.create.index');
     }
+
+    public function edit($id)
+    {
+        return view('user.modules.invoice.edit.index', [
+            'id' => $id,
+        ]);
+    }
 }

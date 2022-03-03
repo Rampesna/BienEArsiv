@@ -99,4 +99,22 @@ class SafeboxService extends BaseService
 
         return $safebox;
     }
+
+    /**
+     * @param int $customerId
+     * @param int|null $typeId
+     */
+    public function getTotalBalance(
+        $customerId,
+        $typeId = null
+    )
+    {
+        $safeboxes = Safebox::where('customer_id', $customerId);
+
+        if ($typeId) {
+            $safeboxes->where('type_id', $typeId);
+        }
+
+        return $safeboxes->get()->sum('balance');
+    }
 }

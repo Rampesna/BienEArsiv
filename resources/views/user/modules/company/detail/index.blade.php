@@ -233,9 +233,8 @@
                         <thead>
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
                             <th>İşlem Tarihi</th>
-                            <th>Dekont Numarası</th>
-                            <th>Açıklama</th>
-                            <th>Tutar</th>
+                            <th class="hideIfMobile">Dekont Numarası</th>
+                            <th class="text-end">Tutar</th>
                             <th class="text-end">İşlemler</th>
                         </tr>
                         </thead>

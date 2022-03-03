@@ -132,17 +132,14 @@
                     <tr>
                         <td>
                             ${icon}
-                            ${transaction.datetime}
+                            ${reformatDatetimeTo_DD_MM_YYYY_WithDot(transaction.datetime)}
                             <br>
                             ${transaction.type ? `<span class="badge badge-light-${transaction.type.class} ms-9">${transaction.type.name}</span>` : ``}
                         </td>
-                        <td>
+                        <td class="hideIfMobile">
                             ${transaction.receipt_number ?? ``}
                         </td>
-                        <td>
-                            ${transaction.description ?? ``}
-                        </td>
-                        <td>
+                        <td class="text-end">
                             ${reformatNumberToMoney(transaction.amount)} ₺
                         </td>
                         <td class="text-end">
@@ -615,7 +612,7 @@
     });
 
     DeleteCompanyButton.click(function () {
-        var id = '{{ $id }}';
+        var companyId = '{{ $id }}';
         $.ajax({
             type: 'get',
             url: '{{ route('api.user.transaction.count') }}',
@@ -624,7 +621,7 @@
                 'Authorization': token
             },
             data: {
-                id: id
+                companyId: companyId
             },
             success: function (response) {
                 if (response.response > 0) {
@@ -640,7 +637,7 @@
                             'Authorization': token
                         },
                         data: {
-                            id: id
+                            id: companyId
                         },
                         success: function () {
                             toastr.success('Başarıyla Silindi');

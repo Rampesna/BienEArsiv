@@ -26,7 +26,7 @@
 
 <div id="loader"></div>
 
-<div class="d-flex flex-column flex-root">
+<div class="d-flex flex-column flex-root" id="rootDocument">
     <div class="page d-flex flex-row flex-column-fluid">
 
         @include('user.layouts.sidebar')
@@ -48,6 +48,7 @@
 
 <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
 <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+<script src="{{ asset('assets/js/jquery.touchSwipe.js') }}"></script>
 
 <script src="{{ asset('assets/js/custom.js') }}"></script>
 

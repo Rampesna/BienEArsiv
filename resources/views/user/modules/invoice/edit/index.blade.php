@@ -1,10 +1,10 @@
 @extends('user.layouts.master')
-@section('title', 'Yeni Fatura Oluştur | ')
+@section('title', 'Faturayı Düzenle | ')
 
 @section('subheader')
     <div id="kt_toolbar_container" class="container-fluid d-flex flex-stack">
         <div class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
-            <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Yeni Fatura Oluştur</h1>
+            <h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Faturayı Düzenle</h1>
         </div>
         <div class="d-flex align-items-center gap-2 gap-lg-3">
 
@@ -13,8 +13,6 @@
 @endsection
 
 @section('content')
-
-    @include('user.modules.invoice.create.modals.createInvoice')
 
     <div class="row">
         <div class="col-xl-3 mb-5">
@@ -29,10 +27,10 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="form-group">
-                                <label for="create_invoice_tax_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_tax_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>VKN/TCKN</span>
                                 </label>
-                                <input id="create_invoice_tax_number" type="text" class="form-control form-control-sm form-control-solid onlyNumber" maxlength="11" placeholder="VKN/TCKN">
+                                <input id="edit_invoice_tax_number" type="text" class="form-control form-control-sm form-control-solid onlyNumber" maxlength="11" placeholder="VKN/TCKN">
                             </div>
                         </div>
                     </div>
@@ -40,10 +38,10 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="form-group">
-                                <label for="create_invoice_company_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_company_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span class="required">Cari</span>
                                 </label>
-                                <select id="create_invoice_company_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Cari Seçin"></select>
+                                <select id="edit_invoice_company_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Cari Seçin"></select>
                             </div>
                         </div>
                     </div>
@@ -51,10 +49,10 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="form-group">
-                                <label for="create_invoice_type_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_type_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span class="required">Fatura Türü</span>
                                 </label>
-                                <select id="create_invoice_type_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fatura Türü" data-hide-search="true"></select>
+                                <select id="edit_invoice_type_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fatura Türü" data-hide-search="true"></select>
                             </div>
                         </div>
                     </div>
@@ -62,10 +60,10 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="form-group">
-                                <label for="create_invoice_company_statement_description" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_company_statement_description" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>Cari Ekstre Açıklama</span>
                                 </label>
-                                <input id="create_invoice_company_statement_description" type="text" class="form-control form-control-sm form-control-solid" placeholder="Cari Ekstre Açıklama">
+                                <input id="edit_invoice_company_statement_description" type="text" class="form-control form-control-sm form-control-solid" placeholder="Cari Ekstre Açıklama">
                             </div>
                         </div>
                     </div>
@@ -73,10 +71,10 @@
                     <div class="row">
                         <div class="col-xl-12">
                             <div class="form-group">
-                                <label for="create_invoice_datetime" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_datetime" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span class="required">Fatura Tarihi</span>
                                 </label>
-                                <input id="create_invoice_datetime" type="datetime-local" class="form-control form-control-sm form-control-solid">
+                                <input id="edit_invoice_datetime" type="datetime-local" class="form-control form-control-sm form-control-solid">
                             </div>
                         </div>
                     </div>
@@ -84,18 +82,18 @@
                     <div class="row">
                         <div class="col-xl-6 mb-8">
                             <div class="form-group">
-                                <label for="create_invoice_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>Fatura Numarası</span>
                                 </label>
-                                <input id="create_invoice_number" type="text" class="form-control form-control-sm form-control-solid onlyNumber" maxlength="9" data-placeholder="Fatura Numarası">
+                                <input id="edit_invoice_number" type="text" class="form-control form-control-sm form-control-solid onlyNumber" maxlength="9" data-placeholder="Fatura Numarası">
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="form-group">
-                                <label for="create_invoice_vat_included" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_vat_included" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>Fiyatlara KDV Dahil</span>
                                 </label>
-                                <select id="create_invoice_vat_included" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fiyatlara KDV Dahil">
+                                <select id="edit_invoice_vat_included" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fiyatlara KDV Dahil">
                                     <option value="0">Hayır</option>
                                     <option value="1">Evet</option>
                                 </select>
@@ -106,18 +104,18 @@
                     <div class="row">
                         <div class="col-xl-6 mb-8">
                             <div class="form-group">
-                                <label for="create_invoice_waybill_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_waybill_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>İrsaliye Numarası</span>
                                 </label>
-                                <input id="create_invoice_waybill_number" type="text" class="form-control form-control-sm form-control-solid" data-placeholder="Fatura Numarası">
+                                <input id="edit_invoice_waybill_number" type="text" class="form-control form-control-sm form-control-solid" data-placeholder="Fatura Numarası">
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="form-group">
-                                <label for="create_invoice_waybill_datetime" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_waybill_datetime" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>İrsaliye Tarihi</span>
                                 </label>
-                                <input id="create_invoice_waybill_datetime" type="datetime-local" class="form-control form-control-sm form-control-solid">
+                                <input id="edit_invoice_waybill_datetime" type="datetime-local" class="form-control form-control-sm form-control-solid">
                             </div>
                         </div>
                     </div>
@@ -125,18 +123,18 @@
                     <div class="row">
                         <div class="col-xl-6 mb-8">
                             <div class="form-group">
-                                <label for="create_invoice_order_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_order_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>Sipariş Numarası</span>
                                 </label>
-                                <input id="create_invoice_order_number" type="text" class="form-control form-control-sm form-control-solid" data-placeholder="Fatura Numarası">
+                                <input id="edit_invoice_order_number" type="text" class="form-control form-control-sm form-control-solid" data-placeholder="Fatura Numarası">
                             </div>
                         </div>
                         <div class="col-xl-6">
                             <div class="form-group">
-                                <label for="create_invoice_order_datetime" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                <label for="edit_invoice_order_datetime" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span>Sipariş Tarihi</span>
                                 </label>
-                                <input id="create_invoice_order_datetime" type="datetime-local" class="form-control form-control-sm form-control-solid">
+                                <input id="edit_invoice_order_datetime" type="datetime-local" class="form-control form-control-sm form-control-solid">
                             </div>
                         </div>
                     </div>
@@ -148,7 +146,7 @@
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-3 hideIfMobile">
+                            <div class="row mb-3">
                                 <div class="col-xl-12">
                                     <div class="row">
                                         <div class="col-xl-3">
@@ -264,9 +262,9 @@
 @endsection
 
 @section('customStyles')
-    @include('user.modules.invoice.create.components.style')
+    @include('user.modules.invoice.edit.components.style')
 @endsection
 
 @section('customScripts')
-    @include('user.modules.invoice.create.components.script')
+    @include('user.modules.invoice.edit.components.script')
 @endsection

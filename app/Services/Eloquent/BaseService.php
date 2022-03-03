@@ -20,6 +20,6 @@ class BaseService
 
     public function getById($id)
     {
-        return $this->model->find($id) ?? 404;
+        return $this->model->find($id);
     }
 }

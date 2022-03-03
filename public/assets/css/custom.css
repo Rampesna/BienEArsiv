@@ -24,3 +24,7 @@
     background: #23232b url('../../assets/media/gif/loader.gif') no-repeat center;
     z-index: 999;
 }
+
+.top-30 {
+    top: 30%;
+}

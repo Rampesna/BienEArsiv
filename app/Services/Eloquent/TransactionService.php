@@ -13,22 +13,76 @@ class TransactionService extends BaseService
 
     /**
      * @param int $customerId
+     * @param int|null $companyId
+     * @param int|null $typeId
+     * @param int|null $safeboxId
+     * @param int|null $direction
+     * @param string|null $datetimeStart
+     * @param string|null $datetimeEnd
+     * @param int|null $amountMin
+     * @param int|null $amountMax
      */
     public function all(
-        int $customerId
+        int    $customerId,
+        int    $companyId = null,
+        int    $typeId = null,
+        int    $safeboxId = null,
+        int    $direction = null,
+        string $datetimeStart = null,
+        string $datetimeEnd = null,
+        int    $amountMin = null,
+        int    $amountMax = null
     )
     {
-        return Transaction::where('customer_id', $customerId)->get();
+        $transactions = Transaction::with([
+            'type',
+            'company',
+            'safebox',
+        ])->where('customer_id', $customerId);
+
+        if ($companyId) {
+            $transactions->where('company_id', $companyId);
+        }
+
+        if ($typeId) {
+            $transactions->where('type_id', $typeId);
+        }
+
+        if ($safeboxId) {
+            $transactions->where('safebox_id', $safeboxId);
+        }
+
+        if ($direction) {
+            $transactions->where('direction', $direction);
+        }
+
+        if ($datetimeStart) {
+            $transactions->where('datetime', '>=', $datetimeStart);
+        }
+
+        if ($datetimeEnd) {
+            $transactions->where('datetime', '<=', $datetimeEnd);
+        }
+
+        if ($amountMin) {
+            $transactions->where('amount', '>=', $amountMin);
+        }
+
+        if ($amountMax) {
+            $transactions->where('amount', '<=', $amountMax);
+        }
+
+        return $transactions->get();
     }
 
     /**
-     * @param int $customerId
+     * @param int $companyId
      */
     public function count(
-        int $customerId
+        int $companyId
     )
     {
-        return Transaction::where('customer_id', $customerId)->count();
+        return Transaction::where('company_id', $companyId)->count();
     }
 
     /**

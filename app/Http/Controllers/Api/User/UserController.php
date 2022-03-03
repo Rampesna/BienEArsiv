@@ -41,9 +41,9 @@ class UserController extends Controller
     public function show(ShowRequest $request)
     {
         $user = $this->userService->getById($request->id);
-        return gettype($user) == 'integer' ?
-            $this->error('', $user) :
-            $this->success('User details', $user);
+        return !$user
+            ? $this->error('User not found', 404)
+            : $this->success('User details', $user);
     }
 
     public function updateTheme(UpdateThemeRequest $request)

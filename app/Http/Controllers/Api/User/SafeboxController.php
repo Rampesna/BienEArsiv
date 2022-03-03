@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\SafeboxController\AllRequest;
 use App\Http\Requests\Api\User\SafeboxController\IndexRequest;
 use App\Http\Requests\Api\User\SafeboxController\GetByIdRequest;
+use App\Http\Requests\Api\User\SafeboxController\GetTotalBalanceRequest;
 use App\Http\Requests\Api\User\SafeboxController\CreateRequest;
 use App\Services\Eloquent\SafeboxService;
 use App\Traits\Response;
@@ -42,9 +43,17 @@ class SafeboxController extends Controller
     public function getById(GetByIdRequest $request)
     {
         $safebox = $this->safeboxService->getById($request->id);
-        return $request->user()->customer_id == $safebox->customer_id
-            ? $this->success('Safebox details', $safebox)
-            : $this->error('Safebox not found', 404);
+        return !$safebox || $request->user()->customer_id == $safebox->customer_id
+            ? $this->error('Safebox not found', 404)
+            : $this->success('Safebox details', $safebox);
+    }
+
+    public function getTotalBalance(GetTotalBalanceRequest $request)
+    {
+        return $this->success('Total balance', $this->safeboxService->getTotalBalance(
+            $request->user()->customer_id,
+            $request->typeId
+        ));
     }
 
     public function create(CreateRequest $request)

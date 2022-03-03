@@ -18,7 +18,7 @@
 
     @include('user.modules.safebox.index.modals.createSafebox')
 
-    <div class="showIfMobile" style="display: none">
+    <div class="">
         <div class="row">
             <div class="col-xl-12 text-end">
                 <button class="btn btn-primary" onclick="createSafebox()">Yeni Kasa & Banka</button>
@@ -92,8 +92,8 @@
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
                             <th class="w-10px pe-2"></th>
                             <th class="min-w-200px">Hesap Adı</th>
-                            <th class="min-w-125px">Hesap Türü</th>
-                            <th class="min-w-125px text-end">Bakiye</th>
+                            <th class="">Hesap Türü</th>
+                            <th class="text-end">Bakiye</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600" id="safeboxes"></tbody>

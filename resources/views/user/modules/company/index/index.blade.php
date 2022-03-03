@@ -18,7 +18,7 @@
 
     @include('user.modules.company.index.modals.createCompany')
 
-    <div class="showIfMobile">
+    <div class="">
         <div class="row">
             <div class="col-xl-12 text-end">
                 <button class="btn btn-primary" onclick="createCompany()">Yeni Cari Oluştur</button>
@@ -109,11 +109,10 @@
                     <table class="table table-responsive align-middle table-row-dashed fs-6 gy-5">
                         <thead>
                         <tr class="text-start text-dark fw-bolder fs-7 gs-0">
-                            <th></th>
                             <th>Cari Bilgisi</th>
-                            <th>E-posta</th>
-                            <th>Telefon</th>
-                            <th>Bakiye</th>
+                            <th class="hideIfMobile">E-posta</th>
+                            <th class="hideIfMobile">Telefon</th>
+                            <th class="text-end">Bakiye</th>
                             <th class="text-end">İşlemler</th>
                         </tr>
                         </thead>
