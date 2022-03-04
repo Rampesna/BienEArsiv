@@ -154,7 +154,10 @@
     </div>
 
     <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-
+        <button class="btn btn-custom btn-primary w-100" id="SettingsModalButton">
+            <i class="fa fa-cog"></i>
+            <span class="btn-label">Ayarlar</span>
+        </button>
     </div>
 
 </div>

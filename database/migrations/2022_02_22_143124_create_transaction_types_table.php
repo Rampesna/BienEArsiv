@@ -17,6 +17,9 @@ return new class extends Migration {
             $table->string('name');
             $table->string('class');
             $table->boolean('direction');
+            $table->boolean('invoice');
+            $table->bigInteger('parent_id')->nullable();
+            $table->boolean('transaction_lock');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -352,6 +352,7 @@
                     safeboxId: null,
                     direction: 0,
                     amount: amount,
+                    locked: 0,
                 },
                 success: function () {
                     $('#NewCreditModal').modal('hide');
@@ -401,6 +402,7 @@
                     safeboxId: null,
                     direction: 1,
                     amount: amount,
+                    locked: 0,
                 },
                 success: function () {
                     $('#NewDebitModal').modal('hide');
@@ -453,6 +455,7 @@
                     safeboxId: safeboxId,
                     direction: 0,
                     amount: amount,
+                    locked: 0,
                 },
                 success: function () {
                     $('#NewCollectionModal').modal('hide');
@@ -505,6 +508,7 @@
                     safeboxId: safeboxId,
                     direction: 1,
                     amount: amount,
+                    locked: 0,
                 },
                 success: function () {
                     $('#NewPaymentModal').modal('hide');
@@ -627,26 +631,47 @@
                 if (response.response > 0) {
                     toastr.warning('İşlem Görmüş Cari Silinemez.');
                 } else {
-                    $('#loader').fadeIn(250);
-                    $('#DeleteCompanyModal').modal('hide');
                     $.ajax({
-                        type: 'delete',
-                        url: '{{ route('api.user.company.delete') }}',
+                        type: 'get',
+                        url: '{{ route('api.user.invoice.count') }}',
                         headers: {
                             'Accept': 'application/json',
                             'Authorization': token
                         },
                         data: {
-                            id: companyId
+                            companyId: companyId
                         },
-                        success: function () {
-                            toastr.success('Başarıyla Silindi');
-                            window.location.href = '{{ route('web.user.company.index') }}';
+                        success: function (response) {
+                            if (response.response > 0) {
+                                toastr.warning('İşlem Görmüş Cari Silinemez.');
+                            } else {
+                                $('#loader').fadeIn(250);
+                                $('#DeleteCompanyModal').modal('hide');
+                                $.ajax({
+                                    type: 'delete',
+                                    url: '{{ route('api.user.company.delete') }}',
+                                    headers: {
+                                        'Accept': 'application/json',
+                                        'Authorization': token
+                                    },
+                                    data: {
+                                        id: companyId
+                                    },
+                                    success: function () {
+                                        toastr.success('Başarıyla Silindi');
+                                        window.location.href = '{{ route('web.user.company.index') }}';
+                                    },
+                                    error: function (error) {
+                                        console.log(error);
+                                        toastr.error('Cari Silinirken Serviste Bir Hata Oluştu.');
+                                        $('#loader').fadeOut(250);
+                                    }
+                                });
+                            }
                         },
                         error: function (error) {
                             console.log(error);
                             toastr.error('Cari Silinirken Serviste Bir Hata Oluştu.');
-                            $('#loader').fadeOut(250);
                         }
                     });
                 }

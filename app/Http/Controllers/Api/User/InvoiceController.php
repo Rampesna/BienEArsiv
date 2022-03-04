@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\InvoiceController\IndexRequest;
+use App\Http\Requests\Api\User\InvoiceController\CountRequest;
 use App\Http\Requests\Api\User\InvoiceController\GetByIdRequest;
 use App\Http\Requests\Api\User\InvoiceController\CreateRequest;
 use App\Http\Requests\Api\User\InvoiceController\UpdateRequest;
@@ -32,6 +33,14 @@ class InvoiceController extends Controller
             $request->direction,
             $request->datetimeStart,
             $request->datetimeEnd
+        ));
+    }
+
+    public function count(CountRequest $request)
+    {
+        return $this->success('Invoices', $this->invoiceService->count(
+            $request->user()->customer_id,
+            $request->companyId
         ));
     }
 

@@ -143,6 +143,7 @@
                 id: id,
             },
             success: function (response) {
+                console.log(response);
                 $('#edit_invoice_tax_number').val(response.response.tax_number);
                 $('#edit_invoice_company_id').val(response.response.company_id).select2();
                 $('#edit_invoice_type_id').val(response.response.type_id).select2();
@@ -439,7 +440,10 @@
                         waybillNumber: waybillNumber,
                         waybillDatetime: waybillDatetime,
                         orderNumber: orderNumber,
-                        orderDatetime: orderDatetime
+                        orderDatetime: orderDatetime,
+                        price: $.sum($.map(editInvoiceProducts, function (product) {
+                            return (product.quantity * product.unitPrice) + (product.quantity * product.unitPrice * product.vatRate / 100);
+                        })),
                     };
 
                     $.ajax({

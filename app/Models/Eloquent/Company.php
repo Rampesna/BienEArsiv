@@ -19,4 +19,14 @@ class Company extends Model
         $transactions = Transaction::where('company_id', $this->id)->get();
         return $transactions->where('direction', 0)->sum('amount') - $transactions->where('direction', 1)->sum('amount');
     }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
+    public function province()
+    {
+        return $this->belongsTo(Province::class);
+    }
 }

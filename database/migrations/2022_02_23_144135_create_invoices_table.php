@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->string('tax_number')->nullable();
             $table->bigInteger('company_id')->unsigned();
             $table->tinyInteger('type_id')->unsigned();
+            $table->tinyInteger('status_id')->unsigned();
             $table->text('company_statement_description')->nullable();
             $table->dateTime('datetime');
             $table->string('number');
@@ -28,6 +29,7 @@ return new class extends Migration {
             $table->dateTime('order_datetime')->nullable();
             $table->text('description')->nullable();
             $table->decimal('price')->default(0);
+            $table->boolean('locked')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

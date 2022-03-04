@@ -76,6 +76,16 @@ class TransactionService extends BaseService
     }
 
     /**
+     * @param int $invoiceId
+     */
+    public function getByInvoiceId(
+        $invoiceId
+    )
+    {
+        return Transaction::where('invoice_id', $invoiceId)->get();
+    }
+
+    /**
      * @param int $companyId
      */
     public function count(
@@ -171,6 +181,7 @@ class TransactionService extends BaseService
      * @param int|null $safeboxId
      * @param int $direction
      * @param float $amount
+     * @param int $locked
      */
     public function create(
         $customerId,
@@ -182,7 +193,8 @@ class TransactionService extends BaseService
         $description,
         $safeboxId,
         $direction,
-        $amount
+        $amount,
+        $locked
     )
     {
         $transaction = new Transaction;
@@ -196,6 +208,7 @@ class TransactionService extends BaseService
         $transaction->safebox_id = $safeboxId;
         $transaction->direction = $direction;
         $transaction->amount = $amount;
+        $transaction->locked = $locked;
         $transaction->save();
 
         return $transaction;

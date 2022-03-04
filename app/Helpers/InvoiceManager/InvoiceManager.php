@@ -1,7 +1,12 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helpers\InvoiceManager;
 
+use App\Helpers\InvoiceManager\Exceptions\ApiException;
+use App\Helpers\InvoiceManager\Exceptions\NullDataException;
+use App\Helpers\InvoiceManager\Exceptions\TestEnvironmentException;
+use App\Helpers\InvoiceManager\Models\Invoice;
+use App\Helpers\InvoiceManager\Models\UserInformations;
 use GuzzleHttp\Client;
 use Ramsey\Uuid\Uuid;
 
@@ -58,7 +63,7 @@ class InvoiceManager
     /**
      * Current targeted invoice
      *
-     * @var furkankadioglu\eFatura\Models\Invoice
+     * @var Invoice
      */
     protected $invoice;
 
@@ -79,14 +84,14 @@ class InvoiceManager
     /**
      * Invoices
      *
-     * @var array furkankadioglu\eFatura\Models\Invoice
+     * @var array Invoice
      */
     protected $invoices = [];
 
     /**
      * User Informations
      *
-     * @var furkankadioglu\eFatura\Models\UserInformations
+     * @var UserInformations
      */
     protected $userInformations;
 
@@ -129,7 +134,7 @@ class InvoiceManager
      * Setter function for username
      *
      * @param string $username
-     * @return furkankadioglu\eFatura\InvoiceManager
+     * @return InvoiceManager
      */
     public function setUsername($username)
     {
@@ -141,7 +146,7 @@ class InvoiceManager
      * Set a debug mode
      *
      * @param boolean $status
-     * @return furkankadioglu\eFatura\InvoiceManager
+     * @return InvoiceManager
      */
     public function setDebugMode($status)
     {
@@ -153,7 +158,7 @@ class InvoiceManager
      * Setter function for password
      *
      * @param string $password
-     * @return furkankadioglu\eFatura\InvoiceManager
+     * @return InvoiceManager
      */
     public function setPassword($password)
     {
@@ -193,7 +198,7 @@ class InvoiceManager
      *
      * @param string $username
      * @param string $password
-     * @return furkankadioglu\eFatura\InvoiceManager
+     * @return InvoiceManager
      */
     public function setCredentials($username, $password)
     {
@@ -206,7 +211,7 @@ class InvoiceManager
      * Setter function for token
      *
      * @param string $token
-     * @return furkankadioglu\eFatura\InvoiceManager
+     * @return InvoiceManager
      */
     public function setToken($token)
     {
@@ -218,7 +223,7 @@ class InvoiceManager
      * Getter function for token
      *
      * @param string $token
-     * @return furkankadioglu\eFatura\InvoiceManager
+     * @return InvoiceManager
      */
     public function getToken($token)
     {
@@ -228,7 +233,7 @@ class InvoiceManager
     /**
      * Connect with credentials
      *
-     * @return furkankadioglu\eFatura\InvoiceManager
+     * @return InvoiceManager
      */
     public function connect()
     {
@@ -339,7 +344,7 @@ class InvoiceManager
      * Setter function for invoice
      *
      * @param Invoice $invoice
-     * @return furkankadioglu\eFatura\InvoiceManager
+     * @return InvoiceManager
      */
     public function setInvoice(Invoice $invoice)
     {
@@ -350,7 +355,7 @@ class InvoiceManager
     /**
      * Getter function for invoice
      *
-     * @return furkankadioglu\eFatura\Models\Invoice
+     * @return Invoice
      */
     public function getInvoice()
     {
@@ -360,7 +365,7 @@ class InvoiceManager
     /**
      * Getter function for invoices
      *
-     * @return array furkankadioglu\eFatura\Models\Invoice
+     * @return array Invoice
      */
     public function getInvoices()
     {
@@ -462,7 +467,7 @@ class InvoiceManager
      * Create draft basic invoice
      *
      * @param Invoice $invoice
-     * @return furkankadioglu\eFatura\Models\Invoice
+     * @return Invoice
      */
     public function createDraftBasicInvoice(Invoice $invoice = null)
     {
@@ -622,7 +627,7 @@ class InvoiceManager
      *
      * @param Invoice $invoice
      * @param boolean $signed
-     * @return string
+
      */
     public function getDownloadURL(Invoice $invoice = null, $signed = true)
     {
@@ -642,8 +647,8 @@ class InvoiceManager
     /**
      * Set invoice manager user informations
      *
-     * @param furkankadioglu\eFatura\Models\UserInformations $userInformations
-     * @return furkankadioglu\eFatura\Models\Invoice
+     * @param UserInformations $userInformations
+     * @return Invoice
      */
     public function setUserInformations(UserInformations $userInformations)
     {
@@ -654,7 +659,7 @@ class InvoiceManager
     /**
      * Get invoice manager user informations
      *
-     * @return furkankadioglu\eFatura\Models\UserInformations
+     * @return UserInformations
      */
     public function getUserInformations()
     {
@@ -664,7 +669,7 @@ class InvoiceManager
     /**
      * Get user informations data
      *
-     * @return furkankadioglu\eFatura\Models\UserInformations
+     * @return UserInformations
      */
     public function getUserInformationsData()
     {
@@ -676,11 +681,11 @@ class InvoiceManager
             "jp" => "{}",
         ];
 
-        return $body = $this->sendRequestAndGetBody(self::DISPATCH_PATH, $parameters);
-//        $this->checkError($body);
-//
-//        $userInformations = new UserInformations($body["data"]);
-//        return $this->userInformations = $userInformations;
+        $body = $this->sendRequestAndGetBody(self::DISPATCH_PATH, $parameters);
+        $this->checkError($body);
+
+        $userInformations = new UserInformations($body["data"]);
+        return $this->userInformations = $userInformations;
     }
 
     /**

@@ -28,6 +28,7 @@ class CreateRequest extends BaseApiRequest
             'typeId' => 'required',
             'direction' => 'required',
             'amount' => 'required',
+            'locked' => 'required',
         ];
     }
 }

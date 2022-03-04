@@ -52,7 +52,7 @@
                                 <label for="edit_invoice_type_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span class="required">Fatura Türü</span>
                                 </label>
-                                <select id="edit_invoice_type_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fatura Türü" data-hide-search="true"></select>
+                                <select id="edit_invoice_type_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fatura Türü" data-hide-search="true" disabled></select>
                             </div>
                         </div>
                     </div>

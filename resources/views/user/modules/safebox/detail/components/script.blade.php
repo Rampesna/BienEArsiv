@@ -101,8 +101,10 @@
                             ${transaction.amount} ₺
                         </td>
                         <td class="text-end">
+                            ${parseInt(transaction.locked) === 0 ? `
                             <button class="btn btn-icon btn-sm btn-primary" title="Düzenle"><i class="fas fa-edit"></i></button>
                             <button class="btn btn-icon btn-sm btn-danger" title="Mutabakat"><i class="fas fa-trash-alt"></i></button>
+                            ` : ``}
                         </td>
                     </tr>
                     `);
@@ -188,6 +190,7 @@
                     safeboxId: safeboxId,
                     direction: 0,
                     amount: amount,
+                    locked: 0,
                 },
                 success: function () {
                     $('#NewEarnModal').modal('hide');
@@ -237,6 +240,7 @@
                     safeboxId: safeboxId,
                     direction: 1,
                     amount: amount,
+                    locked: 0,
                 },
                 success: function () {
                     $('#NewExpenseModal').modal('hide');

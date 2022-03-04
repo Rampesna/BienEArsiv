@@ -117,7 +117,8 @@ class TransactionController extends Controller
             $request->description,
             $request->safeboxId,
             $request->direction,
-            $request->amount
+            $request->amount,
+            $request->locked
         ));
     }
 }

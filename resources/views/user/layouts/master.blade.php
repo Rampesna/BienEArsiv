@@ -26,6 +26,8 @@
 
 <div id="loader"></div>
 
+@include('user.layouts.modals.settings')
+
 <div class="d-flex flex-column flex-root" id="rootDocument">
     <div class="page d-flex flex-row flex-column-fluid">
 
@@ -56,6 +58,7 @@
 
     var token = 'Bearer {{ auth()->user()->apiToken() }}';
     var toggleDarkTheme = $('#toggleDarkTheme');
+    var SettingsModalButton = $('#SettingsModalButton');
 
     toggleDarkTheme.change(function () {
         $('#loader').fadeIn(250);
@@ -79,6 +82,10 @@
                 $('#loader').fadeOut(250);
             }
         });
+    });
+
+    SettingsModalButton.click(function () {
+        $('#SettingsModal').modal('show');
     });
 
 </script>

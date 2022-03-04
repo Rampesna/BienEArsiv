@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->bigInteger('safebox_id')->unsigned()->nullable();
             $table->boolean('direction');
             $table->double('amount')->unsigned();
+            $table->boolean('locked')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

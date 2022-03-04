@@ -8,7 +8,7 @@ class InvoiceProductService extends BaseService
 {
     public function __construct()
     {
-        parent::__construct(new InvoiceProduct());
+        parent::__construct(new InvoiceProduct);
     }
 
     /**
@@ -18,7 +18,9 @@ class InvoiceProductService extends BaseService
         $invoiceId
     )
     {
-        return InvoiceProduct::where('invoice_id', $invoiceId)->get();
+        return InvoiceProduct::with([
+            'product'
+        ])->where('invoice_id', $invoiceId)->get();
     }
 
     /**

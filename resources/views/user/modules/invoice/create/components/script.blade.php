@@ -434,6 +434,33 @@
                     });
                 });
 
+                $.ajax({
+                    type: 'post',
+                    url: '{{ route('api.user.transaction.create') }}',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {
+                        companyId: newInvoice.companyId,
+                        invoiceId: response.response.id,
+                        datetime: reformatDatetime(newInvoice.datetime),
+                        typeId: newInvoice.typeId,
+                        direction: newInvoice.direction === 1 ? 0 : 1,
+                        description: `${response.response.id} Numaralı Faturaya Ait Tahsilat Makbuzu`,
+                        amount: $.sum($.map(newInvoiceProducts, function (product) {
+                            return (product.quantity * product.unitPrice) + (product.quantity * product.unitPrice * product.vatRate / 100);
+                        })),
+                        safeboxId: null,
+                        locked: 1,
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        toastr.error('Tahsilat Makbuzu Oluşturulurken Serviste Bir Hata Oluştu!');
+                        return false;
+                    }
+                });
+
                 if (createTransaction === 1) {
                     $.ajax({
                         type: 'post',
@@ -444,13 +471,16 @@
                         },
                         data: {
                             companyId: newInvoice.companyId,
+                            invoiceId: response.response.id,
                             datetime: reformatDatetime(transactionDatetime),
                             typeId: newInvoice.parentTypeId,
                             direction: newInvoice.direction,
+                            description: `${response.response.id} Numaralı Faturaya Ait Tahsilat Makbuzu`,
                             amount: $.sum($.map(newInvoiceProducts, function (product) {
                                 return (product.quantity * product.unitPrice) + (product.quantity * product.unitPrice * product.vatRate / 100);
                             })),
                             safeboxId: transactionSafeboxId,
+                            locked: 1,
                         },
                         error: function (error) {
                             console.log(error);

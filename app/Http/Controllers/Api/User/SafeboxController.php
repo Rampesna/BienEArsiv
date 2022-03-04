@@ -43,7 +43,7 @@ class SafeboxController extends Controller
     public function getById(GetByIdRequest $request)
     {
         $safebox = $this->safeboxService->getById($request->id);
-        return !$safebox || $request->user()->customer_id == $safebox->customer_id
+        return !$safebox || $request->user()->customer_id != $safebox->customer_id
             ? $this->error('Safebox not found', 404)
             : $this->success('Safebox details', $safebox);
     }

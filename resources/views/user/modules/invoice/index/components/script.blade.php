@@ -81,9 +81,9 @@
                     <tr>
                         <td>
                             ${icon}
-                            ${reformatInvoiceNumber(invoice.datetime, invoice.number)}
-                            <br>
-                            ${invoice.type ? `<span class="badge badge-light-${invoice.type.class} ms-9">${invoice.type.name}</span>` : ``}
+                            <span class="ms-1">${reformatInvoiceNumber(invoice.datetime, invoice.number)}</span>
+                            ${invoice.type ? `<br><span class="badge badge-light-${invoice.type.class} ms-9 mb-3">${invoice.type.name}</span>` : ``}
+                            ${invoice.status ? `<br><span class="badge badge-light-${invoice.status.class} ms-9">${invoice.status.name}</span>` : ``}
                         </td>
                         <td class="hideIfMobile">
                             ${invoice.datetime ?? ``}
@@ -92,8 +92,15 @@
                             ${reformatNumberToMoney(invoice.price ?? 0)} ₺
                         </td>
                         <td class="text-end">
-                            <a href="${editRoute}/${invoice.id}" class="btn btn-icon btn-sm btn-primary" title="Düzenle"><i class="fas fa-edit"></i></a>
-                            <a onclick="deleteInvoice(${invoice.id})" class="btn btn-icon btn-sm btn-danger" title="Mutabakat"><i class="fas fa-trash-alt"></i></a>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-icon btn-sm" type="button" id="Invoice_${invoice.id}_Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="Invoice_${invoice.id}_Dropdown" style="width: 175px">
+                                    <a class="dropdown-item cursor-pointer mb-2 py-3 ps-6" href="${editRoute}/${invoice.id}" title="Düzenle"><i class="fas fa-edit me-2 text-primary"></i> <span class="text-dark">Düzenle</span></a>
+                                    <a class="dropdown-item cursor-pointer py-3 ps-6" onclick="deleteInvoice(${invoice.id})" title="Düzenle"><i class="fas fa-trash-alt me-3 text-danger"></i> <span class="text-dark">Sil</span></a>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     `);

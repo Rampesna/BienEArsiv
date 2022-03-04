@@ -14,13 +14,100 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('test', function () {
-    $client = new \App\Helpers\InvoiceManager();
-    $client->setDebugMode(true)->setTestCredentials();
-    $client->connect();
+    $invoice = (new \App\Services\Eloquent\InvoiceService)->getByIdWith(1);
+    $invoiceProducts = (new \App\Services\Eloquent\InvoiceProductService)->getByInvoiceId(1);
 
-    return $client->getInvoicesFromAPI('01/01/2022', '02/01/2022');
+    $eInvoice = [
+        "belgeNumarasi" => "", // Zorunlu değil
+        "faturaTarihi" => date('d/m/Y', strtotime($invoice->datetime)), // Zorunlu değil
+        "saat" => date('H:i:s', strtotime($invoice->datetime)),
+        "paraBirimi" => "TRY",
+        "dovzTLkur" => "0",
+        "faturaTipi" => "SATIS",
+        "hangiTip" => "5000/30000",
+        "vknTckn" => "11111111111",
+        "aliciUnvan" => $invoice->company->title,
+        "aliciAdi" => $invoice->company->manager_name,
+        "aliciSoyadi" => $invoice->company->manager_surname,
+        "binaAdi" => "", // Zorunlu değil
+        "binaNo" => "", // Zorunlu değil
+        "kapiNo" => "", // Zorunlu değil
+        "kasabaKoy" => "", // Zorunlu değil
+        "vergiDairesi" => $invoice->company->tax_office,
+        "ulke" => $invoice->company->country?->name,
+        "bulvarcaddesokak" => $invoice->company->address,
+        "mahalleSemtIlce" => "", // Zorunlu değil
+        "sehir" => $invoice->company->province?->name,
+        "postaKodu" => $invoice->company->post_code, // Zorunlu değil
+        "tel" => $invoice->company->phone, // Zorunlu değil
+        "fax" => "", // Zorunlu değil
+        "eposta" => $invoice->company->email, // Zorunlu değil
+        "websitesi" => "", // Zorunlu değil
+        "iadeTable" => [], // Zorunlu değil
+        "ozelMatrahTutari" => "0", // Zorunlu değil
+        "ozelMatrahOrani" => 0, // Zorunlu değil
+        "ozelMatrahVergiTutari" => "0", // Zorunlu değil
+        "vergiCesidi" => " ", // Zorunlu değil
+        "tip" => "İskonto",
+        "matrah" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return $invoiceProduct->quantity * $invoiceProduct->unit_price;
+        })->toArray()),
+        "malhizmetToplamTutari" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return $invoiceProduct->quantity * $invoiceProduct->unit_price;
+        })->toArray()),
+        "toplamIskonto" => "0",
+        "hesaplanankdv" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate;
+        })->toArray()),
+        "vergilerToplami" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate;
+        })->toArray()),
+        "vergilerDahilToplamTutar" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate);
+        })->toArray()),
+        "odenecekTutar" => 118,
+        "not" => "", // Zorunlu değil
+        "siparisNumarasi" => "", // Zorunlu değil
+        "siparisTarihi" => "", // Zorunlu değil
+        "irsaliyeNumarasi" => "", // Zorunlu değil
+        "irsaliyeTarihi" => "", // Zorunlu değil
+        "fisNo" => "", // Zorunlu değil
+        "fisTarihi" => "", // Zorunlu değil
+        "fisSaati" => " ", // Zorunlu değil
+        "fisTipi" => " ", // Zorunlu değil
+        "zRaporNo" => "", // Zorunlu değil
+        "okcSeriNo" => "", // Zorunlu değil
+        "malHizmetTable" => $invoiceProducts->map(function ($invoiceProduct) {
+            return [
+                "malHizmet" => $invoiceProduct->product->name,
+                "miktar" => $invoiceProduct->quantity,
+                "birim" => $invoiceProduct->unit->name,
+                "birimFiyat" => $invoiceProduct->unit_price,
+                "fiyat" => $invoiceProduct->quantity * $invoiceProduct->unit_price,
+                "iskontoOrani" => 0,
+                "iskontoTutari" => "0",
+                "iskontoNedeni" => "",
+                "malHizmetTutari" => ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate),
+                "kdvOrani" => $invoiceProduct->vat_rate,
+                "vergiOrani" => 0,
+                "kdvTutari" => $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate,
+                "vergininKdvTutari" => "0",
+                "ozelMatrahTutari" => "0", //zorunlu
+            ];
+        })->toArray()
+    ];
 
-    return $client->getUserInformationsData();
+    $inv = new \App\Helpers\InvoiceManager\Models\Invoice;
+    $inv->mapWithTurkishKeys($eInvoice);
+
+//    return dd($inv);
+
+    $client = new App\Helpers\InvoiceManager\InvoiceManager;
+    $client->setDebugMode(true)->setTestCredentials()->connect()->setInvoice($inv)->createDraftBasicInvoice();
+
+    return $client->getInvoicesFromAPI('04/03/2022','04/03/2022');
+
+
 });
 
 Route::get('login', function () {
@@ -82,4 +169,11 @@ Route::middleware([
         Route::get('index', [\App\Http\Controllers\Web\User\ReportController::class, 'index'])->name('web.user.report.index');
     });
 
+    Route::prefix('setting')->group(function () {
+        Route::get('customer', [\App\Http\Controllers\Web\User\SettingController::class, 'customer'])->name('web.user.setting.customer');
+        Route::get('customerUnit', [\App\Http\Controllers\Web\User\SettingController::class, 'customerUnit'])->name('web.user.setting.customerUnit');
+        Route::get('stampAndLogo', [\App\Http\Controllers\Web\User\SettingController::class, 'stampAndLogo'])->name('web.user.setting.stampAndLogo');
+        Route::get('transactionCategory', [\App\Http\Controllers\Web\User\SettingController::class, 'transactionCategory'])->name('web.user.setting.transactionCategory');
+        Route::get('user', [\App\Http\Controllers\Web\User\SettingController::class, 'user'])->name('web.user.setting.user');
+    });
 });

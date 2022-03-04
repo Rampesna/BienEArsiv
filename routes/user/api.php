@@ -91,6 +91,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('invoice')->group(function () {
         Route::get('index', [\App\Http\Controllers\Api\User\InvoiceController::class, 'index'])->name('api.user.invoice.index');
+        Route::get('count', [\App\Http\Controllers\Api\User\InvoiceController::class, 'count'])->name('api.user.invoice.count');
         Route::get('getById', [\App\Http\Controllers\Api\User\InvoiceController::class, 'getById'])->name('api.user.invoice.getById');
         Route::post('create', [\App\Http\Controllers\Api\User\InvoiceController::class, 'create'])->name('api.user.invoice.create');
         Route::put('update', [\App\Http\Controllers\Api\User\InvoiceController::class, 'update'])->name('api.user.invoice.update');

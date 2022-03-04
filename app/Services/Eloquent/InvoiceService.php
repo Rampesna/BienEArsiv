@@ -12,6 +12,20 @@ class InvoiceService extends BaseService
     }
 
     /**
+     * @param int $id
+     */
+    public function getByIdWith(
+        $id
+    )
+    {
+        return Invoice::with([
+            'type',
+            'status',
+            'company'
+        ])->find($id);
+    }
+
+    /**
      * @param int $customerId
      * @param int $pageIndex
      * @param int $pageSize
@@ -34,6 +48,7 @@ class InvoiceService extends BaseService
     {
         $invoices = Invoice::with([
             'type',
+            'status',
             'company'
         ])->where('customer_id', $customerId);
 
@@ -63,6 +78,16 @@ class InvoiceService extends BaseService
             'pageSize' => $pageSize,
             'invoices' => $invoices->orderBy('created_at', 'desc')->skip($pageIndex * $pageSize)->take($pageSize)->get(),
         ];
+    }
+
+    /**
+     * @param int $companyId
+     */
+    public function count(
+        $companyId
+    )
+    {
+        return Invoice::where('company_id', $companyId)->count();
     }
 
     /**
@@ -163,6 +188,11 @@ class InvoiceService extends BaseService
         $invoice->order_datetime = $orderDatetime;
         $invoice->price = $price;
         $invoice->save();
+
+        (new TransactionService)->getByInvoiceId($id)->map(function ($transaction) use ($invoice) {
+            $transaction->amount = $invoice->price;
+            $transaction->save();
+        });
 
         return $invoice;
     }
