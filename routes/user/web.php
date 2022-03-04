@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('test', function () {
+    $client = new \App\Helpers\InvoiceManager();
+    $client->setDebugMode(true)->setTestCredentials();
+    $client->connect();
+
+    return $client->getInvoicesFromAPI('01/01/2022', '02/01/2022');
+
+    return $client->getUserInformationsData();
+});
+
 Route::get('login', function () {
     return redirect()->route('web.user.authentication.login');
 })->name('login');

@@ -280,7 +280,7 @@
         var companyStatementDescription = $('#create_invoice_company_statement_description').val();
         var datetime = $('#create_invoice_datetime').val();
         var number = $('#create_invoice_number').val();
-        var vatIncluded = $('#create_invoice_vat_included').is(':checked');
+        var vatIncluded = $('#create_invoice_vat_included').is(':checked') ? 1 : 0;
         var waybillNumber = $('#create_invoice_waybill_number').val();
         var waybillDatetime = $('#create_invoice_waybill_datetime').val();
         var orderNumber = $('#create_invoice_order_number').val();

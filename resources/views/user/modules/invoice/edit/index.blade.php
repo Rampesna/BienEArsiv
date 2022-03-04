@@ -20,7 +20,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-12 d-grid">
-                            <button class="btn btn-sm btn-success" id="CreateButton">Kaydet</button>
+                            <button class="btn btn-sm btn-success" id="UpdateInvoiceButton">Güncelle</button>
                         </div>
                     </div>
                     <hr class="text-muted">

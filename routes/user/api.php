@@ -93,9 +93,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('index', [\App\Http\Controllers\Api\User\InvoiceController::class, 'index'])->name('api.user.invoice.index');
         Route::get('getById', [\App\Http\Controllers\Api\User\InvoiceController::class, 'getById'])->name('api.user.invoice.getById');
         Route::post('create', [\App\Http\Controllers\Api\User\InvoiceController::class, 'create'])->name('api.user.invoice.create');
+        Route::put('update', [\App\Http\Controllers\Api\User\InvoiceController::class, 'update'])->name('api.user.invoice.update');
     });
 
     Route::prefix('invoiceProduct')->group(function () {
+        Route::get('getByInvoiceId', [\App\Http\Controllers\Api\User\InvoiceProductController::class, 'getByInvoiceId'])->name('api.user.invoiceProduct.getByInvoiceId');
         Route::post('create', [\App\Http\Controllers\Api\User\InvoiceProductController::class, 'create'])->name('api.user.invoiceProduct.create');
+        Route::put('update', [\App\Http\Controllers\Api\User\InvoiceProductController::class, 'update'])->name('api.user.invoiceProduct.update');
     });
 });

@@ -116,6 +116,58 @@ class InvoiceService extends BaseService
     }
 
     /**
+     * @param int $id
+     * @param int $customerId
+     * @param string|null $taxNumber
+     * @param int $companyId
+     * @param int $typeId
+     * @param string|null $companyStatementDescription
+     * @param string $datetime
+     * @param string|null $number
+     * @param int $vatIncluded
+     * @param string|null $waybillNumber
+     * @param string|null $waybillDatetime
+     * @param string|null $orderDatetime
+     * @param string|null $orderDatetime
+     * @param float|null $price
+     */
+    public function update(
+        $id,
+        $customerId,
+        $taxNumber,
+        $companyId,
+        $typeId,
+        $companyStatementDescription,
+        $datetime,
+        $number,
+        $vatIncluded,
+        $waybillNumber,
+        $waybillDatetime,
+        $orderNumber,
+        $orderDatetime,
+        $price
+    )
+    {
+        $invoice = Invoice::find($id);
+        $invoice->customer_id = $customerId;
+        $invoice->tax_number = $taxNumber;
+        $invoice->company_id = $companyId;
+        $invoice->type_id = $typeId;
+        $invoice->company_statement_description = $companyStatementDescription;
+        $invoice->datetime = $datetime;
+        $invoice->number = $number;
+        $invoice->vat_included = $vatIncluded;
+        $invoice->waybill_number = $waybillNumber;
+        $invoice->waybill_datetime = $waybillDatetime;
+        $invoice->order_number = $orderNumber;
+        $invoice->order_datetime = $orderDatetime;
+        $invoice->price = $price;
+        $invoice->save();
+
+        return $invoice;
+    }
+
+    /**
      * @param int $customerId
      */
     public function getNextInvoiceNumber(

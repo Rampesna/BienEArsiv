@@ -143,7 +143,7 @@ function checkScreen() {
 
         $('#kt_body').swipe({
             swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
-                if (detectMobile()) {
+                if (detectMobile() && distance > 150) {
                     if (direction === 'right') {
                         $('#kt_aside_mobile_toggle').trigger('click');
                     }
