@@ -17,6 +17,8 @@
     @include('user.modules.product.index.components.contextMenu')
 
     @include('user.modules.product.index.modals.createProduct')
+    @include('user.modules.product.index.modals.updateProduct')
+    @include('user.modules.product.index.modals.deleteProduct')
 
     <div class="">
         <div class="row">

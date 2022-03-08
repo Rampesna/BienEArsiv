@@ -98,4 +98,45 @@ class ProductService extends BaseService
 
         return $product;
     }
+
+    /**
+     * @param int $id
+     * @param int $customerId
+     * @param string $code
+     * @param string $name
+     * @param int $unitId
+     * @param double $price
+     * @param double $vatRate
+     */
+    public function update(
+        $id,
+        $customerId,
+        $code,
+        $name,
+        $unitId,
+        $price,
+        $vatRate
+    )
+    {
+        $product = Product::find($id);
+        $product->customer_id = $customerId;
+        $product->code = $code;
+        $product->name = $name;
+        $product->unit_id = $unitId;
+        $product->price = $price;
+        $product->vat_Rate = $vatRate;
+        $product->save();
+
+        return $product;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function delete(
+        $id
+    )
+    {
+        return Product::find($id)->delete();
+    }
 }

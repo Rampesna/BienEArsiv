@@ -142,10 +142,6 @@
                         <td class="text-end">
                             ${reformatNumberToMoney(transaction.amount)} ₺
                         </td>
-                        <td class="text-end">
-                            <button class="btn btn-icon btn-sm btn-primary" title="Düzenle"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-icon btn-sm btn-danger" title="Mutabakat"><i class="fas fa-trash-alt"></i></button>
-                        </td>
                     </tr>
                     `);
                 });

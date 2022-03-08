@@ -4,7 +4,8 @@
 
     var LoginButton = $('#LoginButton');
 
-    LoginButton.click(function () {
+    function login() {
+        LoginButton.attr('disabled', true);
         var email = $('#email').val();
         var password = $('#password').val();
 
@@ -36,6 +37,17 @@
                 }
             });
         }
+    }
+
+    $("#password").on('keydown', function (e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) {
+            login();
+        }
+    });
+
+    LoginButton.click(function () {
+        login();
     });
 
 </script>

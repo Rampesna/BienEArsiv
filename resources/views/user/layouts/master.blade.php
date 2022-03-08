@@ -26,7 +26,12 @@
 
 <div id="loader"></div>
 
-@include('user.layouts.modals.settings')
+@include('user.layouts.modals.quickActions')
+@include('user.layouts.modals.quickActionsNewCompany')
+@include('user.layouts.modals.quickActionsNewPayment')
+@include('user.layouts.modals.quickActionsNewCollection')
+@include('user.layouts.modals.quickActionsNewEarn')
+@include('user.layouts.modals.quickActionsNewExpense')
 
 <div class="d-flex flex-column flex-root" id="rootDocument">
     <div class="page d-flex flex-row flex-column-fluid">
@@ -58,7 +63,25 @@
 
     var token = 'Bearer {{ auth()->user()->apiToken() }}';
     var toggleDarkTheme = $('#toggleDarkTheme');
-    var SettingsModalButton = $('#SettingsModalButton');
+    var QuickActionsButton = $('#QuickActionsButton');
+
+    var quick_actions_new_payment_company_id = $('#quick_actions_new_payment_company_id');
+    var quick_actions_new_payment_safebox_id = $('#quick_actions_new_payment_safebox_id');
+
+    var quick_actions_new_collection_company_id = $('#quick_actions_new_collection_company_id');
+    var quick_actions_new_collection_safebox_id = $('#quick_actions_new_collection_safebox_id');
+
+    var quick_actions_new_earn_safebox_id = $('#quick_actions_new_earn_safebox_id');
+    var quick_actions_new_earn_category_id = $('#quick_actions_new_earn_category_id');
+
+    var quick_actions_new_expense_safebox_id = $('#quick_actions_new_expense_safebox_id');
+    var quick_actions_new_expense_category_id = $('#quick_actions_new_expense_category_id');
+
+    var QuickActionsNewCompanyButton = $('#QuickActionsNewCompanyButton');
+    var QuickActionsNewPaymentButton = $('#QuickActionsNewPaymentButton');
+    var QuickActionsNewCollectionButton = $('#QuickActionsNewCollectionButton');
+    var QuickActionsNewEarnButton = $('#QuickActionsNewEarnButton');
+    var QuickActionsNewExpenseButton = $('#QuickActionsNewExpenseButton');
 
     toggleDarkTheme.change(function () {
         $('#loader').fadeIn(250);
@@ -84,8 +107,483 @@
         });
     });
 
-    SettingsModalButton.click(function () {
-        $('#SettingsModal').modal('show');
+    QuickActionsButton.click(function () {
+        $('#QuickActionsModal').modal('show');
+    });
+
+    function quickActionsNewCompany() {
+        $('#QuickActionsModal').modal('hide');
+        $('#QuickActionsNewCompanyModal').modal('show');
+    }
+
+    function quickActionsNewPayment() {
+        $('#QuickActionsModal').modal('hide');
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.company.all') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                quick_actions_new_payment_company_id.empty();
+                $.each(response.response, function (i, company) {
+                    quick_actions_new_payment_company_id.append($('<option>', {
+                        value: company.id,
+                        text: company.title
+                    }));
+                });
+                quick_actions_new_payment_company_id.val('').select2();
+                $.ajax({
+                    type: 'get',
+                    url: '{{ route('api.user.safebox.all') }}',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {},
+                    success: function (response) {
+                        quick_actions_new_payment_safebox_id.empty();
+                        $.each(response.response, function (i, safebox) {
+                            quick_actions_new_payment_safebox_id.append($('<option>', {
+                                value: safebox.id,
+                                text: safebox.name
+                            }));
+                        });
+                        quick_actions_new_payment_safebox_id.val('').select2();
+                        $('#QuickActionsNewPaymentModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        toastr.error('Kasa & Banka Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Cari Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+            }
+        });
+    }
+
+    function quickActionsNewCollection() {
+        $('#QuickActionsModal').modal('hide');
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.company.all') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                quick_actions_new_collection_company_id.empty();
+                $.each(response.response, function (i, company) {
+                    quick_actions_new_collection_company_id.append($('<option>', {
+                        value: company.id,
+                        text: company.title
+                    }));
+                });
+                quick_actions_new_collection_company_id.val('').select2();
+                $.ajax({
+                    type: 'get',
+                    url: '{{ route('api.user.safebox.all') }}',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {},
+                    success: function (response) {
+                        quick_actions_new_collection_safebox_id.empty();
+                        $.each(response.response, function (i, safebox) {
+                            quick_actions_new_collection_safebox_id.append($('<option>', {
+                                value: safebox.id,
+                                text: safebox.name
+                            }));
+                        });
+                        quick_actions_new_collection_safebox_id.val('').select2();
+                        $('#QuickActionsNewCollectionModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        toastr.error('Kasa & Banka Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Cari Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+            }
+        });
+    }
+
+    function quickActionsNewEarn() {
+        $('#QuickActionsModal').modal('hide');
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.safebox.all') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                quick_actions_new_earn_safebox_id.empty();
+                $.each(response.response, function (i, safebox) {
+                    quick_actions_new_earn_safebox_id.append($('<option>', {
+                        value: safebox.id,
+                        text: safebox.name
+                    }));
+                });
+                quick_actions_new_earn_safebox_id.val('').select2();
+                $.ajax({
+                    type: 'get',
+                    url: '{{ route('api.user.customerTransactionCategory.all') }}',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {},
+                    success: function (response) {
+                        quick_actions_new_earn_category_id.empty();
+                        $.each(response.response, function (i, category) {
+                            quick_actions_new_earn_category_id.append($('<option>', {
+                                value: category.id,
+                                text: category.name
+                            }));
+                        });
+                        quick_actions_new_earn_category_id.val('').select2();
+                        $('#QuickActionsNewEarnModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        toastr.error('Gelir & Gider Kategori Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Kasa & Banka Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+            }
+        });
+    }
+
+    function quickActionsNewExpense() {
+        $('#QuickActionsModal').modal('hide');
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.safebox.all') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                quick_actions_new_expense_safebox_id.empty();
+                $.each(response.response, function (i, safebox) {
+                    quick_actions_new_expense_safebox_id.append($('<option>', {
+                        value: safebox.id,
+                        text: safebox.name
+                    }));
+                });
+                quick_actions_new_expense_safebox_id.val('').select2();
+                $.ajax({
+                    type: 'get',
+                    url: '{{ route('api.user.customerTransactionCategory.all') }}',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': token
+                    },
+                    data: {},
+                    success: function (response) {
+                        quick_actions_new_expense_category_id.empty();
+                        $.each(response.response, function (i, category) {
+                            quick_actions_new_expense_category_id.append($('<option>', {
+                                value: category.id,
+                                text: category.name
+                            }));
+                        });
+                        quick_actions_new_expense_category_id.val('').select2();
+                        $('#QuickActionsNewExpenseModal').modal('show');
+                    },
+                    error: function (error) {
+                        console.log(error);
+                        toastr.error('Gelir & Gider Kategori Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+                    }
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Kasa & Banka Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+            }
+        });
+    }
+
+    QuickActionsNewCompanyButton.click(function () {
+        var types = $('#quick_actions_new_company_types').val();
+        var tax_number = $('#quick_actions_new_company_tax_number').val();
+        var tax_office = $('#quick_actions_new_company_tax_office').val();
+        var title = $('#quick_actions_new_company_title').val();
+        var manager_name = $('#quick_actions_new_company_manager_name').val();
+        var manager_surname = $('#quick_actions_new_company_manager_surname').val();
+        var email = $('#quick_actions_new_company_email').val();
+        var phone = $('#quick_actions_new_company_phone').val();
+        var country_id = $('#quick_actions_new_company_country_id').val();
+        var province_id = $('#quick_actions_new_company_province_id').val();
+        var district_id = $('#quick_actions_new_company_district_id').val();
+        var postCode = $('#quick_actions_new_company_postcode').val();
+        var isCustomer = $.inArray('1', types) !== -1 ? 1 : 0;
+        var isSupplier = $.inArray('2', types) !== -1 ? 1 : 0;
+
+        if (!title) {
+            toastr.warning('Firma Adı Boş Olamaz.');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '{{ route('api.user.company.create') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    taxNumber: tax_number,
+                    taxOffice: tax_office,
+                    title: title,
+                    managerName: manager_name,
+                    managerSurname: manager_surname,
+                    email: email,
+                    phone: phone,
+                    countryId: country_id,
+                    provinceId: province_id,
+                    districtId: district_id,
+                    postCode: postCode,
+                    isCustomer: isCustomer,
+                    isSupplier: isSupplier
+                },
+                success: function () {
+                    $('#QuickActionsNewCompanyModal').modal('hide');
+                    toastr.success('Cari Başarıyla Oluşturuldu.');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Cari Oluşturulurken Serviste Bir Hata Oluştu.');
+                }
+            });
+        }
+    });
+
+    QuickActionsNewPaymentButton.click(function () {
+        var companyId = quick_actions_new_payment_company_id.val();
+        var datetime = $('#quick_actions_new_payment_datetime').val();
+        var amount = $('#quick_actions_new_payment_amount').val();
+        var safeboxId = quick_actions_new_payment_safebox_id.val();
+        var description = $('#quick_actions_new_payment_description').val();
+
+        if (!companyId) {
+            toastr.warning('Cari Seçmediniz!');
+        } else if (!datetime) {
+            toastr.warning('Tarih Seçmediniz!');
+        } else if (!amount) {
+            toastr.warning('Tutar Girmediniz!');
+        } else if (!safeboxId) {
+            toastr.warning('Kasa & Banka Seçmediniz!');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '{{ route('api.user.transaction.create') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    companyId: companyId,
+                    invoiceId: null,
+                    datetime: datetime,
+                    typeId: 2,
+                    receiptNumber: '',
+                    description: description,
+                    safeboxId: safeboxId,
+                    direction: 1,
+                    amount: amount,
+                    locked: 0,
+                },
+                success: function () {
+                    $('#QuickActionsNewPaymentModal').modal('hide');
+                    toastr.success('Ödeme Başarılı');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                },
+                error: function (error) {
+                    console.log(error);
+                    if (error.status === 404 || error.status === 403) {
+                        toastr.error('Cari Bulunamadı');
+                    } else {
+                        toastr.error('Sistemsel Bir Hata Oluştu!');
+                    }
+                }
+            });
+        }
+    });
+
+    QuickActionsNewCollectionButton.click(function () {
+        var companyId = quick_actions_new_collection_company_id.val();
+        var datetime = $('#quick_actions_new_collection_datetime').val();
+        var amount = $('#quick_actions_new_collection_amount').val();
+        var safeboxId = quick_actions_new_collection_safebox_id.val();
+        var description = $('#quick_actions_new_collection_description').val();
+
+        if (!companyId) {
+            toastr.warning('Cari Seçmediniz!');
+        } else if (!datetime) {
+            toastr.warning('Tarih Seçmediniz!');
+        } else if (!amount) {
+            toastr.warning('Tutar Girmediniz!');
+        } else if (!safeboxId) {
+            toastr.warning('Kasa & Banka Seçmediniz!');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '{{ route('api.user.transaction.create') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    companyId: companyId,
+                    invoiceId: null,
+                    datetime: datetime,
+                    typeId: 1,
+                    receiptNumber: '',
+                    description: description,
+                    safeboxId: safeboxId,
+                    direction: 0,
+                    amount: amount,
+                    locked: 0,
+                },
+                success: function () {
+                    $('#QuickActionsNewCollectionModal').modal('hide');
+                    toastr.success('Tahsilat Başarılı');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                },
+                error: function (error) {
+                    console.log(error);
+                    if (error.status === 404 || error.status === 403) {
+                        toastr.error('Cari Bulunamadı');
+                    } else {
+                        toastr.error('Sistemsel Bir Hata Oluştu!');
+                    }
+                }
+            });
+        }
+    });
+
+    QuickActionsNewEarnButton.click(function () {
+        var safeboxId = quick_actions_new_earn_safebox_id.val();
+        var datetime = $('#quick_actions_new_earn_date').val();
+        var amount = $('#quick_actions_new_earn_amount').val();
+        var categoryId = quick_actions_new_earn_category_id.val();
+        var description = $('#quick_actions_new_earn_description').val();
+
+        if (!safeboxId) {
+            toastr.warning('Kasa & Banka Seçimi Yapılmadı');
+        } else if (!datetime) {
+            toastr.warning('Tarih Seçmediniz!');
+        } else if (!amount) {
+            toastr.warning('Tutar Girmediniz!');
+        } else if (!categoryId) {
+            toastr.warning('Kategori Seçmediniz!');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '{{ route('api.user.transaction.create') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    companyId: null,
+                    invoiceId: null,
+                    datetime: datetime,
+                    typeId: 3,
+                    categoryId: categoryId,
+                    receiptNumber: '',
+                    description: description,
+                    safeboxId: safeboxId,
+                    direction: 0,
+                    amount: amount,
+                    locked: 0,
+                },
+                success: function () {
+                    $('#QuickActionsNewEarnModal').modal('hide');
+                    toastr.success('Gelir Oluşturuldu');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Sistemsel Bir Hata Oluştu!');
+                }
+            });
+        }
+    });
+
+    QuickActionsNewExpenseButton.click(function () {
+        var safeboxId = quick_actions_new_expense_safebox_id.val();
+        var datetime = $('#quick_actions_new_expense_date').val();
+        var amount = $('#quick_actions_new_expense_amount').val();
+        var categoryId = quick_actions_new_expense_category_id.val();
+        var description = $('#quick_actions_new_expense_description').val();
+
+        if (!safeboxId) {
+            toastr.warning('Kasa & Banka Seçimi Yapılmadı');
+        } else if (!datetime) {
+            toastr.warning('Tarih Seçmediniz!');
+        } else if (!amount) {
+            toastr.warning('Tutar Girmediniz!');
+        } else if (!categoryId) {
+            toastr.warning('Kategori Seçmediniz!');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '{{ route('api.user.transaction.create') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    companyId: null,
+                    invoiceId: null,
+                    datetime: datetime,
+                    typeId: 4,
+                    categoryId: categoryId,
+                    receiptNumber: '',
+                    description: description,
+                    safeboxId: safeboxId,
+                    direction: 1,
+                    amount: amount,
+                    locked: 0,
+                },
+                success: function () {
+                    $('#QuickActionsNewExpenseModal').modal('hide');
+                    toastr.success('Gider Oluşturuldu');
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1000);
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Sistemsel Bir Hata Oluştu!');
+                }
+            });
+        }
     });
 
 </script>

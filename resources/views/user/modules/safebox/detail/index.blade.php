@@ -16,6 +16,8 @@
 
     @include('user.modules.safebox.detail.modals.newEarn')
     @include('user.modules.safebox.detail.modals.newExpense')
+    @include('user.modules.safebox.detail.modals.updateSafebox')
+    @include('user.modules.safebox.detail.modals.deleteSafebox')
 
     <div class="row">
         <div class="col-xl-7 mb-5">
@@ -81,15 +83,15 @@
                                     </div>
                                     <div class="separator border-gray-200 mb-2"></div>
                                     <div class="menu-item px-3">
-                                        <a onclick="editSafebox()" class="menu-link px-3">
+                                        <a onclick="updateSafebox()" class="menu-link px-3">
                                             <i class="fas fa-edit text-primary"></i>
-                                            <span class="ms-5">Kasayı Düzenle</span>
+                                            <span class="ms-5">Düzenle</span>
                                         </a>
                                     </div>
                                     <div class="menu-item px-3">
                                         <a onclick="deleteSafebox()" class="menu-link px-3">
                                             <i class="fas fa-trash-alt text-danger"></i>
-                                            <span class="ms-5">Kasayı Sil</span>
+                                            <span class="ms-5">Sil</span>
                                         </a>
                                     </div>
                                 </div>

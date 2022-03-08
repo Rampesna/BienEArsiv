@@ -41,14 +41,25 @@ class TransactionController extends Controller
 
     public function count(CountRequest $request)
     {
-        $company = (new CompanyService)->getById($request->companyId);
+        if ($request->companyId) {
+            $company = (new CompanyService)->getById($request->companyId);
 
-        if (!$company || $company->customer_id != $request->user()->customer_id) {
-            return $this->error('Company not found', 404);
+            if (!$company || $company->customer_id != $request->user()->customer_id) {
+                return $this->error('Company not found', 404);
+            }
+        }
+
+        if ($request->safeboxId) {
+            $safebox = (new SafeboxService)->getById($request->safeboxId);
+
+            if (!$safebox || $safebox->customer_id != $request->user()->customer_id) {
+                return $this->error('Safebox not found', 404);
+            }
         }
 
         return $this->success('Transactions', $this->transactionService->count(
-            $request->companyId
+            companyId: $request->companyId,
+            safeboxId: $request->safeboxId
         ));
     }
 

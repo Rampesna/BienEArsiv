@@ -18,7 +18,7 @@
                     </div>
                     <div class="d-flex flex-column mb-8 fv-row fv-plugins-icon-container">
                         <div class="row">
-                            <div class="col-xl-6">
+                            <div class="col-xl-6 mb-5">
                                 <div class="form-group">
                                     <label for="new_earn_date" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">İşlem Tarihi</span>
@@ -26,7 +26,7 @@
                                     <input id="new_earn_date" type="date" class="form-control form-control-solid">
                                 </div>
                             </div>
-                            <div class="col-xl-6">
+                            <div class="col-xl-6 mb-5">
                                 <div class="form-group position-relative">
                                     <label for="new_earn_amount" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Tutar</span>
@@ -38,20 +38,18 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-xl-12 mb-5">
                                 <div class="form-group">
                                     <label for="new_earn_category_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Gelir & Gider Kategorisi</span>
                                     </label>
-                                    <select id="new_earn_category_id" class="form-select form-select-solid" data-control="select2"></select>
+                                    <select id="new_earn_category_id" class="form-select form-select-solid select2Input" data-control="select2"></select>
                                 </div>
                             </div>
                         </div>
-                        <br>
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-xl-12 mb-5">
                                 <div class="form-group">
                                     <label for="new_earn_description" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Açıklamalar</span>

@@ -103,13 +103,110 @@ Route::get('test', function () {
 //    return dd($inv);
 
     $client = new App\Helpers\InvoiceManager\InvoiceManager;
-    $client->setDebugMode(true)->setUsername('33333320')->setPassword('1')->connect()->setInvoice($inv)->createDraftBasicInvoice();
+    $client->setDebugMode(true)->connect();
+    return dd($client->setDebugMode(true)->setUsername('33333320')->setPassword('1')->connect()->setInvoice($inv)->createDraftBasicInvoice());
 
 //    return $client->getInvoiceFromAPI($inv);
 
     return $client->getInvoicesFromAPI('04/03/2022', '04/03/2022');
 
 
+});
+
+Route::get('test2', function () {
+    $gibService = new \App\Services\Gib\GibService();
+    $gibService->setTestMode(true);
+    $gibService->setCredentials();
+    $gibService->login();
+
+    $invoice = (new \App\Services\Eloquent\InvoiceService)->getByIdWith(1);
+    $invoiceProducts = (new \App\Services\Eloquent\InvoiceProductService)->getByInvoiceId(1);
+
+    $invoiceToGibInvoice = [
+        "belgeNumarasi" => "", // Zorunlu değil
+        "faturaTarihi" => date('d/m/Y', strtotime($invoice->datetime)), // Zorunlu değil
+        "saat" => date('H:i:s', strtotime($invoice->datetime)),
+        "paraBirimi" => "TRY",
+        "dovzTLkur" => "0",
+        "faturaTipi" => "SATIS",
+        "hangiTip" => "5000/30000",
+        "vknTckn" => "11111111111",
+        "aliciUnvan" => $invoice->company->title,
+        "aliciAdi" => $invoice->company->manager_name,
+        "aliciSoyadi" => $invoice->company->manager_surname,
+        "binaAdi" => "", // Zorunlu değil
+        "binaNo" => "", // Zorunlu değil
+        "kapiNo" => "", // Zorunlu değil
+        "kasabaKoy" => "", // Zorunlu değil
+        "vergiDairesi" => $invoice->company->tax_office,
+        "ulke" => $invoice->company->country?->name,
+        "bulvarcaddesokak" => $invoice->company->address,
+        "mahalleSemtIlce" => "", // Zorunlu değil
+        "sehir" => $invoice->company->province?->name,
+        "postaKodu" => $invoice->company->post_code, // Zorunlu değil
+        "tel" => $invoice->company->phone, // Zorunlu değil
+        "fax" => "", // Zorunlu değil
+        "eposta" => $invoice->company->email, // Zorunlu değil
+        "websitesi" => "", // Zorunlu değil
+        "iadeTable" => [], // Zorunlu değil
+        "ozelMatrahTutari" => "0", // Zorunlu değil
+        "ozelMatrahOrani" => 0, // Zorunlu değil
+        "ozelMatrahVergiTutari" => "0", // Zorunlu değil
+        "vergiCesidi" => " ", // Zorunlu değil
+        "tip" => "İskonto",
+        "matrah" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return $invoiceProduct->quantity * $invoiceProduct->unit_price;
+        })->toArray()),
+        "malhizmetToplamTutari" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return $invoiceProduct->quantity * $invoiceProduct->unit_price;
+        })->toArray()),
+        "toplamIskonto" => "0",
+        "hesaplanankdv" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate;
+        })->toArray()),
+        "vergilerToplami" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate;
+        })->toArray()),
+        "vergilerDahilToplamTutar" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+            return ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate);
+        })->toArray()),
+        "odenecekTutar" => 118,
+        "not" => "", // Zorunlu değil
+        "siparisNumarasi" => "", // Zorunlu değil
+        "siparisTarihi" => "", // Zorunlu değil
+        "irsaliyeNumarasi" => "", // Zorunlu değil
+        "irsaliyeTarihi" => "", // Zorunlu değil
+        "fisNo" => "", // Zorunlu değil
+        "fisTarihi" => "", // Zorunlu değil
+        "fisSaati" => " ", // Zorunlu değil
+        "fisTipi" => " ", // Zorunlu değil
+        "zRaporNo" => "", // Zorunlu değil
+        "okcSeriNo" => "", // Zorunlu değil
+        "malHizmetTable" => $invoiceProducts->map(function ($invoiceProduct) {
+            return [
+                "malHizmet" => $invoiceProduct->product->name,
+                "miktar" => $invoiceProduct->quantity,
+                "birim" => $invoiceProduct->unit->name,
+                "birimFiyat" => $invoiceProduct->unit_price,
+                "fiyat" => $invoiceProduct->quantity * $invoiceProduct->unit_price,
+                "iskontoOrani" => 0,
+                "iskontoTutari" => "0",
+                "iskontoNedeni" => "",
+                "malHizmetTutari" => ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate),
+                "kdvOrani" => $invoiceProduct->vat_rate,
+                "vergiOrani" => 0,
+                "kdvTutari" => $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate,
+                "vergininKdvTutari" => "0",
+                "ozelMatrahTutari" => "0", //zorunlu
+            ];
+        })->toArray()
+    ];
+    $gibInvoice = new \App\Services\Gib\Models\GibInvoice;
+    $gibInvoice->mapWithTurkishKeys($invoiceToGibInvoice);
+
+    return $gibInvoice->getUuid();
+
+    return $gibService->createInvoice($gibInvoice);
 });
 
 Route::get('login', function () {

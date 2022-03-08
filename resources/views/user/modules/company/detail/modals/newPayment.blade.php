@@ -18,7 +18,7 @@
                     </div>
                     <div class="d-flex flex-column mb-8 fv-row fv-plugins-icon-container">
                         <div class="row">
-                            <div class="col-xl-6">
+                            <div class="col-xl-6 mb-5">
                                 <div class="form-group">
                                     <label for="new_payment_datetime" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">İşlem Tarihi</span>
@@ -26,7 +26,7 @@
                                     <input id="new_payment_datetime" type="datetime-local" class="form-control form-control-solid">
                                 </div>
                             </div>
-                            <div class="col-xl-6">
+                            <div class="col-xl-6 mb-5">
                                 <div class="form-group position-relative">
                                     <label for="new_payment_amount" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Tutar</span>
@@ -38,9 +38,8 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-xl-12 mb-5">
                                 <div class="form-group position-relative">
                                     <label for="new_payment_safebox_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Kasa & Banka</span>
@@ -49,9 +48,8 @@
                                 </div>
                             </div>
                         </div>
-                        <br>
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-xl-12 mb-5">
                                 <div class="form-group">
                                     <label for="new_payment_description" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Açıklamalar</span>

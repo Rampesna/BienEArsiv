@@ -7,6 +7,8 @@ use App\Http\Requests\Api\User\ProductController\AllRequest;
 use App\Http\Requests\Api\User\ProductController\IndexRequest;
 use App\Http\Requests\Api\User\ProductController\GetByIdRequest;
 use App\Http\Requests\Api\User\ProductController\CreateRequest;
+use App\Http\Requests\Api\User\ProductController\UpdateRequest;
+use App\Http\Requests\Api\User\ProductController\DeleteRequest;
 use App\Services\Eloquent\ProductService;
 use App\Traits\Response;
 
@@ -55,6 +57,38 @@ class ProductController extends Controller
             $request->unitId,
             $request->price,
             $request->vatRate
+        ));
+    }
+
+    public function update(UpdateRequest $request)
+    {
+        $product = $this->productService->getById($request->id);
+
+        if (!$product || ($request->user()->customer_id != $product->customer_id)) {
+            return $this->error('Product not found', 404);
+        }
+
+        return $this->success('Product updated successfully', $this->productService->update(
+            $product->id,
+            $request->user()->customer_id,
+            $request->code,
+            $request->name,
+            $request->unitId,
+            $request->price,
+            $request->vatRate
+        ));
+    }
+
+    public function delete(DeleteRequest $request)
+    {
+        $product = $this->productService->getById($request->id);
+
+        if (!$product || ($request->user()->customer_id != $product->customer_id)) {
+            return $this->error('Product not found', 404);
+        }
+
+        return $this->success('Product deleted successfully', $this->productService->delete(
+            $product->id
         ));
     }
 }

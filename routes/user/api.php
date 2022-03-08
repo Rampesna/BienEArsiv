@@ -90,6 +90,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('getById', [\App\Http\Controllers\Api\User\SafeboxController::class, 'getById'])->name('api.user.safebox.getById');
         Route::get('getTotalBalance', [\App\Http\Controllers\Api\User\SafeboxController::class, 'getTotalBalance'])->name('api.user.safebox.getTotalBalance');
         Route::post('create', [\App\Http\Controllers\Api\User\SafeboxController::class, 'create'])->name('api.user.safebox.create');
+        Route::put('update', [\App\Http\Controllers\Api\User\SafeboxController::class, 'update'])->name('api.user.safebox.update');
+        Route::delete('delete', [\App\Http\Controllers\Api\User\SafeboxController::class, 'delete'])->name('api.user.safebox.delete');
     });
 
     Route::prefix('product')->group(function () {
@@ -97,6 +99,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('index', [\App\Http\Controllers\Api\User\ProductController::class, 'index'])->name('api.user.product.index');
         Route::get('getById', [\App\Http\Controllers\Api\User\ProductController::class, 'getById'])->name('api.user.product.getById');
         Route::post('create', [\App\Http\Controllers\Api\User\ProductController::class, 'create'])->name('api.user.product.create');
+        Route::put('update', [\App\Http\Controllers\Api\User\ProductController::class, 'update'])->name('api.user.product.update');
+        Route::delete('delete', [\App\Http\Controllers\Api\User\ProductController::class, 'delete'])->name('api.user.product.delete');
     });
 
     Route::prefix('transaction')->group(function () {

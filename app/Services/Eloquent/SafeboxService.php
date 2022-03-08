@@ -101,6 +101,47 @@ class SafeboxService extends BaseService
     }
 
     /**
+     * @param int $id
+     * @param int $customerId
+     * @param int $typeId
+     * @param string $name
+     * @param string $accountNumber
+     * @param string $branch
+     * @param string $iban
+     */
+    public function update(
+        $id,
+        $customerId,
+        $typeId,
+        $name,
+        $accountNumber,
+        $branch,
+        $iban
+    )
+    {
+        $safebox = Safebox::find($id);
+        $safebox->customer_id = $customerId;
+        $safebox->type_id = $typeId;
+        $safebox->name = $name;
+        $safebox->account_number = $accountNumber;
+        $safebox->branch = $branch;
+        $safebox->iban = $iban;
+        $safebox->save();
+
+        return $safebox;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function delete(
+        $id
+    )
+    {
+        return Safebox::find($id)->delete();
+    }
+
+    /**
      * @param int $customerId
      * @param int|null $typeId
      */

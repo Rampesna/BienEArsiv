@@ -235,7 +235,6 @@
                             <th>İşlem Tarihi</th>
                             <th class="hideIfMobile">Dekont Numarası</th>
                             <th class="text-end">Tutar</th>
-                            <th class="text-end">İşlemler</th>
                         </tr>
                         </thead>
                         <tbody class="fw-bold text-gray-600" id="transactions"></tbody>

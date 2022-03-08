@@ -8,6 +8,8 @@ use App\Http\Requests\Api\User\SafeboxController\IndexRequest;
 use App\Http\Requests\Api\User\SafeboxController\GetByIdRequest;
 use App\Http\Requests\Api\User\SafeboxController\GetTotalBalanceRequest;
 use App\Http\Requests\Api\User\SafeboxController\CreateRequest;
+use App\Http\Requests\Api\User\SafeboxController\UpdateRequest;
+use App\Http\Requests\Api\User\SafeboxController\DeleteRequest;
 use App\Services\Eloquent\SafeboxService;
 use App\Traits\Response;
 
@@ -65,6 +67,38 @@ class SafeboxController extends Controller
             $request->accountNumber,
             $request->branch,
             $request->iban,
+        ));
+    }
+
+    public function update(UpdateRequest $request)
+    {
+        $safeBox = $this->safeboxService->getById($request->id);
+
+        if (!$safeBox || ($request->user()->customer_id != $safeBox->customer_id)) {
+            return $this->error('Safebox not found', 404);
+        }
+
+        return $this->success('Safebox created successfully', $this->safeboxService->update(
+            $safeBox->id,
+            $request->user()->customer_id,
+            $request->typeId,
+            $request->name,
+            $request->accountNumber,
+            $request->branch,
+            $request->iban,
+        ));
+    }
+
+    public function delete(DeleteRequest $request)
+    {
+        $safeBox = $this->safeboxService->getById($request->id);
+
+        if (!$safeBox || ($request->user()->customer_id != $safeBox->customer_id)) {
+            return $this->error('Safebox not found', 404);
+        }
+
+        return $this->success('Safebox created successfully', $this->safeboxService->delete(
+            $safeBox->id
         ));
     }
 }

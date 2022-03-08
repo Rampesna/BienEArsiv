@@ -15,6 +15,8 @@
     var new_earn_category_id = $('#new_earn_category_id');
     var new_expense_category_id = $('#new_expense_category_id');
 
+    var update_safebox_type_id = $('#update_safebox_type_id');
+
     function changePage(newPage) {
         if (newPage === 1) {
             pageDownButton.attr('disabled', true);
@@ -47,6 +49,27 @@
             error: function (error) {
                 console.log(error);
                 toastr.error('Gelir & Gider Kategorileri Alınırken Serviste Bir Hata Oluştu!');
+            }
+        });
+    }
+
+    function getSafeboxTypes() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.safeboxType.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                update_safebox_type_id.empty();
+                $.each(response.response, function (i, safeboxType) {
+                    update_safebox_type_id.append(`<option value="${safeboxType.id}">${safeboxType.name}</option>`);
+                });
+            },
+            error: function (error) {
+                console.log(error);
             }
         });
     }
@@ -165,8 +188,30 @@
         $('#NewExpenseModal').modal('show');
     }
 
-    function editSafebox() {
-        $('#EditSafeboxModal').modal('show');
+    function updateSafebox() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.safebox.getById') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                id: '{{ $id }}'
+            },
+            success: function (response) {
+                update_safebox_type_id.val(response.response.type_id).select2();
+                $('#update_safebox_name').val(response.response.name);
+                $('#update_safebox_account_number').val(response.response.account_number);
+                $('#update_safebox_branch').val(response.response.branch);
+                $('#update_safebox_iban').val(response.response.iban);
+                $('#UpdateSafeboxModal').modal('show');
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Kasa & Banka Bilgileri Alınırken Serviste Bir Hata Oluştu.');
+            }
+        });
     }
 
     function deleteSafebox() {
@@ -176,6 +221,7 @@
     getSafeboxById();
     getTransactions();
     getTransactionCategories();
+    getSafeboxTypes();
 
     pageUpButton.click(function () {
         changePage(parseInt(page.html()) + 1);
@@ -233,11 +279,7 @@
                 },
                 error: function (error) {
                     console.log(error);
-                    if (error.status === 404 || error.status === 403) {
-                        toastr.error('Cari Bulunamadı');
-                    } else {
-                        toastr.error('Sistemsel Bir Hata Oluştu!');
-                    }
+                    toastr.error('Sistemsel Bir Hata Oluştu!');
                 }
             });
         }
@@ -287,14 +329,98 @@
                 },
                 error: function (error) {
                     console.log(error);
-                    if (error.status === 404 || error.status === 403) {
-                        toastr.error('Cari Bulunamadı');
-                    } else {
-                        toastr.error('Sistemsel Bir Hata Oluştu!');
-                    }
+                    toastr.error('Sistemsel Bir Hata Oluştu!');
                 }
             });
         }
+    });
+
+    UpdateSafeboxButton.click(function () {
+        var id = '{{ $id }}';
+        var typeId = create_safebox_type_id.val();
+        var name = $('#create_safebox_name').val();
+        var accountNumber = $('#create_safebox_account_number').val();
+        var branch = $('#create_safebox_branch').val();
+        var iban = $('#create_safebox_iban').val();
+
+        if (!typeId) {
+            toastr.warning('Hesap Türü Seçmediniz!');
+        } else if (!name) {
+            toastr.warning('Hesap Tanımı Girmediniz!');
+        } else {
+            $.ajax({
+                type: 'put',
+                url: '{{ route('api.user.safebox.update') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    id: id,
+                    typeId: typeId,
+                    name: name,
+                    accountNumber: accountNumber,
+                    branch: branch,
+                    iban: iban
+                },
+                success: function () {
+                    $('#UpdateSafeboxModal').modal('hide');
+                    toastr.success('Başarıyla Güncellendi!');
+                    getSafeboxById();
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Hesap Güncellenirken Serviste Bir Hata Oluştu!');
+                }
+            });
+        }
+    });
+
+    DeleteSafeboxButton.click(function () {
+        var safeboxId = '{{ $id }}';
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.transaction.count') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                safeboxId: safeboxId
+            },
+            success: function (response) {
+                if (response.response > 0) {
+                    toastr.warning('İşlem Görmüş Hesap Silinemez.');
+                } else {
+                    $('#loader').fadeIn(250);
+                    $('#DeleteSafeboxModal').modal('hide');
+                    $.ajax({
+                        type: 'delete',
+                        url: '{{ route('api.user.safebox.delete') }}',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Authorization': token
+                        },
+                        data: {
+                            id: safeboxId
+                        },
+                        success: function () {
+                            toastr.success('Başarıyla Silindi');
+                            window.location.href = '{{ route('web.user.safebox.index') }}';
+                        },
+                        error: function (error) {
+                            console.log(error);
+                            toastr.error('Hesap Silinirken Serviste Bir Hata Oluştu.');
+                            $('#loader').fadeOut(250);
+                        }
+                    });
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Hesap Silinirken Serviste Bir Hata Oluştu.');
+            }
+        });
     });
 
 </script>

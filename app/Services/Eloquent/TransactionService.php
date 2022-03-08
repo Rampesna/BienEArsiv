@@ -86,13 +86,25 @@ class TransactionService extends BaseService
     }
 
     /**
-     * @param int $companyId
+     * @param int|null $companyId
+     * @param int|null $safeboxId
      */
     public function count(
-        int $companyId
+        int $companyId = null,
+        int $safeboxId = null,
     )
     {
-        return Transaction::where('company_id', $companyId)->count();
+        $transactions = Transaction::with([]);
+
+        if ($companyId) {
+            $transactions->where('company_id', $companyId);
+        }
+
+        if ($safeboxId) {
+            $transactions->where('safebox_id', $safeboxId);
+        }
+
+        return $transactions->count();
     }
 
     /**

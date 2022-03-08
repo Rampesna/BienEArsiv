@@ -467,7 +467,6 @@ class InvoiceManager
      * Create draft basic invoice
      *
      * @param Invoice $invoice
-     * @return Invoice
      */
     public function createDraftBasicInvoice(Invoice $invoice = null)
     {
@@ -627,7 +626,6 @@ class InvoiceManager
      *
      * @param Invoice $invoice
      * @param boolean $signed
-
      */
     public function getDownloadURL(Invoice $invoice = null, $signed = true)
     {
