@@ -34,7 +34,7 @@
     function getUnits() {
         $.ajax({
             type: 'get',
-            url: '{{ route('api.user.unit.getAll') }}',
+            url: '{{ route('api.user.customerUnit.all') }}',
             headers: {
                 'Accept': 'application/json',
                 'Authorization': token

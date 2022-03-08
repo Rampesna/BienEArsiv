@@ -101,6 +101,7 @@ class TransactionService extends BaseService
      * @param int $customerId
      * @param int|null $companyId
      * @param int|null $typeId
+     * @param int|null $categoryId
      * @param int|null $safeboxId
      * @param int|null $direction
      * @param string|null $datetimeStart
@@ -114,6 +115,7 @@ class TransactionService extends BaseService
         int    $pageSize,
         int    $companyId = null,
         int    $typeId = null,
+        int    $categoryId = null,
         int    $safeboxId = null,
         int    $direction = null,
         string $datetimeStart = null,
@@ -134,6 +136,10 @@ class TransactionService extends BaseService
 
         if ($typeId) {
             $transactions->where('type_id', $typeId);
+        }
+
+        if ($categoryId) {
+            $transactions->where('category_id', $categoryId);
         }
 
         if ($safeboxId) {
@@ -176,6 +182,7 @@ class TransactionService extends BaseService
      * @param int|null $invoiceId
      * @param string $datetime
      * @param int $typeId
+     * @param int $categoryId
      * @param string|null $receiptNumber
      * @param string|null $description
      * @param int|null $safeboxId
@@ -189,6 +196,7 @@ class TransactionService extends BaseService
         $invoiceId,
         $datetime,
         $typeId,
+        $categoryId,
         $receiptNumber,
         $description,
         $safeboxId,
@@ -203,6 +211,7 @@ class TransactionService extends BaseService
         $transaction->invoice_id = $invoiceId;
         $transaction->datetime = $datetime;
         $transaction->type_id = $typeId;
+        $transaction->category_id = $categoryId;
         $transaction->receipt_number = $receiptNumber;
         $transaction->description = $description;
         $transaction->safebox_id = $safeboxId;

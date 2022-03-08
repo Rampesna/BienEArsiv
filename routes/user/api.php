@@ -28,6 +28,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('create', [\App\Http\Controllers\Api\User\UserController::class, 'create'])->name('api.user.create')->withoutMiddleware('auth:sanctum');
     });
 
+    Route::get('index', [\App\Http\Controllers\Api\User\UserController::class, 'index'])->name('api.user.index');
+    Route::get('getById', [\App\Http\Controllers\Api\User\UserController::class, 'getById'])->name('api.user.getById');
+    Route::get('count', [\App\Http\Controllers\Api\User\UserController::class, 'count'])->name('api.user.count');
+    Route::put('update', [\App\Http\Controllers\Api\User\UserController::class, 'update'])->name('api.user.update');
+    Route::delete('delete', [\App\Http\Controllers\Api\User\UserController::class, 'delete'])->name('api.user.delete');
+
+    Route::prefix('customer')->group(function () {
+        Route::get('getById', [\App\Http\Controllers\Api\User\CustomerController::class, 'getById'])->name('api.user.customer.getById');
+        Route::put('update', [\App\Http\Controllers\Api\User\CustomerController::class, 'update'])->name('api.user.customer.update');
+        Route::post('updateStamp', [\App\Http\Controllers\Api\User\CustomerController::class, 'updateStamp'])->name('api.user.customer.updateStamp');
+        Route::post('updateLogo', [\App\Http\Controllers\Api\User\CustomerController::class, 'updateLogo'])->name('api.user.customer.updateLogo');
+    });
+
     Route::get('show', [\App\Http\Controllers\Api\User\UserController::class, 'show'])->name('api.user.show');
     Route::post('updateTheme', [\App\Http\Controllers\Api\User\UserController::class, 'updateTheme'])->name('api.user.updateTheme');
 
@@ -42,6 +55,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('unit')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\UnitController::class, 'getAll'])->name('api.user.unit.getAll');
+    });
+
+    Route::prefix('transactionCategory')->group(function () {
+        Route::get('getAll', [\App\Http\Controllers\Api\User\TransactionCategoryController::class, 'getAll'])->name('api.user.transactionCategory.getAll');
     });
 
     Route::prefix('country')->group(function () {
@@ -101,5 +118,23 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('getByInvoiceId', [\App\Http\Controllers\Api\User\InvoiceProductController::class, 'getByInvoiceId'])->name('api.user.invoiceProduct.getByInvoiceId');
         Route::post('create', [\App\Http\Controllers\Api\User\InvoiceProductController::class, 'create'])->name('api.user.invoiceProduct.create');
         Route::put('update', [\App\Http\Controllers\Api\User\InvoiceProductController::class, 'update'])->name('api.user.invoiceProduct.update');
+    });
+
+    Route::prefix('customerUnit')->group(function () {
+        Route::get('all', [\App\Http\Controllers\Api\User\CustomerUnitController::class, 'all'])->name('api.user.customerUnit.all');
+        Route::get('index', [\App\Http\Controllers\Api\User\CustomerUnitController::class, 'index'])->name('api.user.customerUnit.index');
+        Route::get('getById', [\App\Http\Controllers\Api\User\CustomerUnitController::class, 'getById'])->name('api.user.customerUnit.getById');
+        Route::post('create', [\App\Http\Controllers\Api\User\CustomerUnitController::class, 'create'])->name('api.user.customerUnit.create');
+        Route::put('update', [\App\Http\Controllers\Api\User\CustomerUnitController::class, 'update'])->name('api.user.customerUnit.update');
+        Route::delete('delete', [\App\Http\Controllers\Api\User\CustomerUnitController::class, 'delete'])->name('api.user.customerUnit.delete');
+    });
+
+    Route::prefix('customerTransactionCategory')->group(function () {
+        Route::get('all', [\App\Http\Controllers\Api\User\CustomerTransactionCategoryController::class, 'all'])->name('api.user.customerTransactionCategory.all');
+        Route::get('index', [\App\Http\Controllers\Api\User\CustomerTransactionCategoryController::class, 'index'])->name('api.user.customerTransactionCategory.index');
+        Route::get('getById', [\App\Http\Controllers\Api\User\CustomerTransactionCategoryController::class, 'getById'])->name('api.user.customerTransactionCategory.getById');
+        Route::post('create', [\App\Http\Controllers\Api\User\CustomerTransactionCategoryController::class, 'create'])->name('api.user.customerTransactionCategory.create');
+        Route::put('update', [\App\Http\Controllers\Api\User\CustomerTransactionCategoryController::class, 'update'])->name('api.user.customerTransactionCategory.update');
+        Route::delete('delete', [\App\Http\Controllers\Api\User\CustomerTransactionCategoryController::class, 'delete'])->name('api.user.customerTransactionCategory.delete');
     });
 });

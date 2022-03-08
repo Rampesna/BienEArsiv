@@ -154,10 +154,29 @@
     </div>
 
     <div class="aside-footer flex-column-auto pt-5 pb-7 px-5" id="kt_aside_footer">
-        <button class="btn btn-custom btn-primary w-100" id="SettingsModalButton">
-            <i class="fa fa-cog"></i>
-            <span class="btn-label">Ayarlar</span>
-        </button>
+        <div class="btn-group d-grid dropup">
+            <button class="btn btn-custom btn-primary" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-cog"></i>
+                <span class="btn-label">Ayarlar</span>
+            </button>
+            <div class="dropdown-menu text-center w-100">
+                <a href="{{ route('web.user.setting.customer') }}" class="dropdown-item cursor-pointer mb-2 py-3 ps-6" title="Genel">
+                    <span class="text-dark">Genel</span>
+                </a>
+                <a href="{{ route('web.user.setting.user') }}" class="dropdown-item cursor-pointer mb-2 py-3 ps-6" title="Genel">
+                    <span class="text-dark">Kullanıcılar</span>
+                </a>
+                <a href="{{ route('web.user.setting.customerUnit') }}" class="dropdown-item cursor-pointer mb-2 py-3 ps-6" title="Genel">
+                    <span class="text-dark">Birim Tanımlamaları</span>
+                </a>
+                <a href="{{ route('web.user.setting.customerTransactionCategory') }}" class="dropdown-item cursor-pointer mb-2 py-3 ps-6" title="Genel">
+                    <span class="text-dark">Gelir & Gider Kategorileri</span>
+                </a>
+                <a href="{{ route('web.user.setting.stampAndLogo') }}" class="dropdown-item cursor-pointer mb-2 py-3 ps-6" title="Genel">
+                    <span class="text-dark">Kaşe & İmza</span>
+                </a>
+            </div>
+        </div>
     </div>
 
 </div>

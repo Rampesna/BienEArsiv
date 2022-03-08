@@ -21,9 +21,9 @@ class SettingController extends Controller
         return view('user.modules.setting.stampAndLogo.index');
     }
 
-    public function transactionCategory()
+    public function customerTransactionCategory()
     {
-        return view('user.modules.setting.transactionCategory.index');
+        return view('user.modules.setting.customerTransactionCategory.index');
     }
 
     public function user()

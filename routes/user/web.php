@@ -103,9 +103,11 @@ Route::get('test', function () {
 //    return dd($inv);
 
     $client = new App\Helpers\InvoiceManager\InvoiceManager;
-    $client->setDebugMode(true)->setTestCredentials()->connect()->setInvoice($inv)->createDraftBasicInvoice();
+    $client->setDebugMode(true)->setUsername('33333320')->setPassword('1')->connect()->setInvoice($inv)->createDraftBasicInvoice();
 
-    return $client->getInvoicesFromAPI('04/03/2022','04/03/2022');
+//    return $client->getInvoiceFromAPI($inv);
+
+    return $client->getInvoicesFromAPI('04/03/2022', '04/03/2022');
 
 
 });
@@ -173,7 +175,7 @@ Route::middleware([
         Route::get('customer', [\App\Http\Controllers\Web\User\SettingController::class, 'customer'])->name('web.user.setting.customer');
         Route::get('customerUnit', [\App\Http\Controllers\Web\User\SettingController::class, 'customerUnit'])->name('web.user.setting.customerUnit');
         Route::get('stampAndLogo', [\App\Http\Controllers\Web\User\SettingController::class, 'stampAndLogo'])->name('web.user.setting.stampAndLogo');
-        Route::get('transactionCategory', [\App\Http\Controllers\Web\User\SettingController::class, 'transactionCategory'])->name('web.user.setting.transactionCategory');
+        Route::get('customerTransactionCategory', [\App\Http\Controllers\Web\User\SettingController::class, 'customerTransactionCategory'])->name('web.user.setting.customerTransactionCategory');
         Route::get('user', [\App\Http\Controllers\Web\User\SettingController::class, 'user'])->name('web.user.setting.user');
     });
 });

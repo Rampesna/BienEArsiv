@@ -25,7 +25,7 @@ class CreateRequest extends BaseApiRequest
     {
         return [
             'title' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'email',
         ];
     }
 }

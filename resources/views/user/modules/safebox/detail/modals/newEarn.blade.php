@@ -42,6 +42,17 @@
                         <div class="row">
                             <div class="col-xl-12">
                                 <div class="form-group">
+                                    <label for="new_earn_category_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span class="required">Gelir & Gider Kategorisi</span>
+                                    </label>
+                                    <select id="new_earn_category_id" class="form-select form-select-solid" data-control="select2"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-xl-12">
+                                <div class="form-group">
                                     <label for="new_earn_description" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">Açıklamalar</span>
                                     </label>

@@ -51,4 +51,9 @@ class User extends Authenticatable
     {
         return $this->theme;
     }
+
+    public function getCustomerId()
+    {
+        return $this->customer_id;
+    }
 }

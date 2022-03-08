@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Api\User\UserController;
+namespace App\Http\Requests\Api\User\CustomerTransactionCategoryController;
 
 use App\Http\Requests\Api\BaseApiRequest;
 
-class ShowRequest extends BaseApiRequest
+class AllRequest extends BaseApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class ShowRequest extends BaseApiRequest
     public function rules()
     {
         return [
-            'id' => 'required',
+            //
         ];
     }
 }

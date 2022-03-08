@@ -12,6 +12,9 @@
     var UpdateSafeboxButton = $('#UpdateSafeboxButton');
     var DeleteSafeboxButton = $('#DeleteSafeboxButton');
 
+    var new_earn_category_id = $('#new_earn_category_id');
+    var new_expense_category_id = $('#new_expense_category_id');
+
     function changePage(newPage) {
         if (newPage === 1) {
             pageDownButton.attr('disabled', true);
@@ -21,6 +24,31 @@
 
         page.html(newPage);
         getTransactions();
+    }
+
+    function getTransactionCategories() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.customerTransactionCategory.all') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                console.log(response);
+                new_earn_category_id.empty();
+                new_expense_category_id.empty();
+                $.each(response.response, function (i, transactionCategory) {
+                    new_earn_category_id.append(`<option value="${transactionCategory.id}">${transactionCategory.name}</option>`);
+                    new_expense_category_id.append(`<option value="${transactionCategory.id}">${transactionCategory.name}</option>`);
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Gelir & Gider Kategorileri Alınırken Serviste Bir Hata Oluştu!');
+            }
+        });
     }
 
     function getSafeboxById() {
@@ -147,6 +175,7 @@
 
     getSafeboxById();
     getTransactions();
+    getTransactionCategories();
 
     pageUpButton.click(function () {
         changePage(parseInt(page.html()) + 1);
@@ -164,6 +193,7 @@
         var safeboxId = '{{ $id }}';
         var datetime = $('#new_earn_date').val();
         var amount = $('#new_earn_amount').val();
+        var categoryId = new_earn_category_id.val();
         var description = $('#new_earn_description').val();
 
         if (!safeboxId) {
@@ -172,6 +202,8 @@
             toastr.warning('Tarih Seçmediniz!');
         } else if (!amount) {
             toastr.warning('Tutar Girmediniz!');
+        } else if (!categoryId) {
+            toastr.warning('Kategori Seçmediniz!');
         } else {
             $.ajax({
                 type: 'post',
@@ -185,6 +217,7 @@
                     invoiceId: null,
                     datetime: datetime,
                     typeId: 3,
+                    categoryId: categoryId,
                     receiptNumber: '',
                     description: description,
                     safeboxId: safeboxId,
@@ -214,6 +247,7 @@
         var safeboxId = '{{ $id }}';
         var datetime = $('#new_expense_date').val();
         var amount = $('#new_expense_amount').val();
+        var categoryId = new_expense_category_id.val();
         var description = $('#new_expense_description').val();
 
         if (!safeboxId) {
@@ -222,6 +256,8 @@
             toastr.warning('Tarih Seçmediniz!');
         } else if (!amount) {
             toastr.warning('Tutar Girmediniz!');
+        } else if (!categoryId) {
+            toastr.warning('Kategori Seçmediniz!');
         } else {
             $.ajax({
                 type: 'post',
@@ -235,6 +271,7 @@
                     invoiceId: null,
                     datetime: datetime,
                     typeId: 4,
+                    categoryId: categoryId,
                     receiptNumber: '',
                     description: description,
                     safeboxId: safeboxId,
