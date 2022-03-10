@@ -8,6 +8,7 @@ use App\Http\Requests\Api\User\InvoiceController\CountRequest;
 use App\Http\Requests\Api\User\InvoiceController\GetByIdRequest;
 use App\Http\Requests\Api\User\InvoiceController\CreateRequest;
 use App\Http\Requests\Api\User\InvoiceController\UpdateRequest;
+use App\Http\Requests\Api\User\InvoiceController\SendToGibRequest;
 use App\Services\Eloquent\InvoiceService;
 use App\Traits\Response;
 
@@ -95,6 +96,19 @@ class InvoiceController extends Controller
             $request->orderNumber,
             $request->orderDatetime,
             $request->price
+        ));
+    }
+
+    public function sendToGib(SendToGibRequest $request)
+    {
+        $invoice = $this->invoiceService->getById($request->id);
+
+        if (!$invoice || ($invoice->customer_id != $request->user()->customer_id)) {
+            return $this->error('Invoice not found', 404);
+        }
+
+        return $this->success('Invoice sent to Gib successfully.', $this->invoiceService->sendToGib(
+            $invoice->id
         ));
     }
 }

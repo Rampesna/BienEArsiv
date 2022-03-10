@@ -116,6 +116,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('getById', [\App\Http\Controllers\Api\User\InvoiceController::class, 'getById'])->name('api.user.invoice.getById');
         Route::post('create', [\App\Http\Controllers\Api\User\InvoiceController::class, 'create'])->name('api.user.invoice.create');
         Route::put('update', [\App\Http\Controllers\Api\User\InvoiceController::class, 'update'])->name('api.user.invoice.update');
+        Route::post('sendToGib', [\App\Http\Controllers\Api\User\InvoiceController::class, 'sendToGib'])->name('api.user.invoice.sendToGib');
+    });
+
+    Route::prefix('eInvoice')->group(function () {
+        Route::get('getInvoices', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'getInvoices'])->name('api.user.eInvoice.getInvoices');
+        Route::get('getInvoiceHTML', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'getInvoiceHTML'])->name('api.user.eInvoice.getInvoiceHTML');
+        Route::get('getInvoicePDF', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'getInvoicePDF'])->name('api.user.eInvoice.getInvoicePDF');
     });
 
     Route::prefix('invoiceProduct')->group(function () {

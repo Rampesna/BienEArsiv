@@ -48,6 +48,7 @@ class CustomerController extends Controller
             title: $request->title,
             taxOffice: $request->taxOffice,
             taxNumber: $request->taxNumber,
+            gibPassword: $request->gibPassword,
             phone: $request->phone,
             email: $request->email,
             address: $request->address,

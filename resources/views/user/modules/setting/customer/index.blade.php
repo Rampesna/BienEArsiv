@@ -27,7 +27,7 @@
                                 <input id="customer_title" type="text" class="form-control form-control-solid" placeholder="Firma Ünvanı" aria-hidden="true">
                             </div>
                         </div>
-                        <div class="col-xl-6 mb-7">
+                        <div class="col-xl-4 mb-7">
                             <div class="form-group">
                                 <label for="customer_tax_office" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Vergi Dairesi</span>
@@ -35,12 +35,20 @@
                                 <input id="customer_tax_office" type="text" class="form-control form-control-solid" placeholder="Vergi Dairesi" aria-hidden="true">
                             </div>
                         </div>
-                        <div class="col-xl-6 mb-7">
+                        <div class="col-xl-4 mb-7">
                             <div class="form-group">
                                 <label for="customer_tax_number" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Vergi Numarası</span>
                                 </label>
                                 <input id="customer_tax_number" type="text" class="form-control form-control-solid" placeholder="Vergi Numarası" aria-hidden="true">
+                            </div>
+                        </div>
+                        <div class="col-xl-4 mb-7">
+                            <div class="form-group">
+                                <label for="customer_gib_password" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">GİB Portal Şifresi</span>
+                                </label>
+                                <input id="customer_gib_password" type="text" class="form-control form-control-solid" placeholder="GİB Portal Şifresi" aria-hidden="true">
                             </div>
                         </div>
                         <div class="col-xl-6 mb-7">

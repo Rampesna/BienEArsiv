@@ -71,6 +71,7 @@
                 $('#customer_title').val(response.response.title);
                 $('#customer_tax_office').val(response.response.tax_office);
                 $('#customer_tax_number').val(response.response.tax_number);
+                $('#customer_gib_password').val(response.response.gib_password);
                 $('#customer_phone').val(response.response.phone);
                 $('#customer_email').val(response.response.email);
                 $('#customer_address').val(response.response.address);
@@ -100,6 +101,7 @@
         var title = $('#customer_title').val();
         var taxOffice = $('#customer_tax_office').val();
         var taxNumber = $('#customer_tax_number').val();
+        var gibPassword = $('#customer_gib_password').val();
         var phone = $('#customer_phone').val();
         var email = $('#customer_email').val();
         var address = $('#customer_address').val();
@@ -118,6 +120,7 @@
                 title: title,
                 taxOffice: taxOffice,
                 taxNumber: taxNumber,
+                gibPassword: gibPassword,
                 phone: phone,
                 email: email,
                 address: address,

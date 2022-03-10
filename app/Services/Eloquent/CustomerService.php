@@ -70,6 +70,7 @@ class CustomerService extends BaseService
         string      $title,
         string|null $taxOffice = null,
         string|null $taxNumber = null,
+        string|null $gibPassword = null,
         string|null $phone = null,
         string|null $email = null,
         string|null $address = null,
@@ -83,6 +84,7 @@ class CustomerService extends BaseService
         $customer->title = $title;
         $customer->tax_office = $taxOffice;
         $customer->tax_number = $taxNumber;
+        $customer->gib_password = $gibPassword;
         $customer->phone = $phone;
         $customer->email = $email;
         $customer->address = $address;

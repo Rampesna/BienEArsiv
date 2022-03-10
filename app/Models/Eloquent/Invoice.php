@@ -10,6 +10,11 @@ class Invoice extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
     public function type()
     {
         return $this->belongsTo(TransactionType::class);
@@ -23,5 +28,10 @@ class Invoice extends Model
     public function status()
     {
         return $this->belongsTo(InvoiceStatus::class);
+    }
+
+    public function products()
+    {
+        return $this->belongsTo(InvoiceProduct::class);
     }
 }

@@ -16,6 +16,8 @@
 
     @include('user.modules.invoice.index.components.contextMenu')
 
+    @include('user.modules.invoice.index.modals.sendToGib')
+
     <div class="">
         <div class="row">
             <div class="col-xl-12 text-end">

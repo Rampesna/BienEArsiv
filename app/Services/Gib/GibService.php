@@ -3,6 +3,7 @@
 namespace App\Services\Gib;
 
 use App\Services\Gib\Models\GibInvoice;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Ramsey\Uuid\Uuid;
 
 class GibService
@@ -51,7 +52,7 @@ class GibService
         $this->dispatchEndpoint = "/earsiv-services/dispatch";
         $this->tokenEndpoint = "/earsiv-services/assos-login";
         $this->referrerEndpoint = "/intragiris.html";
-        $this->client = new \GuzzleHttp\Client();
+        $this->client = new \GuzzleHttp\Client(['verify' => false]);
     }
 
     public function getBaseUrl()
@@ -59,39 +60,54 @@ class GibService
         return $this->testMode === true ? $this->testUrl : $this->baseUrl;
     }
 
+    /**
+     * @param string $taxNumber
+     */
     public function setTaxNumber($taxNumber)
     {
         $this->taxNumber = $taxNumber;
     }
 
+    /**
+     * @param string $password
+     */
     public function setPassword($password)
     {
         $this->password = $password;
     }
 
+    /**
+     * @param string $language
+     */
     public function setLanguage($language)
     {
         $this->language = $language;
     }
 
+    /**
+     * @param string $referrer
+     */
     public function setReferrer($referrer)
     {
         $this->referrer = $referrer;
     }
 
+    /**
+     * @param boolean $status
+     */
     public function setTestMode($status)
     {
         $this->testMode = $status;
     }
 
-    private function checkError($jsonData)
-    {
-        if (isset($jsonData["error"])) {
-            throw new \Exception($jsonData["error"]);
-        }
-    }
-
-    public function setCredentials($taxNumber = null, $password = null)
+    /**
+     * @param string|null $taxNumber
+     * @param string|null $password
+     */
+    public function setCredentials(
+        $taxNumber = null,
+        $password = null
+    )
     {
         if ($taxNumber && $password) {
             $this->taxNumber = $taxNumber;
@@ -128,6 +144,9 @@ class GibService
         return $this->token = json_decode($response->getBody())->token;
     }
 
+    /**
+     * @param GibInvoice $invoice
+     */
     public function createInvoice(GibInvoice $invoice)
     {
         if ($invoice == null) {
@@ -148,5 +167,79 @@ class GibService
         ]);
 
         return $response->getBody();
+    }
+
+    /**
+     * @param string $startDatetime
+     * @param string $endDatetime
+     */
+    public function getInvoices(
+        $startDatetime,
+        $endDatetime
+    )
+    {
+        $parameters = [
+            "cmd" => "EARSIV_PORTAL_TASLAKLARI_GETIR",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_BASITTASLAKLAR",
+            "token" => $this->token,
+            "jp" => '{"baslangic":"' . $startDatetime . '","bitis":"' . $endDatetime . '","hangiTip":"5000/30000", "table":[]}'
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
+            "form_params" => $parameters,
+            "headers" => []
+        ]);
+
+        return json_decode($response->getBody())->data;
+    }
+
+    /**
+     * @param string $uuid
+     * @param boolean $signed
+     */
+    public function getInvoiceHTML(
+        $uuid,
+        $signed = true
+    )
+    {
+        $data = [
+            "ettn" => $uuid,
+            "onayDurumu" => $signed ? "Onaylandı" : "Onaylanmadı"
+        ];
+
+        $parameters = [
+            "cmd" => "EARSIV_PORTAL_FATURA_GOSTER",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_TASLAKLAR",
+            "token" => $this->token,
+            "jp" => "" . json_encode($data) . "",
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
+            "form_params" => $parameters,
+            "headers" => $this->headers
+        ]);
+
+        return json_decode($response->getBody())->data;
+    }
+
+    /**
+     * @param string $uuid
+     * @param boolean $signed
+     */
+    public function getInvoicePDF(
+        $uuid,
+        $signed = true
+    )
+    {
+        $invoiceHtml = $this->getInvoiceHTML($uuid, $signed);
+        $pdf = app()->make('dompdf.wrapper');
+        $pdf->loadHTML($invoiceHtml);
+        $pdf->save(public_path('eInvoices/' . $uuid . '.pdf'));
+
+
+        $pdf = PDF::loadHTML($invoiceHtml);
+        $pdf->save(public_path('eInvoices/' . $uuid . '.pdf'));
     }
 }

@@ -63,7 +63,7 @@
                         <span class="menu-title">Faturalar</span>
                     </span>
                 </a>
-                <a href="{{ route('web.user.eInvoice.index') }}" class="menu-item {{ request()->segment(1) == 'eInvoice' ? 'show' : '' }}">
+                <a href="{{ route('web.user.eInvoice.outbox') }}" class="menu-item {{ request()->segment(1) == 'eInvoice' ? 'show' : '' }}">
                     <span class="menu-link">
                         <span class="menu-icon">
                             <span class="svg-icon svg-icon-2">

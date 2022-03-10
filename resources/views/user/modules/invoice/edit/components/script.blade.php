@@ -3,6 +3,7 @@
     var UpdateInvoiceButton = $('#UpdateInvoiceButton');
     var NewInvoiceProductButton = $('#NewInvoiceProductButton');
 
+    var allCompanies = [];
     var editInvoice = null;
     var editInvoiceProducts = [];
     var allEditInvoiceProducts = [];
@@ -20,6 +21,7 @@
 
     function getCompanies() {
         $.ajax({
+            async: false,
             type: 'get',
             url: '{{ route('api.user.company.all') }}',
             headers: {
@@ -32,6 +34,7 @@
                 $.each(response.response, function (i, company) {
                     edit_invoice_company_id.append(`<option value="${company.id}">${company.title}</option>`);
                 });
+                allCompanies = response.response;
             },
             error: function (error) {
                 console.log(error);
@@ -517,6 +520,11 @@
         } else {
             $('#edit_invoice_transaction_inputs').show();
         }
+    });
+
+    edit_invoice_company_id.change(function () {
+        var companyId = $(this).val();
+        $('#edit_invoice_tax_number').val(allCompanies.find(company => parseInt(company.id) === parseInt(companyId)).tax_number);
     });
 
 </script>

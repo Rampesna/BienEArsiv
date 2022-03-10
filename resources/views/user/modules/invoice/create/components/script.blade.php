@@ -4,6 +4,7 @@
     var CreateInvoiceButton = $('#CreateInvoiceButton');
     var NewInvoiceProductButton = $('#NewInvoiceProductButton');
 
+    var allCompanies = [];
     var newInvoice = null;
     var newInvoiceProducts = [];
     var allNewInvoiceProducts = [];
@@ -21,6 +22,7 @@
 
     function getCompanies() {
         $.ajax({
+            async: false,
             type: 'get',
             url: '{{ route('api.user.company.all') }}',
             headers: {
@@ -33,6 +35,7 @@
                 $.each(response.response, function (i, company) {
                     create_invoice_company_id.append(`<option value="${company.id}">${company.title}</option>`);
                 });
+                allCompanies = response.response;
             },
             error: function (error) {
                 console.log(error);
@@ -361,6 +364,11 @@
         } else {
             $('#create_invoice_transaction_inputs').show();
         }
+    });
+
+    create_invoice_company_id.change(function () {
+        var companyId = $(this).val();
+        $('#create_invoice_tax_number').val(allCompanies.find(company => parseInt(company.id) === parseInt(companyId)).tax_number);
     });
 
     CreateInvoiceButton.click(function () {

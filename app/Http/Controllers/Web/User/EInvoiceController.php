@@ -6,8 +6,18 @@ use App\Http\Controllers\Controller;
 
 class EInvoiceController extends Controller
 {
-    public function index()
+    public function inbox()
     {
-        return view('user.modules.eInvoice.index.index');
+        return view('user.modules.eInvoice.inbox.index');
+    }
+
+    public function outbox()
+    {
+        return view('user.modules.eInvoice.outbox.index');
+    }
+
+    public function cancellationRequest()
+    {
+        return view('user.modules.eInvoice.cancellationRequest.index');
     }
 }

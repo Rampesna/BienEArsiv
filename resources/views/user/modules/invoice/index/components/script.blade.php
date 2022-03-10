@@ -11,6 +11,8 @@
 
     var filter_transaction_type_id = $('#filter_transaction_type_id');
 
+    var SendToGibButton = $('#SendToGibButton');
+
     function getTransactionTypes() {
         $.ajax({
             type: 'get',
@@ -60,6 +62,20 @@
             success: function (response) {
                 invoices.empty();
                 $.each(response.response.invoices, function (i, invoice) {
+                    var dropdownMenuList = !invoice.uuid ?
+                        `
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-icon btn-sm" type="button" id="Invoice_${invoice.id}_Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="Invoice_${invoice.id}_Dropdown" style="width: 175px">
+                                    <a class="dropdown-item cursor-pointer mb-2 py-3 ps-6" onclick="sendInvoiceToGib(${invoice.id})" title="Faturayı Gönder"><i class="fas fa-location-arrow me-2 text-success"></i> <span class="text-dark">Faturayı Gönder</span></a>
+                                    <hr>
+                                    <a class="dropdown-item cursor-pointer mb-2 py-3 ps-6" href="${editRoute}/${invoice.id}" title="Düzenle"><i class="fas fa-edit me-2 text-primary"></i> <span class="text-dark">Düzenle</span></a>
+                                    <a class="dropdown-item cursor-pointer py-3 ps-6" onclick="deleteInvoice(${invoice.id})" title="Sil"><i class="fas fa-trash-alt me-3 text-danger"></i> <span class="text-dark">Sil</span></a>
+                                </div>
+                            </div>
+                        ` : ``;
                     var icon = invoice.type.direction === 0 ?
                         `
                         <span class="svg-icon svg-icon-success svg-icon-2x">
@@ -92,15 +108,7 @@
                             ${reformatNumberToMoney(invoice.price ?? 0)} ₺
                         </td>
                         <td class="text-end">
-                            <div class="dropdown">
-                                <button class="btn btn-secondary btn-icon btn-sm" type="button" id="Invoice_${invoice.id}_Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-th"></i>
-                                </button>
-                                <div class="dropdown-menu" aria-labelledby="Invoice_${invoice.id}_Dropdown" style="width: 175px">
-                                    <a class="dropdown-item cursor-pointer mb-2 py-3 ps-6" href="${editRoute}/${invoice.id}" title="Düzenle"><i class="fas fa-edit me-2 text-primary"></i> <span class="text-dark">Düzenle</span></a>
-                                    <a class="dropdown-item cursor-pointer py-3 ps-6" onclick="deleteInvoice(${invoice.id})" title="Düzenle"><i class="fas fa-trash-alt me-3 text-danger"></i> <span class="text-dark">Sil</span></a>
-                                </div>
-                            </div>
+                            ${dropdownMenuList}
                         </td>
                     </tr>
                     `);
@@ -123,6 +131,11 @@
 
     function createInvoice() {
         window.location.href = '{{ route('web.user.invoice.create') }}';
+    }
+
+    function sendInvoiceToGib(id) {
+        $('#send_to_gib_invoice_id').val(id);
+        $('#SendToGibModal').modal('show');
     }
 
     function changePage(newPage) {
@@ -170,6 +183,33 @@
 
     $(document).delegate('.filterInput', 'change', function () {
         changePage(1);
+    });
+
+    SendToGibButton.click(function () {
+        var id = $('#send_to_gib_invoice_id').val();
+        $('#loader').fadeIn(250);
+        $('#SendToGibModal').modal('hide');
+        $.ajax({
+            url: '{{ route('api.user.invoice.sendToGib') }}',
+            type: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                id: id,
+            },
+            success: function () {
+                toastr.success('Faturanız Başarıyla Gönderildi.');
+                changePage(parseInt(page.html()));
+                $('#loader').fadeOut(250);
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Fatura Gönderilirken Serviste Bir Hata Oluştu.');
+                $('#loader').fadeOut(250);
+            }
+        });
     });
 
 </script>

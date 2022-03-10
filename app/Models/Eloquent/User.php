@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->customer_id;
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

@@ -21,7 +21,8 @@ class InvoiceService extends BaseService
         return Invoice::with([
             'type',
             'status',
-            'company'
+            'company',
+            'products'
         ])->find($id);
     }
 
@@ -206,5 +207,120 @@ class InvoiceService extends BaseService
     {
         $lastInvoice = Invoice::where('customer_id', $customerId)->orderBy('created_at', 'desc')->first();
         return $lastInvoice ? $lastInvoice->number + 1 : 1;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function sendToGib(
+        $id
+    )
+    {
+        $invoice = Invoice::with([
+            'company' => function ($company) {
+                $company->with([
+                    'country'
+                ]);
+            },
+        ])->find($id);
+        $invoiceProducts = $invoice->products()->get();
+
+        $gibService = new \App\Services\Gib\GibService;
+        $gibService->setTestMode(true);
+        $gibService->setCredentials($invoice->customer->tax_number, $invoice->customer->gib_password);
+        $gibService->login();
+
+        $invoiceToGibInvoice = [
+            "belgeNumarasi" => "", // Zorunlu değil
+            "faturaTarihi" => date('d/m/Y', strtotime($invoice->datetime)), // Zorunlu değil
+            "saat" => date('H:i:s', strtotime($invoice->datetime)),
+            "paraBirimi" => "TRY",
+            "dovzTLkur" => "0",
+            "faturaTipi" => "SATIS",
+            "hangiTip" => "5000/30000",
+            "vknTckn" => $invoice->tax_number ?? "11111111111",
+            "aliciUnvan" => $invoice->company->title,
+            "aliciAdi" => $invoice->company->manager_name,
+            "aliciSoyadi" => $invoice->company->manager_surname,
+            "binaAdi" => "", // Zorunlu değil
+            "binaNo" => "", // Zorunlu değil
+            "kapiNo" => "", // Zorunlu değil
+            "kasabaKoy" => "", // Zorunlu değil
+            "vergiDairesi" => $invoice->company->tax_office,
+            "ulke" => $invoice->company->country?->name,
+            "bulvarcaddesokak" => $invoice->company->address,
+            "mahalleSemtIlce" => "", // Zorunlu değil
+            "sehir" => $invoice->company->province?->name,
+            "postaKodu" => $invoice->company->post_code, // Zorunlu değil
+            "tel" => $invoice->company->phone, // Zorunlu değil
+            "fax" => "", // Zorunlu değil
+            "eposta" => $invoice->company->email, // Zorunlu değil
+            "websitesi" => "", // Zorunlu değil
+            "iadeTable" => [], // Zorunlu değil
+            "ozelMatrahTutari" => "0", // Zorunlu değil
+            "ozelMatrahOrani" => 0, // Zorunlu değil
+            "ozelMatrahVergiTutari" => "0", // Zorunlu değil
+            "vergiCesidi" => " ", // Zorunlu değil
+            "tip" => "İskonto",
+            "matrah" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+                return $invoiceProduct->quantity * $invoiceProduct->unit_price;
+            })->toArray()),
+            "malhizmetToplamTutari" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+                return $invoiceProduct->quantity * $invoiceProduct->unit_price;
+            })->toArray()),
+            "toplamIskonto" => "0",
+            "hesaplanankdv" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+                return $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate;
+            })->toArray()),
+            "vergilerToplami" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+                return $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate;
+            })->toArray()),
+            "vergilerDahilToplamTutar" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+                return ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate);
+            })->toArray()),
+            "odenecekTutar" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
+                return ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate);
+            })->toArray()),
+            "not" => "", // Zorunlu değil
+            "siparisNumarasi" => "", // Zorunlu değil
+            "siparisTarihi" => "", // Zorunlu değil
+            "irsaliyeNumarasi" => "", // Zorunlu değil
+            "irsaliyeTarihi" => "", // Zorunlu değil
+            "fisNo" => "", // Zorunlu değil
+            "fisTarihi" => "", // Zorunlu değil
+            "fisSaati" => " ", // Zorunlu değil
+            "fisTipi" => " ", // Zorunlu değil
+            "zRaporNo" => "", // Zorunlu değil
+            "okcSeriNo" => "", // Zorunlu değil
+            "malHizmetTable" => $invoiceProducts->map(function ($invoiceProduct) {
+                return [
+                    "malHizmet" => $invoiceProduct->product->name,
+                    "miktar" => $invoiceProduct->quantity,
+                    "birim" => $invoiceProduct->unit->name,
+                    "birimFiyat" => $invoiceProduct->unit_price,
+                    "fiyat" => $invoiceProduct->quantity * $invoiceProduct->unit_price,
+                    "iskontoOrani" => 0,
+                    "iskontoTutari" => "0",
+                    "iskontoNedeni" => "",
+                    "malHizmetTutari" => ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate),
+                    "kdvOrani" => $invoiceProduct->vat_rate,
+                    "vergiOrani" => 0,
+                    "kdvTutari" => $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate,
+                    "vergininKdvTutari" => "0",
+                    "ozelMatrahTutari" => "0", //zorunlu
+                ];
+            })->toArray()
+        ];
+        $gibInvoice = new \App\Services\Gib\Models\GibInvoice;
+        $gibInvoice->mapWithTurkishKeys($invoiceToGibInvoice);
+
+        $uuid = $gibInvoice->getUuid();
+
+        $gibService->createInvoice($gibInvoice);
+
+        $invoice->uuid = $uuid;
+        $invoice->status_id = 2;
+        $invoice->locked = 1;
+        return $invoice->save();
     }
 }
