@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Customer extends Model
+class CustomerSubscription extends Model
 {
     use HasFactory, SoftDeletes;
 
-    public function subscriptions()
+    public function customer()
     {
-        return $this->hasMany(Subscription::class);
+        return $this->belongsTo(Customer::class);
     }
 }

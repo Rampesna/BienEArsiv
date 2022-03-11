@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('soapTest', [\App\Http\Controllers\SoapTestController::class, 'show']);
+
 Route::get('login', function () {
     return redirect()->route('web.user.authentication.login');
 })->name('login');
@@ -30,7 +32,8 @@ Route::prefix('authentication')->group(function () {
 });
 
 Route::middleware([
-    'auth'
+    'auth',
+    'SubscriptionWeb',
 ])->group(function () {
     Route::prefix('dashboard')->group(function () {
         Route::get('index', [\App\Http\Controllers\Web\User\DashboardController::class, 'index'])->name('web.user.dashboard.index');
@@ -80,5 +83,9 @@ Route::middleware([
         Route::get('stampAndLogo', [\App\Http\Controllers\Web\User\SettingController::class, 'stampAndLogo'])->name('web.user.setting.stampAndLogo');
         Route::get('customerTransactionCategory', [\App\Http\Controllers\Web\User\SettingController::class, 'customerTransactionCategory'])->name('web.user.setting.customerTransactionCategory');
         Route::get('user', [\App\Http\Controllers\Web\User\SettingController::class, 'user'])->name('web.user.setting.user');
+    });
+
+    Route::prefix('subscription')->group(function () {
+        Route::get('index', [\App\Http\Controllers\Web\User\SubscriptionController::class, 'index'])->name('web.user.subscription.index')->withoutMiddleware('SubscriptionWeb');
     });
 });

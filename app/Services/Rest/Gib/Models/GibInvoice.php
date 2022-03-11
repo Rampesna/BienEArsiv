@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Gib\Models;
+namespace App\Services\Rest\Gib\Models;
 
 use Ramsey\Uuid\Uuid;
 

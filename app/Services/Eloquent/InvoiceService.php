@@ -225,7 +225,7 @@ class InvoiceService extends BaseService
         ])->find($id);
         $invoiceProducts = $invoice->products()->get();
 
-        $gibService = new \App\Services\Gib\GibService;
+        $gibService = new \App\Services\Rest\Gib\GibService;
         $gibService->setTestMode(true);
         $gibService->setCredentials($invoice->customer->tax_number, $invoice->customer->gib_password);
         $gibService->login();
@@ -311,7 +311,7 @@ class InvoiceService extends BaseService
                 ];
             })->toArray()
         ];
-        $gibInvoice = new \App\Services\Gib\Models\GibInvoice;
+        $gibInvoice = new \App\Services\Rest\Gib\Models\GibInvoice;
         $gibInvoice->mapWithTurkishKeys($invoiceToGibInvoice);
 
         $uuid = $gibInvoice->getUuid();

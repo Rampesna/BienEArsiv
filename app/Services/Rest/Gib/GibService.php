@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services\Gib;
+namespace App\Services\Rest\Gib;
 
-use App\Services\Gib\Models\GibInvoice;
+use App\Services\Rest\Gib\Models\GibInvoice;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Ramsey\Uuid\Uuid;
 

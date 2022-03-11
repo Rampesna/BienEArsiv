@@ -17,15 +17,18 @@ Route::prefix('customer')->group(function () {
     Route::post('create', [\App\Http\Controllers\Api\User\CustomerController::class, 'create'])->name('api.user.customer.create');
 });
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware([
+    'auth:sanctum',
+    'Subscription',
+])->group(function () {
 
     Route::group([
         'withoutMiddleware' => [
             'auth:sanctum'
         ],
     ], function () {
-        Route::post('login', [\App\Http\Controllers\Api\User\UserController::class, 'login'])->name('api.user.login')->withoutMiddleware('auth:sanctum');
-        Route::post('create', [\App\Http\Controllers\Api\User\UserController::class, 'create'])->name('api.user.create')->withoutMiddleware('auth:sanctum');
+        Route::post('login', [\App\Http\Controllers\Api\User\UserController::class, 'login'])->name('api.user.login')->withoutMiddleware(['auth:sanctum', 'Subscription']);
+        Route::post('create', [\App\Http\Controllers\Api\User\UserController::class, 'create'])->name('api.user.create')->withoutMiddleware(['auth:sanctum', 'Subscription']);
     });
 
     Route::get('index', [\App\Http\Controllers\Api\User\UserController::class, 'index'])->name('api.user.index');
@@ -55,6 +58,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('unit')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\UnitController::class, 'getAll'])->name('api.user.unit.getAll');
+    });
+
+    Route::prefix('subscription')->group(function () {
+        Route::get('getAll', [\App\Http\Controllers\Api\User\SubscriptionController::class, 'getAll'])->name('api.user.subscription.getAll');
     });
 
     Route::prefix('transactionCategory')->group(function () {

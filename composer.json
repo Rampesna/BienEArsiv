@@ -7,13 +7,17 @@
     "require": {
         "php": "^8.0.2",
         "barryvdh/laravel-dompdf": "^1.0",
+        "codedredd/laravel-soap": "*",
         "fruitcake/laravel-cors": "^2.0.5",
         "guzzlehttp/guzzle": "^7.4",
         "laravel/framework": "^9.0",
         "laravel/sanctum": "^2.14",
         "laravel/tinker": "^2.7",
+        "nyholm/psr7": "^1.5",
         "rap2hpoutre/fast-excel": "^3.2",
-        "yajra/laravel-datatables": "^1.5"
+        "symfony/http-client": "^6.0",
+        "yajra/laravel-datatables": "^1.5",
+        "ext-soap": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

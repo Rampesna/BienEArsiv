@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
-use App\Services\Gib\GibService;
-use App\Http\Requests\Api\User\EInvoiceController\GetInvoicesRequest;
 use App\Http\Requests\Api\User\EInvoiceController\GetInvoiceHTMLRequest;
 use App\Http\Requests\Api\User\EInvoiceController\GetInvoicePdfRequest;
+use App\Http\Requests\Api\User\EInvoiceController\GetInvoicesRequest;
+use App\Services\Rest\Gib\GibService;
 use App\Traits\Response;
 
 class EInvoiceController extends Controller

@@ -43,11 +43,9 @@
                         </div>
                         <div class="separator my-2"></div>
                         <div class="menu-item px-5">
-                            <a href="#" class="menu-link px-5">Profilim</a>
+                            <a href="{{ route('web.user.subscription.index') }}" class="menu-link px-5">Hesap Ayarları</a>
                         </div>
-                        <div class="menu-item px-5 my-1">
-                            <a href="#" class="menu-link px-5">Hesap Ayarları</a>
-                        </div>
+                        <div class="separator my-2"></div>
                         <div class="menu-item px-5">
                             <a href="{{ route('web.user.authentication.logout') }}" class="menu-link px-5">Çıkış Yap</a>
                         </div>
