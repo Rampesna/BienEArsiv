@@ -14,7 +14,8 @@
 
 @section('content')
 
-
+    <h1 class="text-center">Çok Yakında...</h1>
+    <div class="bgi-no-repeat bgi-position-x-center bgi-size-contain min-h-200px min-h-lg-600px" style="background-image: url('{{ asset('assets/media/illustrations/sketchy-1/17.png') }}')"></div>
 
 @endsection
 
