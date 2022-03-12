@@ -13,8 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('soapTest', [\App\Http\Controllers\SoapTestController::class, 'show']);
-
 Route::get('login', function () {
     return redirect()->route('web.user.authentication.login');
 })->name('login');

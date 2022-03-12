@@ -43,7 +43,7 @@
                         </div>
                         <div class="separator my-2"></div>
                         <div class="menu-item px-5">
-                            <a href="{{ route('web.user.subscription.index') }}" class="menu-link px-5">Hesap Ayarları</a>
+                            <a href="{{ route('web.user.subscription.index') }}" class="menu-link px-5">Hesap Aktivasyonu</a>
                         </div>
                         <div class="separator my-2"></div>
                         <div class="menu-item px-5">

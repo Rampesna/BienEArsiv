@@ -155,4 +155,14 @@ Route::middleware([
         Route::put('update', [\App\Http\Controllers\Api\User\CustomerTransactionCategoryController::class, 'update'])->name('api.user.customerTransactionCategory.update');
         Route::delete('delete', [\App\Http\Controllers\Api\User\CustomerTransactionCategoryController::class, 'delete'])->name('api.user.customerTransactionCategory.delete');
     });
+
+    Route::prefix('subscriptionPayment')->group(function () {
+        Route::post('create', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'create'])->name('api.user.subscriptionPayment.create');
+        Route::post('success', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'successUrl'])->name('api.user.subscriptionPayment.successUrl')->withoutMiddleware(['auth:sanctum', 'Subscription']);
+        Route::post('failure', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'failureUrl'])->name('api.user.subscriptionPayment.failureUrl')->withoutMiddleware(['auth:sanctum', 'Subscription']);
+    });
+
+    Route::prefix('customerSubscription')->group(function () {
+        Route::get('check', [\App\Http\Controllers\Api\User\CustomerSubscriptionController::class, 'check'])->name('api.user.customerSubscription.check');
+    });
 });

@@ -17,6 +17,11 @@ class ParamService
     protected $client;
 
     /**
+     * @var string $guid
+     */
+    protected $guid;
+
+    /**
      * @var integer $clientCode
      */
     protected $clientCode;
@@ -43,13 +48,14 @@ class ParamService
 
     public function __construct()
     {
-        $this->baseUrl = 'https://test-dmz.param.com.tr:4443/turkpos.ws/service_turkpos_test.asmx?wsdl';
+        $this->baseUrl = 'https://posws.param.com.tr/turkpos.ws/service_turkpos_prod.asmx?wsdl';
         $this->client = new SoapClient($this->baseUrl);
-        $this->clientCode = 10738;
-        $this->clientUsername = 'Test';
-        $this->clientPassword = 'Test';
-        $this->successUrl = 'www.ornek.com';
-        $this->failureUrl = 'www.ornek.com';
+        $this->guid = 'F7F6DA0C-81DA-4EAB-AB7B-1745204D7A0D';
+        $this->clientCode = 44506;
+        $this->clientUsername = 'TP10076153';
+        $this->clientPassword = '6AD169D581F57551';
+        $this->successUrl = route('api.user.subscriptionPayment.successUrl');
+        $this->failureUrl = route('api.user.subscriptionPayment.failureUrl');
     }
 
     /**
@@ -73,7 +79,6 @@ class ParamService
     }
 
     /**
-     * @param string $guid
      * @param string $creditCardHolderName
      * @param string $creditCardNumber
      * @param string $creditCardMonth
@@ -82,7 +87,7 @@ class ParamService
      * @param string $creditCardHolderGsm
      * @param string $orderId
      * @param string|null $orderDescription
-     * @param string $numberOfInstallment
+     * @param int $numberOfInstallment
      * @param string $transactionAmount
      * @param string $totalAmount
      * @param string $transactionType
@@ -101,7 +106,6 @@ class ParamService
      * @param string|null $data10
      */
     public function PosPayment(
-        string $guid,
         string $creditCardHolderName,
         string $creditCardNumber,
         string $creditCardMonth,
@@ -110,12 +114,12 @@ class ParamService
         string $creditCardHolderGsm,
         string $orderId,
         string $orderDescription,
-        string $numberOfInstallment,
+        int    $numberOfInstallment,
         string $transactionAmount,
         string $totalAmount,
         string $transactionType,
         string $transactionId = '',
-        string $ipAddress = '',
+        string $ipAddress = '88.247.47.164',
         string $refUrl = '',
         string $data1 = '',
         string $data2 = '',
@@ -130,7 +134,7 @@ class ParamService
     )
     {
         $hash = $this->SHA2B64(
-            $guid,
+            $this->guid,
             $numberOfInstallment,
             $transactionAmount,
             $totalAmount,
@@ -143,7 +147,7 @@ class ParamService
                 'CLIENT_USERNAME' => $this->clientUsername,
                 'CLIENT_PASSWORD' => $this->clientPassword,
             ],
-            'GUID' => $guid,
+            'GUID' => $this->guid,
             'KK_Sahibi' => $creditCardHolderName,
             'KK_No' => $creditCardNumber,
             'KK_SK_Ay' => $creditCardMonth,

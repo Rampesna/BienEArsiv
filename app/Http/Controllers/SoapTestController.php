@@ -29,16 +29,16 @@ class SoapTestController extends Controller
             ipAddress: 'http://127.0.0.1',
             transactionId: '',
             refUrl: 'http://127.0.0.1',
-            data1: 'test',
-            data2: 'test',
-            data3: 'test',
-            data4: 'test',
-            data5: 'test',
-            data6: 'test',
-            data7: 'test',
-            data8: 'test',
-            data9: 'test',
-            data10: 'test'
+            data1: '',
+            data2: '',
+            data3: '',
+            data4: '',
+            data5: '',
+            data6: '',
+            data7: '',
+            data8: '',
+            data9: '',
+            data10: ''
         );
     }
 }

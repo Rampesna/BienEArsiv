@@ -7,7 +7,70 @@
     var pageDownButton = $('#pageDown');
     var pageSizeSelector = $('#pageSize');
 
+    var NewEarnButton = $('#NewEarnButton');
+    var NewExpenseButton = $('#NewExpenseButton');
+
+    var new_earn_category_id = $('#new_earn_category_id');
+    var new_earn_safebox_id = $('#new_earn_safebox_id');
+    var new_expense_category_id = $('#new_expense_category_id');
+    var new_expense_safebox_id = $('#new_expense_safebox_id');
+
     var filter_transaction_type_id = $('#filter_transaction_type_id');
+
+    function getTransactionCategories() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.customerTransactionCategory.all') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                console.log(response);
+                new_earn_category_id.empty();
+                new_expense_category_id.empty();
+                $.each(response.response, function (i, transactionCategory) {
+                    new_earn_category_id.append(`<option value="${transactionCategory.id}">${transactionCategory.name}</option>`);
+                    new_expense_category_id.append(`<option value="${transactionCategory.id}">${transactionCategory.name}</option>`);
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Gelir & Gider Kategorileri Alınırken Serviste Bir Hata Oluştu!');
+            }
+        });
+    }
+
+    function getSafeboxes() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.safebox.all') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                new_earn_safebox_id.empty();
+                new_expense_safebox_id.empty();
+                $.each(response.response, function (i, safebox) {
+                    new_earn_safebox_id.append($('<option>', {
+                        value: safebox.id,
+                        text: safebox.name
+                    }));
+                    new_expense_safebox_id.append($('<option>', {
+                        value: safebox.id,
+                        text: safebox.name
+                    }));
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Kasa & Banka Listesi Alınırken Serviste Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+            }
+        });
+    }
 
     function getTransactionTypes() {
         $.ajax({
@@ -119,7 +182,23 @@
         getTransactions();
     }
 
+    function newEarn() {
+        $('#new_credit_date').val('');
+        $('#new_credit_amount').val('');
+        $('#new_credit_description').val('');
+        $('#NewEarnModal').modal('show');
+    }
+
+    function newExpense() {
+        $('#new_debit_date').val('');
+        $('#new_debit_amount').val('');
+        $('#new_debit_description').val('');
+        $('#NewExpenseModal').modal('show');
+    }
+
+    getTransactionCategories();
     getTransactionTypes();
+    getSafeboxes();
     getTransactions();
 
     pageUpButton.click(function () {
@@ -136,6 +215,104 @@
 
     $(document).delegate('.filterInput', 'change', function () {
         changePage(1);
+    });
+
+    NewEarnButton.click(function () {
+        var safeboxId = new_earn_safebox_id.val();
+        var datetime = $('#new_earn_date').val();
+        var amount = $('#new_earn_amount').val();
+        var categoryId = new_earn_category_id.val();
+        var description = $('#new_earn_description').val();
+
+        if (!safeboxId) {
+            toastr.warning('Kasa & Banka Seçimi Yapılmadı');
+        } else if (!datetime) {
+            toastr.warning('Tarih Seçmediniz!');
+        } else if (!amount) {
+            toastr.warning('Tutar Girmediniz!');
+        } else if (!categoryId) {
+            toastr.warning('Kategori Seçmediniz!');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '{{ route('api.user.transaction.create') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    companyId: null,
+                    invoiceId: null,
+                    datetime: datetime,
+                    typeId: 3,
+                    categoryId: categoryId,
+                    receiptNumber: '',
+                    description: description,
+                    safeboxId: safeboxId,
+                    direction: 0,
+                    amount: amount,
+                    locked: 0,
+                },
+                success: function () {
+                    $('#NewEarnModal').modal('hide');
+                    toastr.success('İşlem Başarılı');
+                    changePage(1);
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Sistemsel Bir Hata Oluştu!');
+                }
+            });
+        }
+    });
+
+    NewExpenseButton.click(function () {
+        var safeboxId = new_expense_safebox_id.val();
+        var datetime = $('#new_expense_date').val();
+        var amount = $('#new_expense_amount').val();
+        var categoryId = new_expense_category_id.val();
+        var description = $('#new_expense_description').val();
+
+        if (!safeboxId) {
+            toastr.warning('Kasa & Banka Seçimi Yapılmadı');
+        } else if (!datetime) {
+            toastr.warning('Tarih Seçmediniz!');
+        } else if (!amount) {
+            toastr.warning('Tutar Girmediniz!');
+        } else if (!categoryId) {
+            toastr.warning('Kategori Seçmediniz!');
+        } else {
+            $.ajax({
+                type: 'post',
+                url: '{{ route('api.user.transaction.create') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    companyId: null,
+                    invoiceId: null,
+                    datetime: datetime,
+                    typeId: 4,
+                    categoryId: categoryId,
+                    receiptNumber: '',
+                    description: description,
+                    safeboxId: safeboxId,
+                    direction: 1,
+                    amount: amount,
+                    locked: 0,
+                },
+                success: function () {
+                    $('#NewExpenseModal').modal('hide');
+                    toastr.success('İşlem Başarılı');
+                    changePage(1);
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Sistemsel Bir Hata Oluştu!');
+                }
+            });
+        }
     });
 
 </script>

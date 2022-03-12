@@ -14,6 +14,7 @@ return new class extends Migration {
     {
         Schema::create('customer_subscriptions', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('payment_id')->unsigned();
             $table->bigInteger('customer_id')->unsigned();
             $table->bigInteger('subscription_id')->unsigned();
             $table->date('subscription_start_date');

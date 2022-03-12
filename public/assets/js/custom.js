@@ -1,5 +1,7 @@
 Inputmask({mask: "(999) 999-9999"}).mask(".phoneMask");
 
+Inputmask({mask: "9999 9999 9999 9999"}).mask(".creditCardMask");
+
 Inputmask({
     mask: "*{1,20}[.*{1,20}][.*{1,20}][.*{1,20}]@*{1,20}[.*{2,6}][.*{1,2}]",
     greedy: false,

@@ -10,8 +10,25 @@ class Customer extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $appends = [
+        'subscription'
+    ];
+
     public function subscriptions()
     {
-        return $this->hasMany(Subscription::class);
+        return $this->hasMany(CustomerSubscription::class);
+    }
+
+    public function getSubscriptionAttribute()
+    {
+        return $this
+            ->subscriptions()
+            ->with([
+                'subscription',
+                'payment'
+            ])
+            ->where('subscription_expiry_date', '>=', date('Y-m-d'))
+            ->orderBy('created_at', 'desc')
+            ->first();
     }
 }

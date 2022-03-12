@@ -56,7 +56,7 @@
                                 <label for="customer_phone" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Telefon Numarası</span>
                                 </label>
-                                <input id="customer_phone" type="text" class="form-control form-control-solid" placeholder="Telefon Numarası" aria-hidden="true">
+                                <input id="customer_phone" type="text" class="form-control form-control-solid phoneMask" placeholder="Telefon Numarası" aria-hidden="true">
                             </div>
                         </div>
                         <div class="col-xl-6 mb-7">

@@ -16,9 +16,9 @@ return new class extends Migration {
             $table->id();
             $table->bigInteger('customer_id')->unsigned();
             $table->bigInteger('subscription_id')->unsigned();
-            $table->string('order_number');
+            $table->string('order_id');
             $table->double('amount')->unsigned();
-            $table->tinyInteger('status_id')->unsigned();
+            $table->boolean('approved')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

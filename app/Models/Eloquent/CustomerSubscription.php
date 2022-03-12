@@ -14,4 +14,14 @@ class CustomerSubscription extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class);
+    }
+
+    public function payment()
+    {
+        return $this->belongsTo(SubscriptionPayment::class);
+    }
 }

@@ -25,7 +25,7 @@ class CustomerTransactionCategoryController extends Controller
 
     public function all(AllRequest $request)
     {
-        return $this->success('Customer transaction categorys', $this->customerTransactionCategoryService->all(
+        return $this->success('Customer transaction categories', $this->customerTransactionCategoryService->all(
             $request->user()->customer_id
         ));
     }
