@@ -9,7 +9,40 @@
 
     @include('user.modules.eInvoice.outbox.modals.eInvoiceHtml')
 
-    <a id="eInvoiceDownloadLink" class="d-none" download=""></a>
+    <div class="row mb-5">
+        <div class="col-xl-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-5">
+                        <h5>Filtreleme Seçenekleri</h5>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-4 mb-10">
+                            <div class="form-group">
+                                <label for="filter_datetime_start" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Başlangıç Tarihi</span>
+                                </label>
+                                <input id="filter_datetime_start" type="date" class="form-control form-control-solid filterInput" value="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
+                        <div class="col-xl-4 mb-10">
+                            <div class="form-group">
+                                <label for="filter_datetime_end" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Bitiş Tarihi</span>
+                                </label>
+                                <input id="filter_datetime_end" type="date" class="form-control form-control-solid filterInput" value="{{ date('Y-m-d') }}">
+                            </div>
+                        </div>
+                        <div class="col-xl-4 mt-8 mb-10">
+                            <div class="form-group d-grid">
+                                <button class="btn btn-primary" id="FilterButton">Filtrele</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="row">
         <div class="col-xl-12">
             <div class="card">

@@ -16,8 +16,25 @@
                     <div class="mb-13 text-center">
                         <h1 class="mb-3">e-Arşiv Giden Faturalar</h1>
                     </div>
-
-                    <div class="text-center">
+                    <div class="row">
+                        <div class="col-xl-6">
+                            <div class="form-group">
+                                <label for="e_invoice_outbox_report_start_date" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Başlangıç Tarihi</span>
+                                </label>
+                                <input id="e_invoice_outbox_report_start_date" type="date" class="form-control form-control-solid">
+                            </div>
+                        </div>
+                        <div class="col-xl-6">
+                            <div class="form-group">
+                                <label for="e_invoice_outbox_report_end_date" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Bitiş Tarihi</span>
+                                </label>
+                                <input id="e_invoice_outbox_report_end_date" type="date" class="form-control form-control-solid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-15">
                         <button type="button" data-bs-dismiss="modal" class="btn btn-light me-3">İptal</button>
                         <button type="button" class="btn btn-info" id="EInvoiceOutboxReportButton">Raporla</button>
                     </div>

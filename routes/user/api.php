@@ -89,6 +89,12 @@ Route::middleware([
         Route::post('create', [\App\Http\Controllers\Api\User\CompanyController::class, 'create'])->name('api.user.company.create');
         Route::put('update', [\App\Http\Controllers\Api\User\CompanyController::class, 'update'])->name('api.user.company.update');
         Route::delete('delete', [\App\Http\Controllers\Api\User\CompanyController::class, 'delete'])->name('api.user.company.delete');
+
+        Route::prefix('report')->group(function () {
+            Route::get('balanceStatus', [\App\Http\Controllers\Api\User\CompanyReportController::class, 'balanceStatus'])->name('api.user.company.report.balanceStatus');
+            Route::post('extract', [\App\Http\Controllers\Api\User\CompanyReportController::class, 'extract'])->name('api.user.company.report.extract');
+            Route::post('transaction', [\App\Http\Controllers\Api\User\CompanyReportController::class, 'transaction'])->name('api.user.company.report.transaction');
+        });
     });
 
     Route::prefix('safebox')->group(function () {
@@ -108,6 +114,10 @@ Route::middleware([
         Route::post('create', [\App\Http\Controllers\Api\User\ProductController::class, 'create'])->name('api.user.product.create');
         Route::put('update', [\App\Http\Controllers\Api\User\ProductController::class, 'update'])->name('api.user.product.update');
         Route::delete('delete', [\App\Http\Controllers\Api\User\ProductController::class, 'delete'])->name('api.user.product.delete');
+
+        Route::prefix('report')->group(function () {
+            Route::get('all', [\App\Http\Controllers\Api\User\ProductReportController::class, 'all'])->name('api.user.product.report.all');
+        });
     });
 
     Route::prefix('transaction')->group(function () {
@@ -115,6 +125,10 @@ Route::middleware([
         Route::get('count', [\App\Http\Controllers\Api\User\TransactionController::class, 'count'])->name('api.user.transaction.count');
         Route::get('index', [\App\Http\Controllers\Api\User\TransactionController::class, 'index'])->name('api.user.transaction.index');
         Route::post('create', [\App\Http\Controllers\Api\User\TransactionController::class, 'create'])->name('api.user.transaction.create');
+
+        Route::prefix('report')->group(function () {
+            Route::post('get', [\App\Http\Controllers\Api\User\TransactionReportController::class, 'get'])->name('api.user.transaction.report.get');
+        });
     });
 
     Route::prefix('invoice')->group(function () {
@@ -127,9 +141,14 @@ Route::middleware([
     });
 
     Route::prefix('eInvoice')->group(function () {
-        Route::get('getInvoices', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'getInvoices'])->name('api.user.eInvoice.getInvoices');
+        Route::get('outbox', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'outbox'])->name('api.user.eInvoice.outbox');
+        Route::get('inbox', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'inbox'])->name('api.user.eInvoice.inbox');
         Route::get('getInvoiceHTML', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'getInvoiceHTML'])->name('api.user.eInvoice.getInvoiceHTML');
         Route::get('getInvoicePDF', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'getInvoicePDF'])->name('api.user.eInvoice.getInvoicePDF');
+
+        Route::prefix('report')->group(function () {
+            Route::post('outbox', [\App\Http\Controllers\Api\User\EInvoiceReportController::class, 'outbox'])->name('api.user.eInvoice.report.outbox');
+        });
     });
 
     Route::prefix('invoiceProduct')->group(function () {

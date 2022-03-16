@@ -4,7 +4,7 @@ namespace App\Http\Requests\Api\User\EInvoiceController;
 
 use App\Http\Requests\Api\BaseApiRequest;
 
-class GetInvoicesRequest extends BaseApiRequest
+class InboxRequest extends BaseApiRequest
 {
     /**
      * Determine if the user is authorized to make this request.

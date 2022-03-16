@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\EInvoiceController\GetInvoiceHTMLRequest;
 use App\Http\Requests\Api\User\EInvoiceController\GetInvoicePdfRequest;
-use App\Http\Requests\Api\User\EInvoiceController\GetInvoicesRequest;
+use App\Http\Requests\Api\User\EInvoiceController\OutboxRequest;
+use App\Http\Requests\Api\User\EInvoiceController\InboxRequest;
 use App\Services\Rest\Gib\GibService;
 use App\Traits\Response;
 
@@ -20,12 +21,21 @@ class EInvoiceController extends Controller
         $this->gibService = new GibService;
     }
 
-    public function getInvoices(GetInvoicesRequest $request)
+    public function outbox(OutboxRequest $request)
     {
-        $this->gibService->setTestMode(true);
         $this->gibService->setCredentials($request->user()->customer->tax_number, $request->user()->customer->gib_password);
         $this->gibService->login();
-        return $this->success('eInvoices', $this->gibService->getInvoices(
+        return $this->success('eInvoices', $this->gibService->outbox(
+            date('d/m/Y', strtoTime($request->dateStart)),
+            date('d/m/Y', strtoTime($request->dateEnd))
+        ));
+    }
+
+    public function inbox(InboxRequest $request)
+    {
+        $this->gibService->setCredentials($request->user()->customer->tax_number, $request->user()->customer->gib_password);
+        $this->gibService->login();
+        return $this->success('eInvoices', $this->gibService->inbox(
             date('d/m/Y', strtoTime($request->dateStart)),
             date('d/m/Y', strtoTime($request->dateEnd))
         ));
@@ -33,7 +43,6 @@ class EInvoiceController extends Controller
 
     public function getInvoiceHTML(GetInvoiceHTMLRequest $request)
     {
-        $this->gibService->setTestMode(true);
         $this->gibService->setCredentials($request->user()->customer->tax_number, $request->user()->customer->gib_password);
         $this->gibService->login();
 
@@ -44,7 +53,6 @@ class EInvoiceController extends Controller
 
     public function getInvoicePDF(GetInvoicePdfRequest $request)
     {
-        $this->gibService->setTestMode(true);
         $this->gibService->setCredentials($request->user()->customer->tax_number, $request->user()->customer->gib_password);
         $this->gibService->login();
 

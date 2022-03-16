@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\CompanyController\AllRequest;
 use App\Http\Requests\Api\User\CompanyController\IndexRequest;
+use App\Http\Requests\Api\User\CompanyController\ReportRequest;
 use App\Http\Requests\Api\User\CompanyController\GetByIdRequest;
 use App\Http\Requests\Api\User\CompanyController\CreateRequest;
 use App\Http\Requests\Api\User\CompanyController\UpdateRequest;
@@ -39,6 +40,13 @@ class CompanyController extends Controller
             $request->keyword,
             $request->accountType,
             $request->balanceType
+        ));
+    }
+
+    public function report(ReportRequest $request)
+    {
+        return $this->success('Companies', $this->companyService->report(
+            $request->user()->customer_id
         ));
     }
 

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Barryvdh\DomPDF\Facade as PDF;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +13,13 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('pdfTest', function () {
+    $companies = \App\Models\Eloquent\Company::all();
+    return PDF::loadView('user.documents.report.company.extract', [
+        'companies' => $companies,
+    ], [], 'UTF-8')->download('test.pdf');
+});
 
 Route::get('login', function () {
     return redirect()->route('web.user.authentication.login');

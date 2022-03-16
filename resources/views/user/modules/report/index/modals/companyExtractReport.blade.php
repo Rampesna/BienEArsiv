@@ -16,8 +16,25 @@
                     <div class="mb-13 text-center">
                         <h1 class="mb-3">Cari Ekstre Raporu</h1>
                     </div>
-
-                    <div class="text-center">
+                    <div class="row">
+                        <div class="col-xl-12 mb-5">
+                            <div class="form-group">
+                                <label for="company_extract_report_company_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Cari</span>
+                                </label>
+                                <select id="company_extract_report_company_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Cari"></select>
+                            </div>
+                        </div>
+                        <div class="col-xl-12">
+                            <div class="form-group">
+                                <label for="company_extract_report_date" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Tarih</span>
+                                </label>
+                                <input id="company_extract_report_date" type="date" class="form-control form-control-solid">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-10">
                         <button type="button" data-bs-dismiss="modal" class="btn btn-light me-3">İptal</button>
                         <button type="button" class="btn btn-info" id="CompanyExtractReportButton">Raporla</button>
                     </div>

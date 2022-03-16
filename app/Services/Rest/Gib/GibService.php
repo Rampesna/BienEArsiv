@@ -53,6 +53,7 @@ class GibService
         $this->tokenEndpoint = "/earsiv-services/assos-login";
         $this->referrerEndpoint = "/intragiris.html";
         $this->client = new \GuzzleHttp\Client(['verify' => false]);
+//        $this->testMode = true;
     }
 
     public function getBaseUrl()
@@ -173,7 +174,7 @@ class GibService
      * @param string $startDatetime
      * @param string $endDatetime
      */
-    public function getInvoices(
+    public function outbox(
         $startDatetime,
         $endDatetime
     )
@@ -185,6 +186,30 @@ class GibService
             "token" => $this->token,
             "jp" => '{"baslangic":"' . $startDatetime . '","bitis":"' . $endDatetime . '","hangiTip":"5000/30000", "table":[]}'
         ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
+            "form_params" => $parameters,
+            "headers" => []
+        ]);
+
+        return json_decode($response->getBody())->data;
+    }
+
+    /**
+     * @param string $startDatetime
+     * @param string $endDatetime
+     */
+    public function inbox(
+        $startDatetime,
+        $endDatetime
+    )
+    {
+        $parameters = [
+            "cmd" => "EARSIV_PORTAL_ADIMA_KESILEN_BELGELERI_GETIR",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_ALICI_TASLAKLAR",
+            "token" => $this->token,
+            "jp" => '{"baslangic":"' . $startDatetime . '","bitis":"' . $endDatetime . ' " }'];
 
         $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
             "form_params" => $parameters,
@@ -234,12 +259,17 @@ class GibService
     )
     {
         $invoiceHtml = $this->getInvoiceHTML($uuid, $signed);
+        $path = 'documents/eInvoices/';
+        $checkPath = base_path($path);
+        if (!file_exists($checkPath)) {
+            mkdir($checkPath, 0777, true);
+        }
         $pdf = app()->make('dompdf.wrapper');
         $pdf->loadHTML($invoiceHtml);
-        $pdf->save(public_path('eInvoices/' . $uuid . '.pdf'));
-
-
+        $pdf->save($checkPath . $uuid . '.pdf');
         $pdf = PDF::loadHTML($invoiceHtml);
-        $pdf->save(public_path('eInvoices/' . $uuid . '.pdf'));
+        $pdf->save($checkPath . $uuid . '.pdf');
+
+        return $path . $uuid . '.pdf';
     }
 }

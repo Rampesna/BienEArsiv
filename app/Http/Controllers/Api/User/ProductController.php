@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\ProductController\AllRequest;
 use App\Http\Requests\Api\User\ProductController\IndexRequest;
+use App\Http\Requests\Api\User\ProductController\ReportRequest;
 use App\Http\Requests\Api\User\ProductController\GetByIdRequest;
 use App\Http\Requests\Api\User\ProductController\CreateRequest;
 use App\Http\Requests\Api\User\ProductController\UpdateRequest;
@@ -37,6 +38,13 @@ class ProductController extends Controller
             $request->pageIndex,
             $request->pageSize,
             $request->keyword,
+        ));
+    }
+
+    public function report(ReportRequest $request)
+    {
+        return $this->success('Products', $this->productService->report(
+            $request->user()->customer_id
         ));
     }
 

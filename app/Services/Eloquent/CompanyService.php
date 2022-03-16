@@ -3,6 +3,7 @@
 namespace App\Services\Eloquent;
 
 use App\Models\Eloquent\Company;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class CompanyService extends BaseService
 {
@@ -70,6 +71,37 @@ class CompanyService extends BaseService
                 ->take($pageSize)
                 ->get()
         ];
+    }
+
+    /**
+     * @param int $customerId
+     */
+    public function report(
+        $customerId
+    )
+    {
+        $companies = Company::where('customer_id', $customerId)->get();
+        $fastExcel = new FastExcel;
+        $fastExcel->data(
+            $companies->map(function ($company) {
+                return [
+                    'Firma' => $company->title,
+                    'Vergi Dairesi' => $company->tax_office,
+                    'Vergi Numarası' => $company->tax_number,
+                    'E-posta Adresi' => $company->email,
+                    'Bakiye' => $company->balance,
+                    'Durum' => intval($company->balance) > 0 ? 'Borçluyuz' : (intval($company->balance) < 0 ? 'Alacaklıyız' : 'Mutabık')
+                ];
+            })
+        );
+        $path = 'documents/customers/' . $customerId . '/companies/report/' . date('Y_m_d_H_i_s');
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+        $filePath = base_path($path . '/Cariler.xlsx');
+        $fastExcel->export($filePath);
+
+        return $path . '/Cariler.xlsx';
     }
 
     /**
