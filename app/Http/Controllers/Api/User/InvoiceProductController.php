@@ -59,7 +59,8 @@ class InvoiceProductController extends Controller
             $request->quantity,
             $request->unitId,
             $request->unitPrice,
-            $request->vatRate
+            $request->vatRate,
+            $request->discountRate
         ));
     }
 
@@ -95,7 +96,8 @@ class InvoiceProductController extends Controller
             $request->quantity,
             $request->unitId,
             $request->unitPrice,
-            $request->vatRate
+            $request->vatRate,
+            $request->discountRate
         ));
     }
 }

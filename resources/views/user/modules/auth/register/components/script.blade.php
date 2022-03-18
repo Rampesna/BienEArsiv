@@ -58,6 +58,8 @@
     });
 
     RegisterButton.click(function () {
+        $(this).attr('disabled', 'disabled');
+        toastr.info('Hesabınız Oluşturuluyor...');
         var name = $('#name').val();
         var surname = $('#surname').val();
         var email = $('#email').val();

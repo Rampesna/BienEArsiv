@@ -84,25 +84,31 @@
                     <div class="row">
                         <div class="col-xl-6 mb-8">
                             <div class="form-group">
-                                <label for="create_invoice_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                    <span>Fatura Numarası</span>
+                                <label for="create_invoice_currency_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                    <span class="required">Döviz Türü</span>
                                 </label>
-                                <input id="create_invoice_number" type="text" class="form-control form-control-sm form-control-solid onlyNumber" maxlength="9" data-placeholder="Fatura Numarası">
+                                <select id="create_invoice_currency_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Döviz Türü"></select>
                             </div>
                         </div>
-                        <div class="col-xl-6">
+                        <div class="col-xl-6 mb-8">
                             <div class="form-group">
-                                <label for="create_invoice_vat_included" class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                    <span>Fiyatlara KDV Dahil</span>
+                                <label for="create_invoice_currency" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                    <span class="required">Döviz Kuru</span>
                                 </label>
-                                <select id="create_invoice_vat_included" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Fiyatlara KDV Dahil">
-                                    <option value="0">Hayır</option>
-                                    <option value="1">Evet</option>
-                                </select>
+                                <input id="create_invoice_currency" type="text" class="form-control form-control-sm form-control-solid currencyMask" placeholder="Döviz Kuru" value="1">
                             </div>
                         </div>
                     </div>
-                    <br>
+                    <div class="row">
+                        <div class="col-xl-12 mb-8">
+                            <div class="form-group">
+                                <label for="create_invoice_vat_discount_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                    <span class="required">Tevkifat</span>
+                                </label>
+                                <select id="create_invoice_vat_discount_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Tevkifat"></select>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-xl-6 mb-8">
                             <div class="form-group">
@@ -151,14 +157,14 @@
                             <div class="row mb-3 hideIfMobile">
                                 <div class="col-xl-12">
                                     <div class="row">
-                                        <div class="col-xl-3">
+                                        <div class="col-xl-2">
                                             <div class="form-group">
                                                 <label class="d-flex align-items-center fs-7 fw-bold mb-2">
                                                     <span>Ürün Adı</span>
                                                 </label>
                                             </div>
                                         </div>
-                                        <div class="col-xl-2">
+                                        <div class="col-xl-1">
                                             <div class="form-group">
                                                 <label class="d-flex align-items-center fs-7 fw-bold mb-2">
                                                     <span>Miktar</span>
@@ -183,6 +189,13 @@
                                             <div class="form-group">
                                                 <label class="d-flex align-items-center fs-7 fw-bold mb-2">
                                                     <span>KDV</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-xl-2">
+                                            <div class="form-group">
+                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                                    <span>İskonto</span>
                                                 </label>
                                             </div>
                                         </div>
@@ -238,6 +251,17 @@
                                 <div class="col-xl-7">
                                     <div class="input-group input-group-sm input-group-solid">
                                         <input id="vatTotalSpan" type="text" class="form-control form-control-sm form-control-solid text-end" value="0.00" disabled>
+                                        <span class="input-group-text">₺</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-10" id="vatDiscountDiv">
+                                <div class="col-xl-5">
+                                    <label for="vatDiscountTotalInput" class="fw-bolder">KDV Tevk.(<span id="vatDiscountRateSpan"></span>): </label>
+                                </div>
+                                <div class="col-xl-7">
+                                    <div class="input-group input-group-sm input-group-solid">
+                                        <input id="vatDiscountTotalInput" type="text" class="form-control form-control-sm form-control-solid text-end" value="0.00" disabled>
                                         <span class="input-group-text">₺</span>
                                     </div>
                                 </div>

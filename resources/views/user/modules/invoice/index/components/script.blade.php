@@ -62,7 +62,7 @@
             success: function (response) {
                 invoices.empty();
                 $.each(response.response.invoices, function (i, invoice) {
-                    var dropdownMenuList = !invoice.uuid ?
+                    var dropdownMenuList = !invoice.uuid && parseInt(invoice.type_id) === 7 || parseInt(invoice.type_id) === 10 ?
                         `
                             <div class="dropdown">
                                 <button class="btn btn-secondary btn-icon btn-sm" type="button" id="Invoice_${invoice.id}_Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -97,12 +97,12 @@
                     <tr>
                         <td>
                             ${icon}
-                            <span class="ms-1">${reformatInvoiceNumber(invoice.datetime, invoice.number)}</span>
+                            <span class="ms-1">${invoice.company.title}</span>
                             ${invoice.type ? `<br><span class="badge badge-light-${invoice.type.class} ms-9 mb-3">${invoice.type.name}</span>` : ``}
                             ${invoice.status ? `<br><span class="badge badge-light-${invoice.status.class} ms-9">${invoice.status.name}</span>` : ``}
                         </td>
                         <td class="hideIfMobile">
-                            ${invoice.datetime ?? ``}
+                            ${reformatDatetimeTo_DD_MM_YYYY_HH_ii_WithDot(invoice.datetime) ?? ``}
                         </td>
                         <td>
                             ${reformatNumberToMoney(invoice.price ?? 0)} ₺

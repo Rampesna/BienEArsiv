@@ -3,6 +3,7 @@
 namespace App\Services\Eloquent;
 
 use App\Models\Eloquent\Invoice;
+use App\Models\Eloquent\InvoiceProduct;
 
 class InvoiceService extends BaseService
 {
@@ -111,6 +112,9 @@ class InvoiceService extends BaseService
         $taxNumber,
         $companyId,
         $typeId,
+        $currencyId,
+        $currency,
+        $vatDiscountId,
         $companyStatementDescription,
         $datetime,
         $number,
@@ -127,6 +131,9 @@ class InvoiceService extends BaseService
         $invoice->tax_number = $taxNumber;
         $invoice->company_id = $companyId;
         $invoice->type_id = $typeId;
+        $invoice->currency_id = $currencyId;
+        $invoice->currency = $currency;
+        $invoice->vat_discount_id = $vatDiscountId;
         $invoice->company_statement_description = $companyStatementDescription;
         $invoice->datetime = $datetime;
         $invoice->number = $number;
@@ -147,6 +154,9 @@ class InvoiceService extends BaseService
      * @param string|null $taxNumber
      * @param int $companyId
      * @param int $typeId
+     * @param int $currencyId
+     * @param int $currency
+     * @param int $vatDiscountId
      * @param string|null $companyStatementDescription
      * @param string $datetime
      * @param string|null $number
@@ -163,6 +173,9 @@ class InvoiceService extends BaseService
         $taxNumber,
         $companyId,
         $typeId,
+        $currencyId,
+        $currency,
+        $vatDiscountId,
         $companyStatementDescription,
         $datetime,
         $number,
@@ -179,6 +192,9 @@ class InvoiceService extends BaseService
         $invoice->tax_number = $taxNumber;
         $invoice->company_id = $companyId;
         $invoice->type_id = $typeId;
+        $invoice->currency_id = $currencyId;
+        $invoice->currency = $currency;
+        $invoice->vat_discount_id = $vatDiscountId;
         $invoice->company_statement_description = $companyStatementDescription;
         $invoice->datetime = $datetime;
         $invoice->number = $number;
@@ -222,95 +238,130 @@ class InvoiceService extends BaseService
                     'country'
                 ]);
             },
+            'currencyName',
+            'vatDiscount',
         ])->find($id);
-        $invoiceProducts = $invoice->products()->get();
+        $invoiceProducts = InvoiceProduct::where('invoice_id', $invoice->id)->get();
 
         $gibService = new \App\Services\Rest\Gib\GibService;
         $gibService->setTestMode(true);
         $gibService->setCredentials($invoice->customer->tax_number, $invoice->customer->gib_password);
         $gibService->login();
 
+        $gibInvoiceDate = date('d/m/Y', strtotime($invoice->datetime));
+        $gibInvoiceHour = date('H:i:s', strtotime($invoice->datetime));
+        $gibInvoiceCurrencyCode = $invoice->currencyName->code;
+        $gibInvoiceCurrencyRate = $invoice->currency;
+        $gibInvoiceInvoiceType = $invoice->vat_discount_id == 0 && $invoice->type_id != 10 ? $invoice->type->code : 'TEVKIFAT';
+        $gibInvoiceWhichType = '5000/30000';
+        $gibInvoiceTaxNumber = $invoice->company->tax_number;
+        $gibInvoiceReceiverTitle = $invoice->company->title;
+        $gibInvoiceReceiverName = $invoice->company->manager_name;
+        $gibInvoiceReceiverSurname = $invoice->company->manager_surname;
+        $gibInvoiceTaxOffice = $invoice->company->tax_office;
+        $gibInvoiceCountry = $invoice->company->country?->name;
+        $gibInvoiceAddress = $invoice->company->address;
+        $gibInvoiceProvince = $invoice->company->province?->name;
+        $gibInvoicePostCode = $invoice->company->post_code;
+        $gibInvoicePhone = $invoice->company->phone;
+        $gibInvoiceEmail = $invoice->company->email;
+        $gibInvoiceType = 'İskonto';
+
+        $baseTotal = 0;
+        $servicesTotal = 0;
+        $totalDiscount = 0;
+        $calculatedVat = 0;
+        $vatTotal = 0;
+        $generalTotal = 0;
+
+        $gibInvoiceProducts = [];
+
+        foreach ($invoiceProducts as $invoiceProduct) {
+            $rowBaseTotal = $invoiceProduct->unit_price * $invoiceProduct->quantity;
+            $rowDiscount = $rowBaseTotal * $invoiceProduct->discount_rate / 100;
+            $rowServicesTotal = $rowBaseTotal - $rowDiscount;
+            $rowVatWithoutVatDiscount = $rowServicesTotal * $invoiceProduct->vat_rate / 100;
+            $rowVatDiscount = $invoice->vat_discount_id == 0 ? 0 : ($rowVatWithoutVatDiscount * $invoice->vatDiscount->percent / 100);
+            $rowVatTotal = $rowVatWithoutVatDiscount - $rowVatDiscount;
+
+            $baseTotal += $rowBaseTotal;
+            $servicesTotal += $rowServicesTotal;
+            $totalDiscount += $rowDiscount;
+            $calculatedVat += $rowVatTotal;
+            $vatTotal += $rowVatTotal;
+            $generalTotal += $rowServicesTotal + $rowVatTotal;
+
+            $gibInvoiceProducts[] = [
+                "malHizmet" => $invoiceProduct->product->name,
+                "miktar" => $invoiceProduct->quantity,
+                "birim" => $invoiceProduct->unit->code,
+                "birimFiyat" => $invoiceProduct->unit_price,
+                "fiyat" => $rowBaseTotal,
+                "iskontoOrani" => $invoiceProduct->discount_rate,
+                "iskontoTutari" => $rowDiscount,
+                "iskontoNedeni" => "",
+                "malHizmetTutari" => $rowServicesTotal,
+                "kdvOrani" => $invoiceProduct->vat_rate,
+                "vergiOrani" => $invoice->vat_discount_id == 0 ? 100 : $invoice->vatDiscount->percent,
+                "kdvTutari" => $rowVatWithoutVatDiscount - $rowVatTotal,
+                "vergininKdvTutari" => $rowVatWithoutVatDiscount - $rowVatTotal,
+                "ozelMatrahTutari" => "0",
+            ];
+        }
+
         $invoiceToGibInvoice = [
-            "belgeNumarasi" => "", // Zorunlu değil
-            "faturaTarihi" => date('d/m/Y', strtotime($invoice->datetime)), // Zorunlu değil
-            "saat" => date('H:i:s', strtotime($invoice->datetime)),
-            "paraBirimi" => "TRY",
-            "dovzTLkur" => "0",
-            "faturaTipi" => "SATIS",
-            "hangiTip" => "5000/30000",
-            "vknTckn" => $invoice->tax_number ?? "11111111111",
-            "aliciUnvan" => $invoice->company->title,
-            "aliciAdi" => $invoice->company->manager_name,
-            "aliciSoyadi" => $invoice->company->manager_surname,
-            "binaAdi" => "", // Zorunlu değil
-            "binaNo" => "", // Zorunlu değil
-            "kapiNo" => "", // Zorunlu değil
-            "kasabaKoy" => "", // Zorunlu değil
-            "vergiDairesi" => $invoice->company->tax_office,
-            "ulke" => $invoice->company->country?->name,
-            "bulvarcaddesokak" => $invoice->company->address,
-            "mahalleSemtIlce" => "", // Zorunlu değil
-            "sehir" => $invoice->company->province?->name,
-            "postaKodu" => $invoice->company->post_code, // Zorunlu değil
-            "tel" => $invoice->company->phone, // Zorunlu değil
-            "fax" => "", // Zorunlu değil
-            "eposta" => $invoice->company->email, // Zorunlu değil
-            "websitesi" => "", // Zorunlu değil
-            "iadeTable" => [], // Zorunlu değil
-            "ozelMatrahTutari" => "0", // Zorunlu değil
-            "ozelMatrahOrani" => 0, // Zorunlu değil
-            "ozelMatrahVergiTutari" => "0", // Zorunlu değil
-            "vergiCesidi" => " ", // Zorunlu değil
-            "tip" => "İskonto",
-            "matrah" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
-                return $invoiceProduct->quantity * $invoiceProduct->unit_price;
-            })->toArray()),
-            "malhizmetToplamTutari" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
-                return $invoiceProduct->quantity * $invoiceProduct->unit_price;
-            })->toArray()),
-            "toplamIskonto" => "0",
-            "hesaplanankdv" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
-                return $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate;
-            })->toArray()),
-            "vergilerToplami" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
-                return $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate;
-            })->toArray()),
-            "vergilerDahilToplamTutar" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
-                return ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate);
-            })->toArray()),
-            "odenecekTutar" => array_sum($invoiceProducts->map(function ($invoiceProduct) {
-                return ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate);
-            })->toArray()),
-            "not" => "", // Zorunlu değil
-            "siparisNumarasi" => "", // Zorunlu değil
-            "siparisTarihi" => "", // Zorunlu değil
-            "irsaliyeNumarasi" => "", // Zorunlu değil
-            "irsaliyeTarihi" => "", // Zorunlu değil
-            "fisNo" => "", // Zorunlu değil
-            "fisTarihi" => "", // Zorunlu değil
-            "fisSaati" => " ", // Zorunlu değil
-            "fisTipi" => " ", // Zorunlu değil
-            "zRaporNo" => "", // Zorunlu değil
-            "okcSeriNo" => "", // Zorunlu değil
-            "malHizmetTable" => $invoiceProducts->map(function ($invoiceProduct) {
-                return [
-                    "malHizmet" => $invoiceProduct->product->name,
-                    "miktar" => $invoiceProduct->quantity,
-                    "birim" => $invoiceProduct->unit->name,
-                    "birimFiyat" => $invoiceProduct->unit_price,
-                    "fiyat" => $invoiceProduct->quantity * $invoiceProduct->unit_price,
-                    "iskontoOrani" => 0,
-                    "iskontoTutari" => "0",
-                    "iskontoNedeni" => "",
-                    "malHizmetTutari" => ($invoiceProduct->quantity * $invoiceProduct->unit_price) + ($invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate),
-                    "kdvOrani" => $invoiceProduct->vat_rate,
-                    "vergiOrani" => 0,
-                    "kdvTutari" => $invoiceProduct->quantity * $invoiceProduct->unit_price / $invoiceProduct->vat_rate,
-                    "vergininKdvTutari" => "0",
-                    "ozelMatrahTutari" => "0", //zorunlu
-                ];
-            })->toArray()
+            "belgeNumarasi" => "",
+            "faturaTarihi" => $gibInvoiceDate,
+            "saat" => $gibInvoiceHour,
+            "paraBirimi" => $gibInvoiceCurrencyCode,
+            "dovzTLkur" => $gibInvoiceCurrencyRate,
+            "faturaTipi" => $gibInvoiceInvoiceType,
+            "hangiTip" => $gibInvoiceWhichType,
+            "vknTckn" => $gibInvoiceTaxNumber ?? "11111111111",
+            "aliciUnvan" => $gibInvoiceReceiverTitle,
+            "aliciAdi" => $gibInvoiceReceiverName,
+            "aliciSoyadi" => $gibInvoiceReceiverSurname,
+            "binaAdi" => "",
+            "binaNo" => "",
+            "kapiNo" => "",
+            "kasabaKoy" => "",
+            "vergiDairesi" => $gibInvoiceTaxOffice,
+            "ulke" => $gibInvoiceCountry ?? "Türkiye",
+            "bulvarcaddesokak" => $gibInvoiceAddress ?? "Türkiye",
+            "mahalleSemtIlce" => "",
+            "sehir" => $gibInvoiceProvince ?? "İstanbul",
+            "postaKodu" => $gibInvoicePostCode ?? "34000",
+            "tel" => $gibInvoicePhone ?? '5555555555',
+            "fax" => "",
+            "eposta" => $gibInvoiceEmail ?? '',
+            "websitesi" => "",
+            "iadeTable" => $invoice->type_id === 10 ? $gibInvoiceProducts : [],
+            "ozelMatrahTutari" => "0",
+            "ozelMatrahOrani" => 0,
+            "ozelMatrahVergiTutari" => "0",
+            "vergiCesidi" => $invoice->vat_discount_id == 0 ? "" : $invoice->vatDiscount->code,
+            "tip" => $gibInvoiceType,
+            "matrah" => $baseTotal,
+            "malhizmetToplamTutari" => $servicesTotal,
+            "toplamIskonto" => $totalDiscount,
+            "hesaplanankdv" => $calculatedVat,
+            "vergilerToplami" => $calculatedVat,
+            "vergilerDahilToplamTutar" => $generalTotal,
+            "odenecekTutar" => $generalTotal,
+            "not" => $invoice->company_statement_description ?? '',
+            "siparisNumarasi" => $invoice->order_number ?? '',
+            "siparisTarihi" => $invoice->order_datetime ?? '',
+            "irsaliyeNumarasi" => $invoice->waybill_number ?? '',
+            "irsaliyeTarihi" => $invoice->waybill_datetime ?? '',
+            "fisNo" => "",
+            "fisTarihi" => "",
+            "fisSaati" => " ",
+            "fisTipi" => " ",
+            "zRaporNo" => "",
+            "okcSeriNo" => "",
+            "malHizmetTable" => $invoice->type_id === 7 ? $gibInvoiceProducts : []
         ];
+
         $gibInvoice = new \App\Services\Rest\Gib\Models\GibInvoice;
         $gibInvoice->mapWithTurkishKeys($invoiceToGibInvoice);
 

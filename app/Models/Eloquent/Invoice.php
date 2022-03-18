@@ -34,4 +34,14 @@ class Invoice extends Model
     {
         return $this->belongsTo(InvoiceProduct::class);
     }
+
+    public function currencyName()
+    {
+        return $this->belongsTo(Currency::class, 'currency_id', 'id');
+    }
+
+    public function vatDiscount()
+    {
+        return $this->belongsTo(VatDiscount::class, 'vat_discount_id', 'id');
+    }
 }

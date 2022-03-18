@@ -3,6 +3,7 @@
 namespace App\Services\Eloquent;
 
 use App\Models\Eloquent\Customer;
+use App\Models\Eloquent\Unit;
 
 class CustomerService extends BaseService
 {
@@ -48,6 +49,17 @@ class CustomerService extends BaseService
         $customer->logo = $logo;
         $customer->stamp = $stamp;
         $customer->save();
+
+        $units = Unit::all();
+        $customerUnitService = new CustomerUnitService;
+
+        foreach ($units as $unit) {
+            $customerUnitService->create(
+                $customer->id,
+                $unit->code,
+                $unit->name
+            );
+        }
 
         return $customer;
     }

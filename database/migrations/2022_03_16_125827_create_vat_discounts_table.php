@@ -12,15 +12,11 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('invoice_products', function (Blueprint $table) {
+        Schema::create('vat_discounts', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('invoice_id')->unsigned();
-            $table->bigInteger('product_id')->unsigned();
-            $table->integer('quantity');
-            $table->bigInteger('unit_id')->unsigned();
-            $table->decimal('unit_price')->unsigned();
-            $table->decimal('vat_rate')->unsigned();
-            $table->decimal('discount_rate')->unsigned();
+            $table->string('code')->unique();
+            $table->text('name');
+            $table->double('percent');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -33,6 +29,6 @@ return new class extends Migration {
      */
     public function down()
     {
-        Schema::dropIfExists('invoice_products');
+        Schema::dropIfExists('vat_discounts');
     }
 };

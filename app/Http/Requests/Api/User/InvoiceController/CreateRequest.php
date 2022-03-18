@@ -26,6 +26,9 @@ class CreateRequest extends BaseApiRequest
         return [
             'companyId' => 'required',
             'typeId' => 'required',
+            'currencyId' => 'required',
+            'currency' => 'required',
+            'vatDiscountId' => 'required',
             'datetime' => 'required',
             'vatIncluded' => 'required',
         ];

@@ -30,6 +30,7 @@ class InvoiceProductService extends BaseService
      * @param int $unitId
      * @param float $unitPrice
      * @param float $vatRate
+     * @param float $discountRate
      */
     public function create(
         $invoiceId,
@@ -37,7 +38,8 @@ class InvoiceProductService extends BaseService
         $quantity,
         $unitId,
         $unitPrice,
-        $vatRate
+        $vatRate,
+        $discountRate
     )
     {
         $invoiceProduct = new InvoiceProduct;
@@ -47,6 +49,7 @@ class InvoiceProductService extends BaseService
         $invoiceProduct->unit_id = $unitId;
         $invoiceProduct->unit_price = $unitPrice;
         $invoiceProduct->vat_rate = $vatRate;
+        $invoiceProduct->discount_rate = $discountRate;
         $invoiceProduct->save();
 
         return $invoiceProduct;
@@ -60,6 +63,7 @@ class InvoiceProductService extends BaseService
      * @param int $unitId
      * @param float $unitPrice
      * @param float $vatRate
+     * @param float $discountRate
      */
     public function update(
         $id,
@@ -68,7 +72,8 @@ class InvoiceProductService extends BaseService
         $quantity,
         $unitId,
         $unitPrice,
-        $vatRate
+        $vatRate,
+        $discountRate
     )
     {
         $invoiceProduct = InvoiceProduct::find($id);
@@ -78,6 +83,7 @@ class InvoiceProductService extends BaseService
         $invoiceProduct->unit_id = $unitId;
         $invoiceProduct->unit_price = $unitPrice;
         $invoiceProduct->vat_rate = $vatRate;
+        $invoiceProduct->discount_rate = $discountRate;
         $invoiceProduct->save();
 
         return $invoiceProduct;

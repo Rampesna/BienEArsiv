@@ -31,6 +31,7 @@ class UpdateRequest extends BaseApiRequest
             'unitId' => 'required',
             'unitPrice' => 'required',
             'vatRate' => 'required',
+            'discountRate' => 'required',
         ];
     }
 }

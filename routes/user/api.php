@@ -60,6 +60,14 @@ Route::middleware([
         Route::get('getAll', [\App\Http\Controllers\Api\User\UnitController::class, 'getAll'])->name('api.user.unit.getAll');
     });
 
+    Route::prefix('currency')->group(function () {
+        Route::get('getAll', [\App\Http\Controllers\Api\User\CurrencyController::class, 'getAll'])->name('api.user.currency.getAll');
+    });
+
+    Route::prefix('vatDiscount')->group(function () {
+        Route::get('getAll', [\App\Http\Controllers\Api\User\VatDiscountController::class, 'getAll'])->name('api.user.vatDiscount.getAll');
+    });
+
     Route::prefix('subscription')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\SubscriptionController::class, 'getAll'])->name('api.user.subscription.getAll');
     });

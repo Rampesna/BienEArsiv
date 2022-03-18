@@ -16,6 +16,8 @@
 
     var edit_invoice_company_id = $('#edit_invoice_company_id');
     var edit_invoice_type_id = $('#edit_invoice_type_id');
+    var edit_invoice_currency_id = $('#edit_invoice_currency_id');
+    var edit_invoice_vat_discount_id = $('#edit_invoice_vat_discount_id');
     var edit_invoice_transaction_safebox_id = $('#edit_invoice_transaction_safebox_id');
     var edit_invoice_transaction = $('#edit_invoice_transaction');
 
@@ -89,6 +91,52 @@
         });
     }
 
+    function getCurrencies() {
+        $.ajax({
+            async: false,
+            type: 'get',
+            url: '{{ route('api.user.currency.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                edit_invoice_currency_id.empty().append(`<option value="" selected hidden></option>`);
+                $.each(response.response, function (i, currency) {
+                    edit_invoice_currency_id.append(`<option ${currency.code === 'TRY' ? 'selected' : ''} value="${currency.id}" data-code="${currency.code}">${currency.code} - ${currency.name}</option>`);
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Fatura Türleri Alınırken Serviste Bir Sorun Oluştu!');
+            }
+        });
+    }
+
+    function getVatDiscounts() {
+        $.ajax({
+            async: false,
+            type: 'get',
+            url: '{{ route('api.user.vatDiscount.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                edit_invoice_vat_discount_id.empty().append(`<option value="0" data-code="0" data-percent="0" selected> Yok</option>`);
+                $.each(response.response, function (i, vatDiscount) {
+                    edit_invoice_vat_discount_id.append(`<option value="${vatDiscount.id}" data-code="${vatDiscount.code}" data-percent="${vatDiscount.percent}">${vatDiscount.name}</option>`);
+                });
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Fatura Türleri Alınırken Serviste Bir Sorun Oluştu!');
+            }
+        });
+    }
+
     function getProducts() {
         $.ajax({
             async: false,
@@ -150,6 +198,9 @@
                 $('#edit_invoice_tax_number').val(response.response.tax_number);
                 $('#edit_invoice_company_id').val(response.response.company_id).select2();
                 $('#edit_invoice_type_id').val(response.response.type_id).select2();
+                edit_invoice_currency_id.val(response.response.currency_id).select2();
+                $('#edit_invoice_currency').val(parseFloat(response.response.currency));
+                edit_invoice_vat_discount_id.val(response.response.vat_discount_id).select2();
                 $('#edit_invoice_company_statement_description').val(response.response.company_statement_description);
                 $('#edit_invoice_datetime').val(reformatDateForCalendar(response.response.datetime));
                 $('#edit_invoice_number').val(response.response.number);
@@ -173,12 +224,12 @@
                         $.each(response.response, function (i, invoiceProduct) {
                             invoiceProducts.append(`
                                 <div class="row invoiceProductRow mb-5" data-invoice-product-id="${invoiceProduct.id}">
-                                    <div class="col-xl-3 mb-5">
+                                    <div class="col-xl-2 mb-5">
                                         <div class="form-group">
                                             <select id="invoiceProduct_${invoiceProduct.id}_ProductId" class="form-select form-select-sm form-select-solid invoiceProductProductId" data-control="select2" data-placeholder="Ürün Ara">${productsForSelect}</select>
                                         </div>
                                     </div>
-                                    <div class="col-xl-2 mb-5">
+                                    <div class="col-xl-1 mb-5">
                                         <div class="form-group">
                                             <input id="invoiceProduct_${invoiceProduct.id}_Quantity" type="text" class="form-control form-control-sm form-control-solid moneyMask invoiceProductQuantity invoiceProductInput" placeholder="Miktar">
                                         </div>
@@ -207,6 +258,14 @@
                                         </div>
                                     </div>
                                     <div class="col-xl-2 mb-5">
+                                        <div class="form-group">
+                                            <div class="input-group input-group-sm input-group-solid">
+                                                <input id="invoiceProduct_${invoiceProduct.id}_DiscountRate" value="0" type="text" class="form-control form-control-sm form-control-solid moneyMask invoiceProductDiscountRate invoiceProductInput" placeholder="İskonto">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-2 mb-5">
                                         <div class="row">
                                             <div class="col-xl-10">
                                                 <div class="form-group">
@@ -228,7 +287,9 @@
                             $('#invoiceProduct_' + invoiceProduct.id + '_UnitId').val(invoiceProduct.unit_id);
                             $('#invoiceProduct_' + invoiceProduct.id + '_UnitPrice').val(parseFloat(invoiceProduct.unit_price));
                             $('#invoiceProduct_' + invoiceProduct.id + '_VatRate').val(parseInt(invoiceProduct.vat_rate));
-                            $('#invoiceProduct_' + invoiceProduct.id + '_Total').val(invoiceProduct.quantity * invoiceProduct.unit_price);
+                            $('#invoiceProduct_' + invoiceProduct.id + '_DiscountRate').val(parseFloat(invoiceProduct.discount_rate));
+
+                            $('#invoiceProduct_' + invoiceProduct.id + '_Total').val((invoiceProduct.quantity * invoiceProduct.unit_price) - (invoiceProduct.quantity * invoiceProduct.unit_price * invoiceProduct.discount_rate / 100));
                         });
                         $('.invoiceProductProductId').select2();
                         $('.invoiceProductUnitId').select2();
@@ -253,6 +314,8 @@
         getCompanies();
         getSafeboxes();
         getTransactionTypes();
+        getCurrencies();
+        getVatDiscounts();
         getProducts();
         getUnits();
         getInvoice();
@@ -262,12 +325,12 @@
     function newInvoiceProduct() {
         invoiceProducts.append(`
             <div class="row invoiceProductRow mb-5">
-                <div class="col-xl-3 mb-5">
+                <div class="col-xl-2 mb-5">
                     <div class="form-group">
                         <select class="form-select form-select-sm form-select-solid invoiceProductProductId" data-control="select2" data-placeholder="Ürün Ara">${productsForSelect}</select>
                     </div>
                 </div>
-                <div class="col-xl-2 mb-5">
+                <div class="col-xl-1 mb-5">
                     <div class="form-group">
                         <input type="text" class="form-control form-control-sm form-control-solid moneyMask invoiceProductQuantity invoiceProductInput" placeholder="Miktar">
                     </div>
@@ -293,6 +356,14 @@
                             <option value="8">8 %</option>
                             <option value="18" selected>18 %</option>
                         </select>
+                    </div>
+                </div>
+                <div class="col-xl-2 mb-5">
+                    <div class="form-group">
+                        <div class="input-group input-group-sm input-group-solid">
+                            <input value="0" type="text" class="form-control form-control-sm form-control-solid moneyMask invoiceProductDiscountRate invoiceProductInput" placeholder="İskonto">
+                            <span class="input-group-text">%</span>
+                        </div>
                     </div>
                 </div>
                 <div class="col-xl-2 mb-5">
@@ -323,8 +394,11 @@
 
     function calculateTotals() {
         var invoiceProductRows = $('.invoiceProductRow');
+        var vatDiscountId = edit_invoice_vat_discount_id.val();
+        var vatDiscountRate = edit_invoice_vat_discount_id.find('option:selected').data('percent');
         var subtotal = 0;
         var vatTotal = 0;
+        var vatDiscountTotal = 0;
         var generalTotal = 0;
 
         var invoiceProducts = [];
@@ -332,24 +406,36 @@
 
         $.each(invoiceProductRows, function (i, invoiceProductRow) {
             var id = $(this).data('invoice-product-id') || null;
+
+            console.log(id);
+
             var productId = $(this).find('.invoiceProductProductId').val();
             var quantity = $(this).find('.invoiceProductQuantity').val();
             var unitId = $(this).find('.invoiceProductUnitId').val();
             var unitPrice = $(this).find('.invoiceProductUnitPrice').val();
             var vatRate = $(this).find('.invoiceProductVatRate').val();
+            var discountRate = $(this).find('.invoiceProductDiscountRate').val();
 
-            if (productId && quantity && unitId && unitPrice && vatRate) {
+            if (productId && quantity && unitId && unitPrice && vatRate && discountRate) {
                 invoiceProducts.push({
                     id: id,
                     productId: productId,
                     quantity: quantity,
                     unitId: unitId,
                     unitPrice: unitPrice,
-                    vatRate: vatRate
+                    vatRate: vatRate,
+                    discountRate: discountRate,
                 });
 
-                subtotal += parseFloat(quantity) * parseFloat(unitPrice);
-                vatTotal += parseFloat(quantity) * parseFloat(unitPrice) * parseFloat(vatRate) / 100;
+                var subtotalWithoutDiscount = parseFloat(quantity) * parseFloat(unitPrice);
+                var discount = parseFloat(subtotalWithoutDiscount) * parseFloat(discountRate) / 100;
+                var subtotalWithDiscount = parseFloat(subtotalWithoutDiscount) - parseFloat(discount);
+                var vat = parseFloat(subtotalWithDiscount) * parseFloat(vatRate) / 100;
+                var vatDiscount = parseFloat(vat) * parseFloat(vatDiscountRate) / 100;
+
+                subtotal += subtotalWithDiscount;
+                vatDiscountTotal += vatDiscount;
+                vatTotal += vat - vatDiscount;
             }
 
             allInvoiceProducts.push({
@@ -358,7 +444,8 @@
                 quantity: quantity,
                 unitId: unitId,
                 unitPrice: unitPrice,
-                vatRate: vatRate
+                vatRate: vatRate,
+                discountRate: discountRate,
             });
         });
 
@@ -370,6 +457,15 @@
 
         editInvoiceProducts = invoiceProducts;
         allEditInvoiceProducts = allInvoiceProducts;
+
+        if (parseInt(vatDiscountId) > 0) {
+            $('#vatDiscountTotalInput').val(reformatNumberToMoney(vatDiscountTotal));
+            $('#vatDiscountRateSpan').html(`${vatDiscountRate}%`);
+            $('#vatDiscountDiv').show();
+        } else {
+            $('#vatDiscountSpan').val(0);
+            $('#vatDiscountDiv').hide();
+        }
     }
 
     NewInvoiceProductButton.click(function () {
@@ -396,6 +492,9 @@
         var taxNumber = $('#edit_invoice_tax_number').val();
         var companyId = edit_invoice_company_id.val();
         var typeId = edit_invoice_type_id.val();
+        var currencyId = edit_invoice_currency_id.val();
+        var currency = $('#edit_invoice_currency').val();
+        var vatDiscountId = edit_invoice_vat_discount_id.val();
         var parentTypeId = edit_invoice_type_id.find(':selected').data('parent-id');
         var direction = edit_invoice_type_id.find(':selected').data('direction');
         var companyStatementDescription = $('#edit_invoice_company_statement_description').val();
@@ -418,7 +517,7 @@
                 toastr.warning('Lütfen tüm alanları doldurunuz!');
             } else {
                 $.each(allEditInvoiceProducts, function (i, product) {
-                    if (!product.productId || !product.quantity || !product.unitId || !product.unitPrice || !product.vatRate) {
+                    if (!product.productId || !product.quantity || !product.unitId || !product.unitPrice || !product.vatRate || !product.discountRate) {
                         toastr.warning('Lütfen tüm alanları doldurunuz.');
                         edit = 0;
                         return false;
@@ -434,6 +533,9 @@
                         taxNumber: taxNumber,
                         companyId: companyId,
                         typeId: typeId,
+                        currencyId: currencyId,
+                        currency: currency,
+                        vatDiscountId: vatDiscountId,
                         parentTypeId: parentTypeId,
                         direction: direction,
                         companyStatementDescription: companyStatementDescription,
@@ -444,9 +546,7 @@
                         waybillDatetime: waybillDatetime,
                         orderNumber: orderNumber,
                         orderDatetime: orderDatetime,
-                        price: $.sum($.map(editInvoiceProducts, function (product) {
-                            return (product.quantity * product.unitPrice) + (product.quantity * product.unitPrice * product.vatRate / 100);
-                        })),
+                        price: $('#generalTotalSpan').val(),
                     };
 
                     $.ajax({
@@ -504,9 +604,10 @@
     function calculateRowTotal(item) {
         var quantity = $(item).closest('.invoiceProductRow').find('.invoiceProductQuantity').val();
         var unitPrice = $(item).closest('.invoiceProductRow').find('.invoiceProductUnitPrice').val();
-        var vatRate = $(item).closest('.invoiceProductRow').find('.invoiceProductVatRate').val();
         var total = quantity * unitPrice;
-        $(item).closest('.invoiceProductRow').find('.invoiceProductTotal').val(total);
+        var discountRate = $(item).closest('.invoiceProductRow').find('.invoiceProductDiscountRate').val();
+        var discount = total * discountRate / 100;
+        $(item).closest('.invoiceProductRow').find('.invoiceProductTotal').val(total - discount);
         calculateTotals();
     }
 
@@ -525,6 +626,10 @@
     edit_invoice_company_id.change(function () {
         var companyId = $(this).val();
         $('#edit_invoice_tax_number').val(allCompanies.find(company => parseInt(company.id) === parseInt(companyId)).tax_number);
+    });
+
+    edit_invoice_vat_discount_id.change(function () {
+        calculateTotals();
     });
 
 </script>

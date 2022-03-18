@@ -32,7 +32,22 @@ function initializeMoneyInputMask() {
     }).mask(".moneyMask");
 }
 
+function initializeCurrencyInputMask() {
+    Inputmask({
+        mask: "*{1,20}.*{8,8}",
+        definitions: {
+            "*": {
+                validator: '[0-9]',
+                cardinality: 1,
+                casing: "lower"
+            },
+        },
+        placeholder: "0",
+    }).mask(".currencyMask");
+}
+
 initializeMoneyInputMask();
+initializeCurrencyInputMask();
 
 $('.decimal').on("copy cut paste drop", function () {
     return false;
@@ -100,6 +115,15 @@ function reformatDatetimeTo_DD_MM_YYYY_WithDot(date) {
     return String(formattedDate.getDate()).padStart(2, '0') + '.' +
         String(formattedDate.getMonth() + 1).padStart(2, '0') + '.' +
         formattedDate.getFullYear();
+}
+
+function reformatDatetimeTo_DD_MM_YYYY_HH_ii_WithDot(date) {
+    var formattedDate = new Date(date);
+    return String(formattedDate.getDate()).padStart(2, '0') + '.' +
+        String(formattedDate.getMonth() + 1).padStart(2, '0') + '.' +
+        formattedDate.getFullYear() + ', ' +
+        String(formattedDate.getHours()).padStart(2, '0') + ':' +
+        String(formattedDate.getMinutes()).padStart(2, '0');
 }
 
 function reformatInvoiceNumber(datetime, number) {

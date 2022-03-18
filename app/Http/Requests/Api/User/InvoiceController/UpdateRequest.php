@@ -27,6 +27,9 @@ class UpdateRequest extends BaseApiRequest
             'id' => 'required',
             'companyId' => 'required',
             'typeId' => 'required',
+            'currencyId' => 'required',
+            'currency' => 'required',
+            'vatDiscountId' => 'required',
             'datetime' => 'required',
             'vatIncluded' => 'required',
         ];
