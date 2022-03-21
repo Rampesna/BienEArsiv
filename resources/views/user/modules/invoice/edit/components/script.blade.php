@@ -406,17 +406,14 @@
 
         $.each(invoiceProductRows, function (i, invoiceProductRow) {
             var id = $(this).data('invoice-product-id') || null;
-
-            console.log(id);
-
             var productId = $(this).find('.invoiceProductProductId').val();
             var quantity = $(this).find('.invoiceProductQuantity').val();
             var unitId = $(this).find('.invoiceProductUnitId').val();
             var unitPrice = $(this).find('.invoiceProductUnitPrice').val();
             var vatRate = $(this).find('.invoiceProductVatRate').val();
-            var discountRate = $(this).find('.invoiceProductDiscountRate').val();
+            var discountRate = $(this).find('.invoiceProductDiscountRate').val() || 0;
 
-            if (productId && quantity && unitId && unitPrice && vatRate && discountRate) {
+            if (productId && quantity && unitId && unitPrice && vatRate) {
                 invoiceProducts.push({
                     id: id,
                     productId: productId,

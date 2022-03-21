@@ -53,7 +53,7 @@ class GibService
         $this->tokenEndpoint = "/earsiv-services/assos-login";
         $this->referrerEndpoint = "/intragiris.html";
         $this->client = new \GuzzleHttp\Client(['verify' => false]);
-//        $this->testMode = true;
+        $this->testMode = true;
     }
 
     public function getBaseUrl()

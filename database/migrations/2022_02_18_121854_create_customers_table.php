@@ -24,6 +24,7 @@ return new class extends Migration {
             $table->integer('district_id')->nullable();
             $table->string('logo')->nullable();
             $table->string('stamp')->nullable();
+            $table->boolean('wizard')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

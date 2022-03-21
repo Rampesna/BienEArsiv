@@ -17,7 +17,7 @@
     @include('user.modules.invoice.create.modals.createInvoice')
 
     <div class="row">
-        <div class="col-xl-3 mb-5">
+        <div class="col-xl-4 mb-5">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -149,70 +149,11 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-9 mb-5">
+        <div class="col-xl-8 mb-5">
             <div class="row mb-5">
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
-                            <div class="row mb-3 hideIfMobile">
-                                <div class="col-xl-12">
-                                    <div class="row">
-                                        <div class="col-xl-2">
-                                            <div class="form-group">
-                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                                    <span>Ürün Adı</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-1">
-                                            <div class="form-group">
-                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                                    <span>Miktar</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-2">
-                                            <div class="form-group">
-                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                                    <span>Birim</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-2">
-                                            <div class="form-group">
-                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                                    <span>Birim Fiyat</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-1">
-                                            <div class="form-group">
-                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                                    <span>KDV</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-2">
-                                            <div class="form-group">
-                                                <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                                    <span>İskonto</span>
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-2">
-                                            <div class="row">
-                                                <div class="col-xl-10">
-                                                    <div class="form-group">
-                                                        <label class="d-flex align-items-center fs-7 fw-bold mb-2">
-                                                            <span>Tutar (KDV Hariç)</span>
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row">
                                 <div class="col-xl-12" id="invoiceProducts">
 
@@ -229,8 +170,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-8"></div>
-                <div class="col-xl-4">
+                <div class="col-xl-7"></div>
+                <div class="col-xl-5">
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-10">

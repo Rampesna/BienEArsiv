@@ -15,7 +15,7 @@
 @section('content')
 
     <div class="row">
-        <div class="col-xl-3 mb-5">
+        <div class="col-xl-4 mb-5">
             <div class="card">
                 <div class="card-body">
                     <div class="row">
@@ -147,7 +147,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-9 mb-5">
+        <div class="col-xl-8 mb-5">
             <div class="row mb-5">
                 <div class="col-xl-12">
                     <div class="card">
@@ -227,8 +227,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-8"></div>
-                <div class="col-xl-4">
+                <div class="col-xl-7"></div>
+                <div class="col-xl-5">
                     <div class="card">
                         <div class="card-body">
                             <div class="row mb-10">

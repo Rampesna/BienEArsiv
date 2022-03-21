@@ -195,22 +195,22 @@
     function newInvoiceProduct() {
         invoiceProducts.append(`
             <div class="row invoiceProductRow mb-5">
-                <div class="col-xl-2 mb-5">
+                <div class="col-xl-6 mb-5">
                     <div class="form-group">
                         <select class="form-select form-select-sm form-select-solid invoiceProductProductId" data-control="select2" data-placeholder="Ürün Ara">${productsForSelect}</select>
                     </div>
                 </div>
-                <div class="col-xl-1 mb-5">
+                <div class="col-xl-3 mb-5">
                     <div class="form-group">
                         <input type="text" class="form-control form-control-sm form-control-solid moneyMask invoiceProductQuantity invoiceProductInput" placeholder="Miktar">
                     </div>
                 </div>
-                <div class="col-xl-2 mb-5">
+                <div class="col-xl-3 mb-5">
                     <div class="form-group">
                         <select class="form-select form-select-sm form-select-solid invoiceProductUnitId invoiceProductInput" data-control="select2" data-placeholder="Birim">${unitsForSelect}</select>
                     </div>
                 </div>
-                <div class="col-xl-2 mb-5">
+                <div class="col-xl-3 mb-5">
                     <div class="form-group">
                         <div class="input-group input-group-sm input-group-solid">
                             <input type="text" class="form-control form-control-sm form-control-solid moneyMask invoiceProductUnitPrice invoiceProductInput" placeholder="Birim Fiyat">
@@ -218,7 +218,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-1 mb-5">
+                <div class="col-xl-3 mb-5">
                     <div class="form-group">
                         <select class="form-select form-select-sm form-select-solid invoiceProductVatRate invoiceProductInput" data-control="select2" data-placeholder="KDV" data-hide-search="true">
                             <option value="0">0 %</option>
@@ -228,15 +228,15 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-xl-2 mb-5">
+                <div class="col-xl-3 mb-5">
                     <div class="form-group">
                         <div class="input-group input-group-sm input-group-solid">
-                            <input value="0" type="text" class="form-control form-control-sm form-control-solid moneyMask invoiceProductDiscountRate invoiceProductInput" placeholder="İskonto">
+                            <input type="text" class="form-control form-control-sm form-control-solid moneyMask invoiceProductDiscountRate invoiceProductInput" placeholder="İskonto">
                             <span class="input-group-text">%</span>
                         </div>
                     </div>
                 </div>
-                <div class="col-xl-2 mb-5">
+                <div class="col-xl-3 mb-5">
                     <div class="row">
                         <div class="col-xl-10">
                             <div class="form-group">
@@ -251,6 +251,7 @@
                         </div>
                     </div>
                 </div>
+                <hr class="text-muted">
             </div>
         `);
         $('.invoiceProductProductId').select2();
@@ -280,9 +281,9 @@
             var unitId = $(this).find('.invoiceProductUnitId').val();
             var unitPrice = $(this).find('.invoiceProductUnitPrice').val();
             var vatRate = $(this).find('.invoiceProductVatRate').val();
-            var discountRate = $(this).find('.invoiceProductDiscountRate').val();
+            var discountRate = $(this).find('.invoiceProductDiscountRate').val() || 0;
 
-            if (productId && quantity && unitId && unitPrice && vatRate && discountRate) {
+            if (productId && quantity && unitId && unitPrice && vatRate) {
                 invoiceProducts.push({
                     productId: productId,
                     quantity: quantity,

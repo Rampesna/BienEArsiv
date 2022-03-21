@@ -76,6 +76,7 @@ class CustomerService extends BaseService
      * @param int|null $districtId
      * @param string|null $logo
      * @param string|null $stamp
+     * @param int $wizard
      */
     public function update(
         int         $id,
@@ -89,7 +90,8 @@ class CustomerService extends BaseService
         int|null    $provinceId = null,
         int|null    $districtId = null,
         string|null $logo = null,
-        string|null $stamp = null
+        string|null $stamp = null,
+        int         $wizard = 0
     )
     {
         $customer = Customer::find($id);
@@ -104,6 +106,7 @@ class CustomerService extends BaseService
         $customer->district_id = $districtId;
         $customer->logo = $logo;
         $customer->stamp = $stamp;
+        $customer->wizard = $wizard;
         $customer->save();
 
         return $customer;

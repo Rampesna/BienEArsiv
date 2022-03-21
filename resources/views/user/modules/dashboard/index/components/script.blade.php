@@ -57,9 +57,6 @@
                 datetimeEnd: datetimeEnd
             },
             success: function (response) {
-
-                console.log(response);
-
                 var totalEarnings = 0;
                 var totalExpenses = 0;
 

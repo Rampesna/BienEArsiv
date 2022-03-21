@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return CustomerSubscription::where('customer_id', $this->customer_id)->orderBy('created_at', 'desc')->first();
     }
+
+    public function wizard()
+    {
+        return $this->customer->wizard;
+    }
 }

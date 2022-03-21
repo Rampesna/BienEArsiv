@@ -39,8 +39,16 @@ Route::prefix('authentication')->group(function () {
 
 Route::middleware([
     'auth',
+    'WizardWeb',
     'SubscriptionWeb',
 ])->group(function () {
+
+    Route::prefix('wizard')->withoutMiddleware([
+        'WizardWeb',
+    ])->group(function () {
+        Route::get('index', [\App\Http\Controllers\Web\User\WizardController::class, 'index'])->name('web.user.wizard.index');
+    });
+
     Route::prefix('dashboard')->group(function () {
         Route::get('index', [\App\Http\Controllers\Web\User\DashboardController::class, 'index'])->name('web.user.dashboard.index');
     });

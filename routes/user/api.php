@@ -19,16 +19,23 @@ Route::prefix('customer')->group(function () {
 
 Route::middleware([
     'auth:sanctum',
-    'Subscription',
+    'SubscriptionApi',
+    'WizardApi',
 ])->group(function () {
+
+    Route::prefix('wizard')->withoutMiddleware([
+        'WizardApi',
+    ])->group(function () {
+        Route::post('complete', [\App\Http\Controllers\Api\User\WizardController::class, 'complete'])->name('api.user.wizard.complete');
+    });
 
     Route::group([
         'withoutMiddleware' => [
             'auth:sanctum'
         ],
     ], function () {
-        Route::post('login', [\App\Http\Controllers\Api\User\UserController::class, 'login'])->name('api.user.login')->withoutMiddleware(['auth:sanctum', 'Subscription']);
-        Route::post('create', [\App\Http\Controllers\Api\User\UserController::class, 'create'])->name('api.user.create')->withoutMiddleware(['auth:sanctum', 'Subscription']);
+        Route::post('login', [\App\Http\Controllers\Api\User\UserController::class, 'login'])->name('api.user.login')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
+        Route::post('create', [\App\Http\Controllers\Api\User\UserController::class, 'create'])->name('api.user.create')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
     });
 
     Route::get('index', [\App\Http\Controllers\Api\User\UserController::class, 'index'])->name('api.user.index');
@@ -185,8 +192,8 @@ Route::middleware([
 
     Route::prefix('subscriptionPayment')->group(function () {
         Route::post('create', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'create'])->name('api.user.subscriptionPayment.create');
-        Route::post('success', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'successUrl'])->name('api.user.subscriptionPayment.successUrl')->withoutMiddleware(['auth:sanctum', 'Subscription']);
-        Route::post('failure', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'failureUrl'])->name('api.user.subscriptionPayment.failureUrl')->withoutMiddleware(['auth:sanctum', 'Subscription']);
+        Route::post('success', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'successUrl'])->name('api.user.subscriptionPayment.successUrl')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
+        Route::post('failure', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'failureUrl'])->name('api.user.subscriptionPayment.failureUrl')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
     });
 
     Route::prefix('customerSubscription')->group(function () {
