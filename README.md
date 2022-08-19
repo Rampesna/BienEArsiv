@@ -6,4 +6,4 @@ BienEAarchive is a software where e-archive invoice payer businesses in Turkey c
 
 ## License
 
-The OTS is Licenced. All rights reserved.
+The BienEArsiv is Licenced. All rights reserved.
