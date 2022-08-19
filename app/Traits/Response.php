@@ -43,8 +43,8 @@ trait Response
      * @param string $message
      * @param integer $statusCode
      */
-    public function error($message, $statusCode = 500)
+    public function error($message, $statusCode = 500, $data = null)
     {
-        return $this->coreResponse($message, $statusCode, null, true);
+        return $this->coreResponse($message, $statusCode, $data, true);
     }
 }

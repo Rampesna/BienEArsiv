@@ -20,6 +20,6 @@ class CustomerSubscriptionController extends Controller
 
     public function check(CheckRequest $request)
     {
-        return $this->success('Check customer subscription', $request->user()->customer->subscription);
+        return $this->success('Check customer subscription', $request->user()->customer()->first()->subscription);
     }
 }

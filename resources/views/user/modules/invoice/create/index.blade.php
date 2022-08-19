@@ -15,6 +15,8 @@
 @section('content')
 
     @include('user.modules.invoice.create.modals.createInvoice')
+    @include('user.modules.invoice.create.modals.createNewCompany')
+    @include('user.modules.invoice.create.modals.createNewProduct')
 
     <div class="row">
         <div class="col-xl-4 mb-5">
@@ -43,7 +45,10 @@
                                 <label for="create_invoice_company_id" class="d-flex align-items-center fs-7 fw-bold mb-2">
                                     <span class="required">Cari</span>
                                 </label>
-                                <select id="create_invoice_company_id" class="form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Cari Seçin"></select>
+                                <div class="input-group flex-nowrap">
+                                    <button class="btn btn-sm btn-icon btn-success" type="button" id="CreateNewCompany">+</button>
+                                    <select id="create_invoice_company_id" class="form-control form-select form-select-sm form-select-solid" data-control="select2" data-placeholder="Cari Seçin"></select>
+                                </div>
                             </div>
                         </div>
                     </div>

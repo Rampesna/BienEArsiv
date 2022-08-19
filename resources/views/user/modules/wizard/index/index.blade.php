@@ -118,6 +118,14 @@
                                 </div>
                                 <div class="col-xl-12 mb-7">
                                     <div class="form-group">
+                                        <label for="customer_gib_code" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                            <span class="required">Gib Portal Kodunuz</span>
+                                        </label>
+                                        <input id="customer_gib_code" type="text" class="form-control form-control-solid" placeholder="Gib Portal Kodunuz" aria-hidden="true">
+                                    </div>
+                                </div>
+                                <div class="col-xl-12 mb-7">
+                                    <div class="form-group">
                                         <label for="customer_gib_password" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                             <span class="required">Gib Portal Şifreniz</span>
                                         </label>

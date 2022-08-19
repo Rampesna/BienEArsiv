@@ -29,13 +29,11 @@ Route::middleware([
         Route::post('complete', [\App\Http\Controllers\Api\User\WizardController::class, 'complete'])->name('api.user.wizard.complete');
     });
 
-    Route::group([
-        'withoutMiddleware' => [
-            'auth:sanctum'
-        ],
-    ], function () {
+    Route::group([], function () {
         Route::post('login', [\App\Http\Controllers\Api\User\UserController::class, 'login'])->name('api.user.login')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
         Route::post('create', [\App\Http\Controllers\Api\User\UserController::class, 'create'])->name('api.user.create')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
+        Route::post('sendPasswordResetEmail', [\App\Http\Controllers\Api\User\UserController::class, 'sendPasswordResetEmail'])->name('api.user.sendPasswordResetEmail')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
+        Route::post('resetPassword', [\App\Http\Controllers\Api\User\UserController::class, 'resetPassword'])->name('api.user.resetPassword')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
     });
 
     Route::get('index', [\App\Http\Controllers\Api\User\UserController::class, 'index'])->name('api.user.index');
@@ -75,7 +73,10 @@ Route::middleware([
         Route::get('getAll', [\App\Http\Controllers\Api\User\VatDiscountController::class, 'getAll'])->name('api.user.vatDiscount.getAll');
     });
 
-    Route::prefix('subscription')->group(function () {
+    Route::prefix('subscription')->withoutMiddleware([
+        'auth:sanctum',
+        'SubscriptionApi'
+    ])->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\SubscriptionController::class, 'getAll'])->name('api.user.subscription.getAll');
     });
 
@@ -85,6 +86,10 @@ Route::middleware([
 
     Route::prefix('country')->group(function () {
         Route::get('getAll', [\App\Http\Controllers\Api\User\CountryController::class, 'getAll'])->name('api.user.country.getAll');
+    });
+
+    Route::prefix('taxpayerType')->group(function () {
+        Route::get('getAll', [\App\Http\Controllers\Api\User\TaxpayerTypeController::class, 'getAll'])->name('api.user.taxpayerType.getAll');
     });
 
     Route::prefix('province')->group(function () {
@@ -101,6 +106,7 @@ Route::middleware([
         Route::get('all', [\App\Http\Controllers\Api\User\CompanyController::class, 'all'])->name('api.user.company.all');
         Route::get('index', [\App\Http\Controllers\Api\User\CompanyController::class, 'index'])->name('api.user.company.index');
         Route::get('getById', [\App\Http\Controllers\Api\User\CompanyController::class, 'getById'])->name('api.user.company.getById');
+        Route::get('getByTaxNumber', [\App\Http\Controllers\Api\User\CompanyController::class, 'getByTaxNumber'])->name('api.user.company.getByTaxNumber');
         Route::post('create', [\App\Http\Controllers\Api\User\CompanyController::class, 'create'])->name('api.user.company.create');
         Route::put('update', [\App\Http\Controllers\Api\User\CompanyController::class, 'update'])->name('api.user.company.update');
         Route::delete('delete', [\App\Http\Controllers\Api\User\CompanyController::class, 'delete'])->name('api.user.company.delete');
@@ -152,17 +158,24 @@ Route::middleware([
         Route::get('getById', [\App\Http\Controllers\Api\User\InvoiceController::class, 'getById'])->name('api.user.invoice.getById');
         Route::post('create', [\App\Http\Controllers\Api\User\InvoiceController::class, 'create'])->name('api.user.invoice.create');
         Route::put('update', [\App\Http\Controllers\Api\User\InvoiceController::class, 'update'])->name('api.user.invoice.update');
+        Route::delete('delete', [\App\Http\Controllers\Api\User\InvoiceController::class, 'delete'])->name('api.user.invoice.delete');
         Route::post('sendToGib', [\App\Http\Controllers\Api\User\InvoiceController::class, 'sendToGib'])->name('api.user.invoice.sendToGib');
     });
 
     Route::prefix('eInvoice')->group(function () {
+        Route::post('login', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'login'])->name('api.user.eInvoice.login');
+        Route::post('logout', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'logout'])->name('api.user.eInvoice.logout');
         Route::get('outbox', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'outbox'])->name('api.user.eInvoice.outbox');
         Route::get('inbox', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'inbox'])->name('api.user.eInvoice.inbox');
+        Route::post('sendSmsVerification', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'sendSmsVerification'])->name('api.user.eInvoice.sendSmsVerification');
+        Route::post('verifySmsCode', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'verifySmsCode'])->name('api.user.eInvoice.verifySmsCode');
+        Route::post('cancelEInvoice', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'cancelEInvoice'])->name('api.user.eInvoice.cancelEInvoice');
         Route::get('getInvoiceHTML', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'getInvoiceHTML'])->name('api.user.eInvoice.getInvoiceHTML');
         Route::get('getInvoicePDF', [\App\Http\Controllers\Api\User\EInvoiceController::class, 'getInvoicePDF'])->name('api.user.eInvoice.getInvoicePDF');
 
         Route::prefix('report')->group(function () {
             Route::post('outbox', [\App\Http\Controllers\Api\User\EInvoiceReportController::class, 'outbox'])->name('api.user.eInvoice.report.outbox');
+            Route::post('inbox', [\App\Http\Controllers\Api\User\EInvoiceReportController::class, 'inbox'])->name('api.user.eInvoice.report.inbox');
         });
     });
 
@@ -196,7 +209,9 @@ Route::middleware([
         Route::post('failure', [\App\Http\Controllers\Api\User\SubscriptionPaymentController::class, 'failureUrl'])->name('api.user.subscriptionPayment.failureUrl')->withoutMiddleware(['auth:sanctum', 'SubscriptionApi']);
     });
 
-    Route::prefix('customerSubscription')->group(function () {
+    Route::prefix('customerSubscription')->withoutMiddleware([
+        'SubscriptionApi'
+    ])->group(function () {
         Route::get('check', [\App\Http\Controllers\Api\User\CustomerSubscriptionController::class, 'check'])->name('api.user.customerSubscription.check');
     });
 });

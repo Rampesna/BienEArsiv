@@ -25,6 +25,7 @@ class WizardController extends Controller
             title: $request->title,
             taxOffice: $request->taxOffice,
             taxNumber: $request->taxNumber,
+            gibCode: $request->gibCode,
             gibPassword: $request->gibPassword,
             phone: $request->phone,
             email: $request->email,

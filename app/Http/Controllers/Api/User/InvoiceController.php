@@ -8,8 +8,10 @@ use App\Http\Requests\Api\User\InvoiceController\CountRequest;
 use App\Http\Requests\Api\User\InvoiceController\GetByIdRequest;
 use App\Http\Requests\Api\User\InvoiceController\CreateRequest;
 use App\Http\Requests\Api\User\InvoiceController\UpdateRequest;
+use App\Http\Requests\Api\User\InvoiceController\DeleteRequest;
 use App\Http\Requests\Api\User\InvoiceController\SendToGibRequest;
 use App\Services\Eloquent\InvoiceService;
+use App\Services\Eloquent\TransactionService;
 use App\Traits\Response;
 
 class InvoiceController extends Controller
@@ -105,6 +107,19 @@ class InvoiceController extends Controller
         ));
     }
 
+    public function delete(DeleteRequest $request)
+    {
+        $invoice = $this->invoiceService->getById($request->id);
+
+        if (!$invoice || ($invoice->customer_id != $request->user()->customer_id)) {
+            return $this->error('Invoice not found', 404);
+        }
+
+        (new TransactionService)->deleteByInvoiceId($invoice->id);
+
+        return $this->success('Invoice deleted successfully.', $this->invoiceService->delete($request->id));
+    }
+
     public function sendToGib(SendToGibRequest $request)
     {
         $invoice = $this->invoiceService->getById($request->id);
@@ -113,8 +128,15 @@ class InvoiceController extends Controller
             return $this->error('Invoice not found', 404);
         }
 
-        return $this->success('Invoice sent to Gib successfully.', $this->invoiceService->sendToGib(
-            $invoice->id
-        ));
+        $response = $this->invoiceService->sendToGib(
+            $invoice->id,
+            $request->user()->customer->gib_token
+        );
+
+        if ($response['status'] == 'error') {
+            return $this->error('Invoice not sent to Gib', 400, $response);
+        }
+
+        return $this->success('Invoice sent to Gib successfully.', $response['message']);
     }
 }

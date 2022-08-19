@@ -19,6 +19,11 @@ class Customer extends Model
         return $this->hasMany(CustomerSubscription::class);
     }
 
+    public function taxpayerType()
+    {
+        return $this->belongsTo(TaxpayerType::class, 'taxpayer_type_id', 'id');
+    }
+
     public function getSubscriptionAttribute()
     {
         return $this

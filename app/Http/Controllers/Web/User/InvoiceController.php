@@ -16,6 +16,11 @@ class InvoiceController extends Controller
         return view('user.modules.invoice.create.index');
     }
 
+    public function createWithoutCompany()
+    {
+        return view('user.modules.invoice.createWithoutCompany.index');
+    }
+
     public function edit($id)
     {
         return view('user.modules.invoice.edit.index', [

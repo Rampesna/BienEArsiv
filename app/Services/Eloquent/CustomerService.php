@@ -67,6 +67,7 @@ class CustomerService extends BaseService
     /**
      * @param int $id
      * @param string $title
+     * @param int|null $taxpayerTypeId
      * @param string|null $taxOffice
      * @param string|null $taxNumber
      * @param string|null $phone
@@ -81,8 +82,10 @@ class CustomerService extends BaseService
     public function update(
         int         $id,
         string      $title,
+        int|null    $taxpayerTypeId = null,
         string|null $taxOffice = null,
         string|null $taxNumber = null,
+        string|null $gibCode = null,
         string|null $gibPassword = null,
         string|null $phone = null,
         string|null $email = null,
@@ -96,8 +99,10 @@ class CustomerService extends BaseService
     {
         $customer = Customer::find($id);
         $customer->title = $title;
+        $customer->taxpayer_type_id = $taxpayerTypeId;
         $customer->tax_office = $taxOffice;
         $customer->tax_number = $taxNumber;
+        $customer->gib_code = $gibCode;
         $customer->gib_password = $gibPassword;
         $customer->phone = $phone;
         $customer->email = $email;
@@ -145,6 +150,22 @@ class CustomerService extends BaseService
         $name = 'stamp.' . $logo->getClientOriginalExtension();
         $logo->move($path, $name);
         $customer->logo = $path . $name;
+        $customer->save();
+
+        return $customer;
+    }
+
+    /**
+     * @param int $customerId
+     * @param string|null $token
+     */
+    public function updateGibToken(
+        $customerId,
+        $token = null
+    )
+    {
+        $customer = $this->getById($customerId);
+        $customer->gib_token = $token;
         $customer->save();
 
         return $customer;

@@ -12,6 +12,7 @@
     var filter_transaction_type_id = $('#filter_transaction_type_id');
 
     var SendToGibButton = $('#SendToGibButton');
+    var DeleteInvoiceButton = $('#DeleteInvoiceButton');
 
     function getTransactionTypes() {
         $.ajax({
@@ -60,10 +61,13 @@
                 typeId: typeId,
             },
             success: function (response) {
+                console.log(response);
                 invoices.empty();
                 $.each(response.response.invoices, function (i, invoice) {
-                    var dropdownMenuList = !invoice.uuid && parseInt(invoice.type_id) === 7 || parseInt(invoice.type_id) === 10 ?
-                        `
+                    var dropdownMenuList = !invoice.uuid ?
+                        (
+                            parseInt(invoice.type_id) === 7 || parseInt(invoice.type_id) === 10 || parseInt(invoice.type_id) === 11 ?
+                                `
                             <div class="dropdown">
                                 <button class="btn btn-secondary btn-icon btn-sm" type="button" id="Invoice_${invoice.id}_Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="fas fa-th"></i>
@@ -75,7 +79,18 @@
                                     <a class="dropdown-item cursor-pointer py-3 ps-6" onclick="deleteInvoice(${invoice.id})" title="Sil"><i class="fas fa-trash-alt me-3 text-danger"></i> <span class="text-dark">Sil</span></a>
                                 </div>
                             </div>
-                        ` : ``;
+                        `: ''
+                        ) : `
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-icon btn-sm" type="button" id="Invoice_${invoice.id}_Dropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="Invoice_${invoice.id}_Dropdown" style="width: 175px">
+                                    <a class="dropdown-item cursor-pointer mb-2 py-3 ps-6" onclick="showEInvoice('${invoice.uuid}')" title="Faturayı Görüntüle"><i class="fas fa-eye me-2 text-info"></i> <span class="text-dark">Faturayı Görüntüle</span></a>
+                                    <a class="dropdown-item cursor-pointer mb-2 py-3 ps-6" onclick="downloadEInvoice('${invoice.uuid}')" title="Faturayı PDF İndir"><i class="fas fa-file-pdf me-2 text-primary"></i> <span class="text-dark">Faturayı PDF İndir</span></a>
+                                </div>
+                            </div>
+                        `;
                     var icon = invoice.type.direction === 0 ?
                         `
                         <span class="svg-icon svg-icon-success svg-icon-2x">
@@ -129,13 +144,72 @@
         });
     }
 
+    function showEInvoice(uuid) {
+        $('#loader').fadeIn(250);
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.eInvoice.getInvoiceHTML') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                uuid: uuid,
+            },
+            success: function (response) {
+                $('#eInvoiceHtml').html(response.response);
+                $('#EInvoiceHtmlModal').modal('show');
+                $('#loader').fadeOut(250);
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Fatura Görüntülenirken Serviste Bir Hata Oluştu.');
+                $('#loader').fadeOut(250);
+            }
+        });
+    }
+
+    function downloadEInvoice(uuid) {
+        $('#loader').fadeIn(250);
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.eInvoice.getInvoicePDF') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                uuid: uuid,
+            },
+            success: function () {
+                var path = '{{ asset('documents/eInvoices/') }}';
+                window.open(path + '/' + uuid + '.pdf', '_blank');
+                $('#loader').fadeOut(250);
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Fatura İndirilirken Serviste Bir Hata Oluştu.');
+                $('#loader').fadeOut(250);
+            }
+        });
+    }
+
     function createInvoice() {
         window.location.href = '{{ route('web.user.invoice.create') }}';
+    }
+
+    function createInvoiceWithoutCompany() {
+        window.location.href = '{{ route('web.user.invoice.createWithoutCompany') }}';
     }
 
     function sendInvoiceToGib(id) {
         $('#send_to_gib_invoice_id').val(id);
         $('#SendToGibModal').modal('show');
+    }
+
+    function deleteInvoice(id) {
+        $('#delete_invoice_id').val(id);
+        $('#DeleteInvoiceModal').modal('show');
     }
 
     function changePage(newPage) {
@@ -199,7 +273,8 @@
             data: {
                 id: id,
             },
-            success: function () {
+            success: function (response) {
+                console.log(response);
                 toastr.success('Faturanız Başarıyla Gönderildi.');
                 changePage(parseInt(page.html()));
                 $('#loader').fadeOut(250);
@@ -208,6 +283,33 @@
                 console.log(error);
                 toastr.error('Fatura Gönderilirken Serviste Bir Hata Oluştu.');
                 $('#loader').fadeOut(250);
+            }
+        });
+    });
+
+    DeleteInvoiceButton.click(function () {
+        $('#loader').show();
+        var id = $('#delete_invoice_id').val();
+        $('#DeleteInvoiceModal').modal('hide');
+        $.ajax({
+            type: 'delete',
+            url: '{{ route('api.user.invoice.delete') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                id: id,
+            },
+            success: function () {
+                toastr.success('Faturanız Başarıyla Silindi.');
+                changePage(parseInt(page.html()));
+                $('#loader').hide();
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Fatura Silinirken Serviste Bir Hata Oluştu.');
+                $('#loader').hide();
             }
         });
     });

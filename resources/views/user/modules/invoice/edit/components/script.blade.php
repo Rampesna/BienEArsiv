@@ -543,7 +543,7 @@
                         waybillDatetime: waybillDatetime,
                         orderNumber: orderNumber,
                         orderDatetime: orderDatetime,
-                        price: $('#generalTotalSpan').val(),
+                        price: $('#generalTotalSpan').val().replace(',', '')
                     };
 
                     $.ajax({

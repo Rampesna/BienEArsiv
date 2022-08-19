@@ -55,7 +55,7 @@
 <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.touchSwipe.js') }}"></script>
 
-<script src="{{ asset('assets/js/custom.js') }}"></script>
+<script src="{{ asset('assets/js/custom.js?v=v3.7') }}"></script>
 
 <script>
 

@@ -86,6 +86,16 @@ class TransactionService extends BaseService
     }
 
     /**
+     * @param int $invoiceId
+     */
+    public function deleteByInvoiceId(
+        $invoiceId
+    )
+    {
+        return Transaction::where('invoice_id', $invoiceId)->delete();
+    }
+
+    /**
      * @param int|null $companyId
      * @param int|null $safeboxId
      */

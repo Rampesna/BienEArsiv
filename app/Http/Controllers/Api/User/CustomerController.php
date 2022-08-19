@@ -46,14 +46,17 @@ class CustomerController extends Controller
         return $this->success('Customer updated successfully', $this->customerService->update(
             id: $request->user()->customer_id,
             title: $request->title,
+            taxpayerTypeId: $request->taxpayerTypeId,
             taxOffice: $request->taxOffice,
             taxNumber: $request->taxNumber,
+            gibCode: $request->gibCode,
             gibPassword: $request->gibPassword,
             phone: $request->phone,
             email: $request->email,
             address: $request->address,
             provinceId: $request->provinceId,
-            districtId: $request->districtId
+            districtId: $request->districtId,
+            wizard: 1
         ));
     }
 

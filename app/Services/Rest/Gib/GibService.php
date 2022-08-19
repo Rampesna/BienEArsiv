@@ -53,12 +53,21 @@ class GibService
         $this->tokenEndpoint = "/earsiv-services/assos-login";
         $this->referrerEndpoint = "/intragiris.html";
         $this->client = new \GuzzleHttp\Client(['verify' => false]);
-        $this->testMode = true;
+//        $this->testMode = true;
+    }
+
+    public function checkResponse(
+        $jsonDecodedResponse
+    )
+    {
+        return isset($jsonDecodedResponse->error) ?
+            ['error' => true, 'message' => $jsonDecodedResponse->messages[0]->text] :
+            ['error' => false, 'message' => 'Success'];
     }
 
     public function getBaseUrl()
     {
-        return $this->testMode === true ? $this->testUrl : $this->baseUrl;
+        return $this->testMode == true ? $this->testUrl : $this->baseUrl;
     }
 
     /**
@@ -129,12 +138,12 @@ class GibService
     public function login()
     {
         $parameters = [
-            "assoscmd" => $this->testMode === true ? "login" : "anologin",
+            "assoscmd" => $this->testMode == true ? "login" : "anologin",
             "rtype" => "json",
             "userid" => $this->taxNumber,
             "sifre" => $this->password,
             "sifre2" => $this->password,
-            "parola" => "1"
+            "parola" => $this->password
         ];
 
         $response = $this->client->post($this->getBaseUrl() . $this->tokenEndpoint, [
@@ -142,13 +151,52 @@ class GibService
             "headers" => $this->headers
         ]);
 
+        $check = $this->checkResponse(json_decode($response->getBody()));
+
+        if ($check['error']) {
+            return null;
+        }
+
         return $this->token = json_decode($response->getBody())->token;
     }
 
     /**
-     * @param GibInvoice $invoice
+     * @param string $token
+     * @param string $uuid
      */
-    public function createInvoice(GibInvoice $invoice)
+    public function getInvoiceFromAPI(
+        string $token,
+        string $uuid
+    )
+    {
+        $data = [
+            "ettn" => $uuid
+        ];
+
+        $parameters = [
+            "cmd" => "EARSIV_PORTAL_FATURA_GETIR",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_BASITFATURA",
+            "token" => $token,
+            "jp" => "" . json_encode($data) . "",
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
+            "form_params" => $parameters,
+            "headers" => $this->headers
+        ]);
+
+        return json_decode($response->getBody());
+    }
+
+    /**
+     * @param GibInvoice $invoice
+     * @param string $token
+     */
+    public function createInvoice(
+        GibInvoice $invoice,
+        string     $token
+    )
     {
         if ($invoice == null) {
             throw new \Exception("Invoice variable not exist");
@@ -158,7 +206,7 @@ class GibService
             "cmd" => "EARSIV_PORTAL_FATURA_OLUSTUR",
             "callid" => Uuid::uuid1()->toString(),
             "pageName" => "RG_BASITFATURA",
-            "token" => $this->token,
+            "token" => $token,
             "jp" => "" . json_encode($invoice->export()) . ""
         ];
 
@@ -173,17 +221,19 @@ class GibService
     /**
      * @param string $startDatetime
      * @param string $endDatetime
+     * @param string $token
      */
     public function outbox(
         $startDatetime,
-        $endDatetime
+        $endDatetime,
+        $token
     )
     {
         $parameters = [
             "cmd" => "EARSIV_PORTAL_TASLAKLARI_GETIR",
             "callid" => Uuid::uuid1()->toString(),
             "pageName" => "RG_BASITTASLAKLAR",
-            "token" => $this->token,
+            "token" => $token,
             "jp" => '{"baslangic":"' . $startDatetime . '","bitis":"' . $endDatetime . '","hangiTip":"5000/30000", "table":[]}'
         ];
 
@@ -198,17 +248,19 @@ class GibService
     /**
      * @param string $startDatetime
      * @param string $endDatetime
+     * @param string $token
      */
     public function inbox(
         $startDatetime,
-        $endDatetime
+        $endDatetime,
+        $token
     )
     {
         $parameters = [
             "cmd" => "EARSIV_PORTAL_ADIMA_KESILEN_BELGELERI_GETIR",
             "callid" => Uuid::uuid1()->toString(),
             "pageName" => "RG_ALICI_TASLAKLAR",
-            "token" => $this->token,
+            "token" => $token,
             "jp" => '{"baslangic":"' . $startDatetime . '","bitis":"' . $endDatetime . ' " }'];
 
         $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
@@ -221,11 +273,13 @@ class GibService
 
     /**
      * @param string $uuid
+     * @param string $token
      * @param boolean $signed
      */
     public function getInvoiceHTML(
         $uuid,
-        $signed = true
+        $token,
+        $signed = true,
     )
     {
         $data = [
@@ -237,7 +291,7 @@ class GibService
             "cmd" => "EARSIV_PORTAL_FATURA_GOSTER",
             "callid" => Uuid::uuid1()->toString(),
             "pageName" => "RG_TASLAKLAR",
-            "token" => $this->token,
+            "token" => $token,
             "jp" => "" . json_encode($data) . "",
         ];
 
@@ -251,14 +305,16 @@ class GibService
 
     /**
      * @param string $uuid
+     * @param string $token
      * @param boolean $signed
      */
     public function getInvoicePDF(
         $uuid,
+        $token,
         $signed = true
     )
     {
-        $invoiceHtml = $this->getInvoiceHTML($uuid, $signed);
+        $invoiceHtml = $this->getInvoiceHTML($uuid, $token, $signed);
         $path = 'documents/eInvoices/';
         $checkPath = base_path($path);
         if (!file_exists($checkPath)) {
@@ -271,5 +327,195 @@ class GibService
         $pdf->save($checkPath . $uuid . '.pdf');
 
         return $path . $uuid . '.pdf';
+    }
+
+    /**
+     * Initialize SMS Verification
+     *
+     * @return boolean
+     */
+
+    private function initializeSmsVerification(
+        $token
+    )
+    {
+        $parameters = [
+            "cmd" => "EARSIV_PORTAL_TELEFONNO_SORGULA",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_BASITTASLAKLAR",
+            "token" => $token,
+            "jp" => "{}",
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
+            "form_params" => $parameters,
+            "headers" => $this->headers
+        ]);
+
+        $data = json_decode($response->getBody())->data;
+
+        return $data->telefon ?? $data['telefon'];
+    }
+
+
+    /**
+     * @param string $token
+     */
+    public function sendSmsVerification(
+        string $token,
+        string $uuid,
+    )
+    {
+        $getPhoneNumber = $this->initializeSmsVerification($token);
+
+        $data = [
+            "CEPTEL" => $getPhoneNumber,
+            "KCEPTEL" => false,
+            "TIP" => ""
+        ];
+
+        $parameters = [
+            "cmd" => "EARSIV_PORTAL_SMSSIFRE_GONDER",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_SMSONAY",
+            "token" => $token,
+            "jp" => "" . json_encode($data) . "",
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
+            "form_params" => $parameters,
+            "headers" => $this->headers
+        ]);
+
+        $data = json_decode($response->getBody())->data;
+
+        $oid = $data->oid ?? $data["oid"];
+
+        return $oid;
+    }
+
+    /**
+     * @param string $token
+     * @param string $code
+     * @param string $oid
+     * @param string $uuid
+     */
+    public function verifySmsCode(
+        $token,
+        $code,
+        $oid,
+        $uuid
+    )
+    {
+        $invoice = $this->getInvoiceFromAPI($token, $uuid)->data;
+
+        $gibInvoice = [
+            "faturaOid" => "",
+            "toplamTutar" => "0",
+            "belgeNumarasi" => $invoice->belgeNumarasi,
+            "aliciVknTckn" => $invoice->vknTckn,
+            "aliciUnvanAdSoyad" => "",
+            "saticiVknTckn" => "",
+            "saticiUnvanAdSoyad" => "",
+            "belgeTarihi" => date('d-m-Y', strtotime($invoice->faturaTarihi)),
+            "belgeTuru" => "FATURA",
+            "onayDurumu" => "Onaylanmadı",
+            "ettn" => $invoice->faturaUuid,
+            "talepDurumColumn" => "----------",
+            "iptalItiraz" => -99,
+            "talepDurum" => -99
+        ];
+
+        $data = [
+            'SIFRE' => $code,
+            'OID' => $oid,
+            'OPR' => 1,
+            'DATA' => [
+                $gibInvoice
+            ]
+        ];
+
+        $parameters = [
+            "cmd" => "0lhozfib5410mp",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_SMSONAY",
+            "token" => $token,
+            "jp" => "" . json_encode($data) . "",
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
+            "form_params" => $parameters,
+            "headers" => $this->headers
+        ]);
+
+        $responseData = json_decode($response->getBody());
+
+        if (isset($responseData->data->sonuc) && $responseData->data->sonuc == "1") {
+            return true;
+        } else if (isset($responseData->data['sonuc']) && $responseData->data['sonuc'] == "1") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @param string $token
+     * @param string $uuid
+     * @param string $reason
+     */
+    public function cancelEInvoice(
+        string $token,
+        string $uuid,
+        string $reason = "Yanlış İşlem"
+    )
+    {
+        $invoice = $this->getInvoiceFromAPI($token, $uuid)->data;
+
+        $gibInvoice = [
+            "ettn" => $invoice->faturaUuid,
+            "onayDurumu" => "Onaylandı",
+            "belgeTuru" => "FATURA",
+            "talepAciklama" => $reason,
+        ];
+
+        $parameters = [
+            "cmd" => "EARSIV_PORTAL_IPTAL_TALEBI_OLUSTUR",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_BASITTASLAKLAR",
+            "token" => $token,
+            "jp" => "" . json_encode($gibInvoice) . "",
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->tokenEndpoint, [
+            "form_params" => $parameters,
+            "headers" => $this->headers
+        ]);
+
+        $responseData = json_decode($response->getBody());
+
+        if ($responseData['data'] == "İptal talebiniz başarıyla oluşturulmuş ve kabul edilmiştir.") {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function logout(
+        $token
+    )
+    {
+        $parameters = [
+            "assoscmd" => "logout",
+            "rtype" => "json",
+            "token" => $token,
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->tokenEndpoint, [
+            "form_params" => $parameters,
+            "headers" => $this->headers
+        ]);
+
+        return json_decode($response->getBody()->getContents());
     }
 }

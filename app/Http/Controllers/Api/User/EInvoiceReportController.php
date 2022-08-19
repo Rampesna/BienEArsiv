@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\User\EInvoiceReportController\OutboxRequest;
+use App\Http\Requests\Api\User\EInvoiceReportController\InboxRequest;
 use App\Services\Rest\Gib\GibService;
 use App\Traits\Response;
 use Rap2hpoutre\FastExcel\FastExcel;
@@ -21,12 +22,10 @@ class EInvoiceReportController extends Controller
 
     public function outbox(OutboxRequest $request)
     {
-        $this->gibService->setCredentials($request->user()->customer->tax_number, $request->user()->customer->gib_password);
-        $this->gibService->login();
-
         $eInvoices = $this->gibService->outbox(
             date('d/m/Y', strtoTime($request->startDate)),
-            date('d/m/Y', strtoTime($request->endDate))
+            date('d/m/Y', strtoTime($request->endDate)),
+            $request->user()->customer->gib_token
         );
 
         $fastExcel = new FastExcel;
@@ -44,8 +43,40 @@ class EInvoiceReportController extends Controller
             })
         );
         $path = 'documents/customers/' . $request->user()->customer_id . '/eInvoices/report/outbox';
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
+        if (!file_exists(asset($path))) {
+            mkdir(asset($path), 0777, true);
+        }
+        $fileName = date('d.m.Y', strtotime($request->startDate)) . '-' . date('d.m.Y', strtotime($request->startDate)) . ' Giden e-Arşiv Faturalar.xlsx';
+        $filePath = base_path($path . '/' . $fileName);
+        $fastExcel->export($filePath);
+
+        return $this->success('filePath', $path . '/' . $fileName);
+    }
+
+    public function inbox(InboxRequest $request)
+    {
+        $eInvoices = $this->gibService->inbox(
+            date('d/m/Y', strtoTime($request->startDate)),
+            date('d/m/Y', strtoTime($request->endDate)),
+            $request->user()->customer->gib_token
+        );
+
+        $fastExcel = new FastExcel;
+        $fastExcel->data(
+            collect($eInvoices)->map(function ($eInvoice) {
+                return [
+                    'Satıcı Ünvan' => $eInvoice->saticiUnvanAdSoyad,
+                    'Satıcı VKN/TCKN' => $eInvoice->saticiVknTckn,
+                    'Belge Numarası' => $eInvoice->belgeNumarasi,
+                    'Belge Tarihi' => $eInvoice->belgeTarihi,
+                    'Belge Türü' => $eInvoice->belgeTuru,
+                    'Ettn' => $eInvoice->ettn,
+                ];
+            })
+        );
+        $path = 'documents/customers/' . $request->user()->customer_id . '/eInvoices/report/inbox';
+        if (!file_exists(asset($path))) {
+            mkdir(asset($path), 0777, true);
         }
         $fileName = date('d.m.Y', strtotime($request->startDate)) . '-' . date('d.m.Y', strtotime($request->startDate)) . ' Giden e-Arşiv Faturalar.xlsx';
         $filePath = base_path($path . '/' . $fileName);

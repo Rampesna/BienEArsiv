@@ -85,12 +85,14 @@
         var title = $('#customer_title').val();
         var taxOffice = $('#customer_tax_office').val();
         var taxNumber = $('#customer_tax_number').val();
+        var gibCode = $('#customer_gib_code').val();
         var gibPassword = $('#customer_gib_password').val();
         var phone = $('#customer_phone').val();
         var email = $('#customer_email').val();
         var address = $('#customer_address').val();
         var provinceId = customer_province_id.val();
         var districtId = customer_district_id.val();
+        var taxpayerTypeId = 2;
 
         if (!title) {
             toastr.warning('Firma Ünvanı Boş Olamaz!');
@@ -110,6 +112,9 @@
         } else if (!taxOffice) {
             toastr.warning('Vergi Dairesi Boş Olamaz!');
             WizardStepper.goTo(2);
+        } else if (!gibCode) {
+            toastr.warning('Gib Portalı Kodu Boş Olamaz!');
+            WizardStepper.goTo(2);
         } else if (!gibPassword) {
             toastr.warning('Gib Portalı Şifresi Boş Olamaz!');
             WizardStepper.goTo(2);
@@ -127,12 +132,14 @@
                     title: title,
                     taxOffice: taxOffice,
                     taxNumber: taxNumber,
+                    gibCode: gibCode,
                     gibPassword: gibPassword,
                     phone: phone,
                     email: email,
                     address: address,
                     provinceId: provinceId,
-                    districtId: districtId
+                    districtId: districtId,
+                    taxpayerTypeId: taxpayerTypeId,
                 },
                 success: function () {
                     toastr.success('Aktivasyon İşleminiz Başarıyla Gerçekleştirildi.');

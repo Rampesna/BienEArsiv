@@ -24,7 +24,7 @@ function initializeMoneyInputMask() {
         definitions: {
             "*": {
                 validator: '[0-9]',
-                cardinality: 1,
+                cardinality: 0,
                 casing: "lower"
             },
         },
@@ -49,17 +49,21 @@ function initializeCurrencyInputMask() {
 initializeMoneyInputMask();
 initializeCurrencyInputMask();
 
-$('.decimal').on("copy cut paste drop", function () {
-    return false;
-}).keyup(function () {
-    var val = $(this).val();
-    if (isNaN(val)) {
-        val = val.replace(/[^0-9\.]/g, '');
-        if (val.split('.').length > 2)
-            val = val.replace(/\.+$/, "");
-    }
-    $(this).val(val);
-});
+function initializeDecimals() {
+    $('.decimal').on("copy cut paste drop", function () {
+        return false;
+    }).keyup(function () {
+        var val = $(this).val();
+        if (isNaN(val)) {
+            val = val.replace(/[^0-9\.]/g, '');
+            if (val.split('.').length > 2)
+                val = val.replace(/\.+$/, "");
+        }
+        $(this).val(val);
+    });
+}
+
+initializeDecimals();
 
 $(".onlyNumber").keypress(function (e) {
     if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {

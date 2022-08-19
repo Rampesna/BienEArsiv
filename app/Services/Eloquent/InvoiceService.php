@@ -28,6 +28,16 @@ class InvoiceService extends BaseService
     }
 
     /**
+     * @param string $uuid
+     */
+    public function getByUuid(
+        string $uuid
+    )
+    {
+        return Invoice::where('uuid', $uuid)->first();
+    }
+
+    /**
      * @param int $customerId
      * @param int $pageIndex
      * @param int $pageSize
@@ -215,6 +225,16 @@ class InvoiceService extends BaseService
     }
 
     /**
+     * @param int $id
+     */
+    public function delete(
+        $id
+    )
+    {
+        return $this->getById($id)->delete();
+    }
+
+    /**
      * @param int $customerId
      */
     public function getNextInvoiceNumber(
@@ -227,9 +247,11 @@ class InvoiceService extends BaseService
 
     /**
      * @param int $id
+     * @param string $token
      */
     public function sendToGib(
-        $id
+        int    $id,
+        string $token
     )
     {
         $invoice = Invoice::with([
@@ -238,22 +260,25 @@ class InvoiceService extends BaseService
                     'country'
                 ]);
             },
+            'customer' => function ($customer) {
+                $customer->with([
+                    'taxpayerType'
+                ]);
+            },
             'currencyName',
             'vatDiscount',
         ])->find($id);
+
         $invoiceProducts = InvoiceProduct::where('invoice_id', $invoice->id)->get();
 
         $gibService = new \App\Services\Rest\Gib\GibService;
-        $gibService->setTestMode(true);
-        $gibService->setCredentials($invoice->customer->tax_number, $invoice->customer->gib_password);
-        $gibService->login();
 
         $gibInvoiceDate = date('d/m/Y', strtotime($invoice->datetime));
         $gibInvoiceHour = date('H:i:s', strtotime($invoice->datetime));
         $gibInvoiceCurrencyCode = $invoice->currencyName->code;
         $gibInvoiceCurrencyRate = $invoice->currency;
         $gibInvoiceInvoiceType = $invoice->vat_discount_id == 0 && $invoice->type_id != 10 ? $invoice->type->code : 'TEVKIFAT';
-        $gibInvoiceWhichType = '5000/30000';
+        $gibInvoiceWhichType = $invoice->customer->taxpayerType ? $invoice->customer->taxpayerType->type : '5000/30000';
         $gibInvoiceTaxNumber = $invoice->company->tax_number;
         $gibInvoiceReceiverTitle = $invoice->company->title;
         $gibInvoiceReceiverName = $invoice->company->manager_name;
@@ -319,8 +344,8 @@ class InvoiceService extends BaseService
             "hangiTip" => $gibInvoiceWhichType,
             "vknTckn" => $gibInvoiceTaxNumber ?? "11111111111",
             "aliciUnvan" => $gibInvoiceReceiverTitle,
-            "aliciAdi" => $gibInvoiceReceiverName,
-            "aliciSoyadi" => $gibInvoiceReceiverSurname,
+            "aliciAdi" => $gibInvoiceReceiverName ?? " ",
+            "aliciSoyadi" => $gibInvoiceReceiverSurname ?? " ",
             "binaAdi" => "",
             "binaNo" => "",
             "kapiNo" => "",
@@ -331,7 +356,7 @@ class InvoiceService extends BaseService
             "mahalleSemtIlce" => "",
             "sehir" => $gibInvoiceProvince ?? "İstanbul",
             "postaKodu" => $gibInvoicePostCode ?? "34000",
-            "tel" => $gibInvoicePhone ?? '5555555555',
+            "tel" => $gibInvoicePhone ?? '',
             "fax" => "",
             "eposta" => $gibInvoiceEmail ?? '',
             "websitesi" => "",
@@ -359,7 +384,7 @@ class InvoiceService extends BaseService
             "fisTipi" => " ",
             "zRaporNo" => "",
             "okcSeriNo" => "",
-            "malHizmetTable" => $invoice->type_id === 7 ? $gibInvoiceProducts : []
+            "malHizmetTable" => $invoice->type_id === 7 || $invoice->type_id === 11 ? $gibInvoiceProducts : []
         ];
 
         $gibInvoice = new \App\Services\Rest\Gib\Models\GibInvoice;
@@ -367,11 +392,33 @@ class InvoiceService extends BaseService
 
         $uuid = $gibInvoice->getUuid();
 
-        $gibService->createInvoice($gibInvoice);
+        $createInvoiceResponse = $gibService->createInvoice(
+            $gibInvoice,
+            $token
+        );
+
+        $createInvoiceResponseDecoded = json_decode($createInvoiceResponse->getContents());
+
+        if ($createInvoiceResponseDecoded->data != 'Faturanız başarıyla oluşturulmuştur. Düzenlenen Belgeler menüsünden faturanıza ulaşabilirsiniz.') {
+            return [
+                'status' => 'error',
+                'message' => $createInvoiceResponseDecoded->data,
+                'data' => []
+            ];
+        }
 
         $invoice->uuid = $uuid;
         $invoice->status_id = 2;
         $invoice->locked = 1;
-        return $invoice->save();
+        $invoice->save();
+
+        return [
+            'status' => 'success',
+            'message' => $createInvoiceResponseDecoded->data,
+            'data' => [
+                'createInvoiceResponse' => json_decode($createInvoiceResponse->getContents()),
+                'invoice' => $invoice,
+            ]
+        ];
     }
 }

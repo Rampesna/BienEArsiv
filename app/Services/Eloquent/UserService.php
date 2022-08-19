@@ -164,4 +164,19 @@ class UserService extends BaseService
 
         return $user;
     }
+
+    /**
+     * @param User $user
+     * @param string $password
+     */
+    public function updatePassword(
+        User   $user,
+        string $password
+    )
+    {
+        $user->password = $password;
+        $user->save();
+
+        return $user;
+    }
 }

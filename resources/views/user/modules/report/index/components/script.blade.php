@@ -17,14 +17,14 @@
         $('#loader').fadeIn(250);
         $.ajax({
             type: 'get',
-            url: '{{ route('api.user.company.report.balanceStatus') }}',
+{{--            url: '{{ route('api.user.company.report.balanceStatus') }}',--}}
             headers: {
                 'Accept': 'application/json',
                 'Authorization': token
             },
             data: {},
             success: function (response) {
-                var basePath = '{{ asset('') }}';
+{{--                var basePath = '{{ asset('') }}';--}}
                 window.location.href = `${basePath + response.response}`;
                 $('#loader').fadeOut(250);
             },
@@ -64,7 +64,7 @@
         $('#loader').fadeIn(250);
         $.ajax({
             type: 'get',
-            url: '{{ route('api.user.product.report.all') }}',
+{{--            url: '{{ route('api.user.product.report.all') }}',--}}
             headers: {
                 'Accept': 'application/json',
                 'Authorization': token
@@ -381,7 +381,40 @@
     });
 
     EInvoiceInboxReportButton.click(function () {
+        var startDate = $('#e_invoice_inbox_report_start_date').val();
+        var endDate = $('#e_invoice_inbox_report_end_date').val();
 
+        if (!startDate) {
+            toastr.warning('Lütfen Başlangıç Tarihi Seçiniz!');
+        } else if (!endDate) {
+            toastr.warning('Lütfen Bitiş Tarihi Seçiniz!');
+        } else {
+            $('#loader').fadeIn(250);
+            $('#EInvoiceInboxReportModal').modal('hide');
+
+            $.ajax({
+                type: 'post',
+                url: '{{ route('api.user.eInvoice.report.inbox') }}',
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': token
+                },
+                data: {
+                    startDate: startDate,
+                    endDate: endDate,
+                },
+                success: function (response) {
+                    var basePath = '{{ asset('') }}';
+                    window.open(basePath + response.response, '_blank');
+                    $('#loader').fadeOut(250);
+                },
+                error: function (error) {
+                    console.log(error);
+                    toastr.error('Rapor Oluşturulurken Serviste Bir Hata Oluştu. Lütfen Daha Sonra Tekrar Deneyiniz.');
+                    $('#loader').fadeOut(250);
+                }
+            });
+        }
     });
 
 </script>

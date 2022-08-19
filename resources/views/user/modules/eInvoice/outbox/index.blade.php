@@ -7,6 +7,8 @@
 
 @section('content')
 
+    @include('user.modules.eInvoice.outbox.modals.approveEInvoice')
+    @include('user.modules.eInvoice.outbox.modals.cancelEInvoice')
     @include('user.modules.eInvoice.outbox.modals.eInvoiceHtml')
 
     <div class="row mb-5">
@@ -80,6 +82,7 @@
                             <th class="hideIfMobile">Alıcı VKN/TCKN</th>
                             <th class="hideIfMobile">Alıcı Ünvan</th>
                             <th class="hideIfMobile">Tarih</th>
+                            <th class="hideIfMobile">Durum</th>
                             <th class="text-end">İşlemler</th>
                         </tr>
                         </thead>

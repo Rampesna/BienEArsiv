@@ -7,6 +7,7 @@ use App\Http\Requests\Api\User\CompanyController\AllRequest;
 use App\Http\Requests\Api\User\CompanyController\IndexRequest;
 use App\Http\Requests\Api\User\CompanyController\ReportRequest;
 use App\Http\Requests\Api\User\CompanyController\GetByIdRequest;
+use App\Http\Requests\Api\User\CompanyController\GetByTaxNumberRequest;
 use App\Http\Requests\Api\User\CompanyController\CreateRequest;
 use App\Http\Requests\Api\User\CompanyController\UpdateRequest;
 use App\Http\Requests\Api\User\CompanyController\DeleteRequest;
@@ -58,6 +59,16 @@ class CompanyController extends Controller
             : $this->success('Company details', $company);
     }
 
+    public function getByTaxNumber(GetByTaxNumberRequest $request)
+    {
+        $company = $this->companyService->getByTaxNumber(
+            $request->taxNumber
+        );
+        return !$company || ($request->user()->customer_id != $company->customer_id)
+            ? $this->error('Company not found', 404)
+            : $this->success('Company details', $company);
+    }
+
     public function create(CreateRequest $request)
     {
         return $this->success('Company created successfully', $this->companyService->create(
@@ -74,8 +85,8 @@ class CompanyController extends Controller
             $request->provinceId,
             $request->districtId,
             $request->postCode,
-            $request->isCustomer,
-            $request->isSupplier
+            $request->isCustomer ?? 1,
+            $request->isSupplier ?? 0
         ));
     }
 

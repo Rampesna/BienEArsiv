@@ -4,16 +4,21 @@ namespace App\Http\Controllers\Web\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\User\AuthenticationController\OAuthRequest;
+use App\Services\Eloquent\PasswordResetService;
 use App\Services\Eloquent\UserService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 
 class AuthenticationController extends Controller
 {
     private $userService;
 
+    private $passwordResetService;
+
     public function __construct()
     {
         $this->userService = new UserService;
+        $this->passwordResetService = new PasswordResetService;
     }
 
     public function login()
@@ -42,6 +47,23 @@ class AuthenticationController extends Controller
     public function forgotPassword()
     {
         return view('user.modules.auth.forgotPassword.index');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        if (!$request->token) {
+            abort(404);
+        }
+
+        $passwordReset = $this->passwordResetService->getByToken($request->token);
+
+        if (!$passwordReset || $passwordReset->used == 1) {
+            abort(404);
+        }
+
+        return view('user.modules.auth.resetPassword.index', [
+            'token' => $request->token
+        ]);
     }
 
     public function oAuth(OAuthRequest $request)

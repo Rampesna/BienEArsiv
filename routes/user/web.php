@@ -14,11 +14,8 @@ use Barryvdh\DomPDF\Facade as PDF;
 |
 */
 
-Route::get('pdfTest', function () {
-    $companies = \App\Models\Eloquent\Company::all();
-    return PDF::loadView('user.documents.report.company.extract', [
-        'companies' => $companies,
-    ], [], 'UTF-8')->download('test.pdf');
+Route::get('test', function () {
+    return view('user.emails.forgotPassword');
 });
 
 Route::get('login', function () {
@@ -35,6 +32,7 @@ Route::prefix('authentication')->group(function () {
     Route::get('oAuth', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'oAuth'])->name('web.user.authentication.oAuth');
     Route::get('register', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'register'])->name('web.user.authentication.register');
     Route::get('forgotPassword', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'forgotPassword'])->name('web.user.authentication.forgotPassword');
+    Route::get('resetPassword/{token?}', [\App\Http\Controllers\Web\User\AuthenticationController::class, 'resetPassword'])->name('web.user.authentication.resetPassword');
 });
 
 Route::middleware([
@@ -61,6 +59,7 @@ Route::middleware([
     Route::prefix('invoice')->group(function () {
         Route::get('index', [\App\Http\Controllers\Web\User\InvoiceController::class, 'index'])->name('web.user.invoice.index');
         Route::get('create', [\App\Http\Controllers\Web\User\InvoiceController::class, 'create'])->name('web.user.invoice.create');
+        Route::get('createWithoutCompany', [\App\Http\Controllers\Web\User\InvoiceController::class, 'createWithoutCompany'])->name('web.user.invoice.createWithoutCompany');
         Route::get('edit/{id?}', [\App\Http\Controllers\Web\User\InvoiceController::class, 'edit'])->name('web.user.invoice.edit');
     });
 
@@ -68,6 +67,7 @@ Route::middleware([
         Route::get('inbox', [\App\Http\Controllers\Web\User\EInvoiceController::class, 'inbox'])->name('web.user.eInvoice.inbox');
         Route::get('outbox', [\App\Http\Controllers\Web\User\EInvoiceController::class, 'outbox'])->name('web.user.eInvoice.outbox');
         Route::get('cancellationRequest', [\App\Http\Controllers\Web\User\EInvoiceController::class, 'cancellationRequest'])->name('web.user.eInvoice.cancellationRequest');
+        Route::get('invoice/{uuid?}', [\App\Http\Controllers\Web\User\EInvoiceController::class, 'invoice'])->name('web.user.eInvoice.invoice');
     });
 
     Route::prefix('order')->group(function () {

@@ -19,7 +19,7 @@
             <div class="card">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-xl-12 mb-7">
+                        <div class="col-xl-9 mb-7">
                             <div class="form-group">
                                 <label for="customer_title" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Firma Ünvanı</span>
@@ -27,7 +27,15 @@
                                 <input id="customer_title" type="text" class="form-control form-control-solid" placeholder="Firma Ünvanı" aria-hidden="true">
                             </div>
                         </div>
-                        <div class="col-xl-4 mb-7">
+                        <div class="col-xl-3 mb-7">
+                            <div class="form-group">
+                                <label for="customer_taxpayer_type_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Mükellef Türü</span>
+                                </label>
+                                <select id="customer_taxpayer_type_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Mükellef Türü" aria-hidden="true"></select>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 mb-7">
                             <div class="form-group">
                                 <label for="customer_tax_office" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Vergi Dairesi</span>
@@ -35,7 +43,7 @@
                                 <input id="customer_tax_office" type="text" class="form-control form-control-solid" placeholder="Vergi Dairesi" aria-hidden="true">
                             </div>
                         </div>
-                        <div class="col-xl-4 mb-7">
+                        <div class="col-xl-3 mb-7">
                             <div class="form-group">
                                 <label for="customer_tax_number" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">Vergi Numarası</span>
@@ -43,7 +51,15 @@
                                 <input id="customer_tax_number" type="text" class="form-control form-control-solid" placeholder="Vergi Numarası" aria-hidden="true">
                             </div>
                         </div>
-                        <div class="col-xl-4 mb-7">
+                        <div class="col-xl-3 mb-7">
+                            <div class="form-group">
+                                <label for="customer_gib_code" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                    <span class="required">Gib Portal Kodu</span>
+                                </label>
+                                <input id="customer_gib_code" type="text" class="form-control form-control-solid" placeholder="Gib Portal Kodu" aria-hidden="true">
+                            </div>
+                        </div>
+                        <div class="col-xl-3 mb-7">
                             <div class="form-group">
                                 <label for="customer_gib_password" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                     <span class="required">GİB Portal Şifresi</span>
@@ -94,7 +110,12 @@
                     </div>
                     <hr class="text-muted">
                     <div class="row">
-                        <div class="col-xl-12 text-end">
+                        <div class="col-xl-6">
+                            <div class="mt-3">
+                                <span class="fw-bolder">GİB Durumu: </span><span class="ms-5 badge cursor-pointer" id="gibStatusBadge"></span>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 text-end">
                             <button class="btn btn-success" id="UpdateCustomerButton">Güncelle</button>
                         </div>
                     </div>

@@ -115,6 +115,16 @@ class CompanyService extends BaseService
     }
 
     /**
+     * @param string $taxNumber
+     */
+    public function getByTaxNumber(
+        string $taxNumber
+    )
+    {
+        return Company::where('tax_number', $taxNumber)->first();
+    }
+
+    /**
      * @param int $customerId
      * @param string $taxNumber
      * @param string $taxOffice

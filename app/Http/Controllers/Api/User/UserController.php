@@ -10,8 +10,14 @@ use App\Http\Requests\Api\User\UserController\DeleteRequest;
 use App\Http\Requests\Api\User\UserController\LoginRequest;
 use App\Http\Requests\Api\User\UserController\GetByIdRequest;
 use App\Http\Requests\Api\User\UserController\UpdateThemeRequest;
+use App\Http\Requests\Api\User\UserController\SendPasswordResetEmailRequest;
+use App\Http\Requests\Api\User\UserController\ResetPasswordRequest;
+use App\Mail\User\ForgotPasswordEmail;
+use App\Services\Eloquent\PasswordResetService;
 use App\Services\Eloquent\UserService;
 use App\Traits\Response;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -19,9 +25,12 @@ class UserController extends Controller
 
     private $userService;
 
+    private $passwordResetService;
+
     public function __construct()
     {
         $this->userService = new UserService;
+        $this->passwordResetService = new PasswordResetService;
     }
 
     public function login(LoginRequest $request)
@@ -103,5 +112,47 @@ class UserController extends Controller
     public function updateTheme(UpdateThemeRequest $request)
     {
         return $this->success('Theme updated successfully', $this->userService->updateTheme($request->user()->id, $request->theme));
+    }
+
+    public function sendPasswordResetEmail(SendPasswordResetEmailRequest $request)
+    {
+        $user = $this->userService->getByEmail($request->email);
+
+        if (!$user) {
+            return $this->error('User not found', 404);
+        }
+
+        $checkPasswordReset = $this->passwordResetService->checkPasswordReset(
+            'App\\Models\\Eloquent\\User',
+            $user->id,
+            date('Y-m-d H:i:s', strtotime('-1 hour'))
+        );
+
+        if ($checkPasswordReset == true) {
+            return $this->error('You can not send another password reset email for the same user within an hour', 406);
+        }
+
+        $passwordReset = $this->passwordResetService->create(
+            'App\\Models\\Eloquent\\User',
+            $user->id
+        );
+
+        Mail::to($user->email)->send(new ForgotPasswordEmail($passwordReset->token));
+
+        return $this->success('Password reset email sent successfully', null);
+    }
+
+    public function resetPassword(ResetPasswordRequest $request)
+    {
+        if (!$passwordReset = $this->passwordResetService->getByToken($request->resetPasswordToken)) return $this->error('Password reset token not found', 404);
+        if (!$user = $this->userService->getById($passwordReset->relation_id)) return $this->error('User not found', 404);
+
+        $this->passwordResetService->setUsed($passwordReset);
+        $this->userService->updatePassword(
+            $user,
+            Hash::make($request->newPassword)
+        );
+
+        return $this->success('Password reset successfully', null);
     }
 }

@@ -21,12 +21,12 @@
                     <div class="row text-center">
                         <div class="col-6 border-right pb-4 pt-4">
                             <h1 class="mb-10">Firma Kaşesi</h1>
-                            <img id="customerStamp" alt="" class="img-fluid" style="width: 200px; height: auto">
+                            <img src="" id="customerStamp" alt="" class="img-fluid" style="width: 200px; height: auto">
                             <input type="file" id="customerStampInput" class="d-none">
                         </div>
                         <div class="col-6 border-right pb-4 pt-4">
                             <h1 class="mb-10">Firma Logosu</h1>
-                            <img id="customerLogo" alt="" class="img-fluid" style="width: 200px; height: auto">
+                            <img src="" id="customerLogo" alt="" class="img-fluid" style="width: 200px; height: auto">
                             <input type="file" id="customerLogoInput" class="d-none">
                         </div>
                     </div>

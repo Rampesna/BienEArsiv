@@ -16,18 +16,33 @@
 
     @include('user.modules.invoice.index.components.contextMenu')
 
+    @include('user.modules.invoice.index.modals.eInvoiceHtml')
     @include('user.modules.invoice.index.modals.sendToGib')
-
-    <div class="">
-        <div class="row">
-            <div class="col-xl-12 text-end">
-                <button class="btn btn-primary" onclick="createInvoice()">Yeni Fatura Oluştur</button>
-            </div>
-        </div>
-        <br>
-    </div>
+    @include('user.modules.invoice.index.modals.delete')
 
     <div class="row mb-5">
+        <div class="col-xl-4 text-end mb-5">
+            <div class="row">
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-xl-12 d-grid">
+                            <button onclick="createInvoiceWithoutCompany()" class="btn btn-info btn-sm">
+                                <span>Carisiz Fatura Oluştur</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="row">
+                        <div class="col-xl-12 d-grid">
+                            <button onclick="createInvoice()" class="btn btn-primary btn-sm">
+                                <span>Yeni Fatura Oluştur</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-xl-8">
             <div class="card">
                 <div class="card-body">
