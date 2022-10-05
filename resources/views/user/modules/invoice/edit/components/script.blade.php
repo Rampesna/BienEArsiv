@@ -209,6 +209,8 @@
                 $('#edit_invoice_waybill_datetime').val(response.response.waybill_datetime ? reformatDateForCalendar(response.response.waybill_datetime) : '');
                 $('#edit_invoice_order_number').val(response.response.order_number);
                 $('#edit_invoice_order_datetime').val(response.response.waybill_datetime ? reformatDateForCalendar(response.response.order_datetime) : '');
+                $('#edit_invoice_return_invoice_number').val(response.response.return_invoice_number);
+                $('#edit_invoice_description').val(response.response.description);
 
                 $.ajax({
                     type: 'get',
@@ -502,6 +504,8 @@
         var waybillDatetime = $('#edit_invoice_waybill_datetime').val();
         var orderNumber = $('#edit_invoice_order_number').val();
         var orderDatetime = $('#edit_invoice_order_datetime').val();
+        var returnInvoiceNumber = $('#edit_invoice_return_invoice_number').val();
+        var description = $('#edit_invoice_description').val();
 
         if (!companyId) {
             toastr.warning('Cari Seçmediniz!');
@@ -543,6 +547,8 @@
                         waybillDatetime: waybillDatetime,
                         orderNumber: orderNumber,
                         orderDatetime: orderDatetime,
+                        returnInvoiceNumber: returnInvoiceNumber,
+                        description: description,
                         price: $('#generalTotalSpan').val().replace(',', '')
                     };
 

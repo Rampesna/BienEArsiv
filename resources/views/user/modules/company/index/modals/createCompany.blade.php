@@ -135,6 +135,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xl-12 mb-5">
+                                <div class="form-group">
+                                    <label for="create_company_address" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span>Adres</span>
+                                    </label>
+                                    <textarea id="create_company_address" class="form-control form-control-solid" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="text-center">
                         <button type="button" data-bs-dismiss="modal" class="btn btn-light me-3">İptal</button>

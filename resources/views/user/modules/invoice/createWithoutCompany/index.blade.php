@@ -18,7 +18,7 @@
 
     <div class="row">
         <div class="col-xl-4 mb-5">
-            <div class="card">
+            <div class="card mb-5">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-xl-12 d-grid">
@@ -153,6 +153,74 @@
                                 <input id="create_invoice_order_datetime" type="datetime-local" class="form-control form-control-sm form-control-solid">
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-xl-12 mb-8">
+                                <div class="form-group">
+                                    <label for="create_invoice_return_invoice_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                        <span>İade Fatura Numarası</span>
+                                    </label>
+                                    <input id="create_invoice_return_invoice_number" type="text" class="form-control form-control-sm form-control-solid" data-placeholder="İade Fatura Numarası">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="col-xl-12">
+                        <div class="row">
+                            <div class="col-xl-6 mb-5">
+                                <div class="form-group" id="country_container">
+                                    <label for="create_invoice_country_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span>Ülke</span>
+                                    </label>
+                                    <select id="create_invoice_country_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Ülke" aria-hidden="true">
+
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 mb-5">
+                                <div class="form-group">
+                                    <label for="create_invoice_province_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span>Şehir</span>
+                                    </label>
+                                    <select id="create_invoice_province_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Şehir" aria-hidden="true">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6 mb-5">
+                                <div class="form-group">
+                                    <label for="create_invoice_district_id" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span>İlçe</span>
+                                    </label>
+                                    <select id="create_invoice_district_id" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="İlçe" aria-hidden="true">
+                                        <option value=""></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 mb-5">
+                                <div class="form-group">
+                                    <label for="create_invoice_postcode" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span>Posta Kodu</span>
+                                    </label>
+                                    <input id="create_invoice_postcode" type="text" class="form-control form-control-solid" placeholder="Posta Kodu" aria-hidden="true">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-12 mb-5">
+                                <div class="form-group">
+                                    <label for="create_invoice_address" class="d-flex align-items-center fs-6 fw-bold mb-2">
+                                        <span>Adres</span>
+                                    </label>
+                                    <textarea id="create_invoice_address" class="form-control form-control-solid" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -178,7 +246,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-7"></div>
+                <div class="col-xl-7">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-group">
+                                        <label for="create_invoice_description" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                            <span>Açıklama</span>
+                                        </label>
+                                        <textarea id="create_invoice_description" class="form-control form-control-sm form-control-solid" rows="9" style="resize: none"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-xl-5">
                     <div class="card">
                         <div class="card-body">

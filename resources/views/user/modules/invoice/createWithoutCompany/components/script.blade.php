@@ -9,6 +9,10 @@
     var newInvoiceProducts = [];
     var allNewInvoiceProducts = [];
 
+    var createInvoiceCountryId = $('#create_invoice_country_id');
+    var createInvoiceProvinceId = $('#create_invoice_province_id');
+    var createInvoiceDistrictId = $('#create_invoice_district_id');
+
     var products = [];
     var units = [];
     var productsForSelect = `<option value="" selected hidden></option>`;
@@ -25,6 +29,92 @@
     var CreateNewCompany = $('#CreateNewCompany');
     var CreateNewCompanyButton = $('#CreateNewCompanyButton');
     var CreateNewProductButton = $('#CreateNewProductButton');
+
+    function getCountries() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.country.getAll') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {},
+            success: function (response) {
+                createInvoiceCountryId.empty();
+                $.each(response.response, function (i, country) {
+                    createInvoiceCountryId.append(`<option value="${country.id}">${country.name}</option>`);
+                });
+                createInvoiceCountryId.val('');
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Ülke Listesi Alınırken Serviste Hata Oluştu.');
+            }
+        });
+    }
+
+    function getProvincesByCountryId() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.province.getByCountryId') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                countryId: createInvoiceCountryId.val()
+            },
+            success: function (response) {
+                createInvoiceProvinceId.empty();
+                $.each(response.response, function (i, province) {
+                    createInvoiceProvinceId.append(`<option value="${province.id}">${province.name}</option>`);
+                });
+                createInvoiceProvinceId.val('');
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Şehir Listesi Alınırken Serviste Hata Oluştu.');
+            }
+        });
+    }
+
+    function getDistrictsByProvinceId() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.district.getByProvinceId') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                provinceId: createInvoiceProvinceId.val()
+            },
+            success: function (response) {
+                createInvoiceDistrictId.empty();
+                $.each(response.response, function (i, district) {
+                    createInvoiceDistrictId.append(`<option value="${district.id}">${district.name}</option>`);
+                });
+                createInvoiceDistrictId.val('');
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('İlçe Listesi Alınırken Serviste Hata Oluştu.');
+            }
+        });
+    }
+
+    getCountries();
+
+    createInvoiceCountryId.on('change', function () {
+        createInvoiceProvinceId.empty();
+        createInvoiceDistrictId.empty();
+        getProvincesByCountryId();
+    });
+
+    createInvoiceProvinceId.on('change', function () {
+        createInvoiceDistrictId.empty();
+        getDistrictsByProvinceId();
+    });
 
     function getTransactionTypes() {
         $.ajax({
@@ -290,6 +380,11 @@
         var taxNumber = $('#create_invoice_tax_number').val();
         var name = $('#create_invoice_name').val();
         var surname = $('#create_invoice_surname').val();
+        var countryId = createInvoiceCountryId.val();
+        var provinceId = createInvoiceProvinceId.val();
+        var districtId = createInvoiceDistrictId.val();
+        var postCode = $('#create_invoice_postcode').val();
+        var address = $('#create_invoice_address').val();
         var typeId = create_invoice_type_id.val();
         var currencyId = create_invoice_currency_id.val();
         var currency = $('#create_invoice_currency').val();
@@ -304,6 +399,8 @@
         var waybillDatetime = $('#create_invoice_waybill_datetime').val();
         var orderNumber = $('#create_invoice_order_number').val();
         var orderDatetime = $('#create_invoice_order_datetime').val();
+        var returnInvoiceNumber = $('#create_invoice_return_invoice_number').val();
+        var description = $('#create_invoice_description').val();
 
         if (!taxNumber) {
             toastr.warning('VKN/TCKN Boş Bırakılamaz.');
@@ -357,7 +454,9 @@
                                 waybillNumber: waybillNumber,
                                 waybillDatetime: waybillDatetime,
                                 orderNumber: orderNumber,
-                                orderDatetime: orderDatetime
+                                orderDatetime: orderDatetime,
+                                returnInvoiceNumber: returnInvoiceNumber,
+                                description: description,
                             };
                             $('#CreateInvoiceModal').modal('show');
                             $('#loader').hide();
@@ -372,7 +471,14 @@
                                 },
                                 data: {
                                     title: `${name} ${surname}`,
+                                    managerName: name,
+                                    managerSurname: surname,
                                     taxNumber: taxNumber,
+                                    countryId: countryId,
+                                    provinceId: provinceId,
+                                    districtId: districtId,
+                                    postCode: postCode,
+                                    address: address,
                                     isCustomer: 1,
                                     isSupplier: 0,
                                 },
@@ -494,6 +600,8 @@
                 waybillDatetime: newInvoice.waybillDatetime,
                 orderNumber: newInvoice.orderNumber,
                 orderDatetime: newInvoice.orderDatetime,
+                returnInvoiceNumber: newInvoice.returnInvoiceNumber,
+                description: newInvoice.description,
                 price: $('#generalTotalSpan').val().replace(',', '')
             },
             success: function (response) {

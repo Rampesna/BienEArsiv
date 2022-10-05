@@ -43,6 +43,7 @@
         create_company_province_id.empty();
         create_company_district_id.empty();
         $('#create_company_postcode').val('');
+        $('#create_company_address').val('');
         $('#CreateCompanyModal').modal('show');
     }
 
@@ -263,6 +264,7 @@
         var province_id = $('#create_company_province_id').val();
         var district_id = $('#create_company_district_id').val();
         var postCode = $('#create_company_postcode').val();
+        var address = $('#create_company_address').val();
         var isCustomer = $.inArray('1', types) !== -1 ? 1 : 0;
         var isSupplier = $.inArray('2', types) !== -1 ? 1 : 0;
 
@@ -288,6 +290,7 @@
                     provinceId: province_id,
                     districtId: district_id,
                     postCode: postCode,
+                    address: address,
                     isCustomer: isCustomer,
                     isSupplier: isSupplier
                 },

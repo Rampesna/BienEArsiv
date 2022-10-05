@@ -74,6 +74,8 @@ class InvoiceController extends Controller
             $request->waybillDatetime,
             $request->orderNumber,
             $request->orderDatetime,
+            $request->returnInvoiceNumber,
+            $request->description,
             $request->price
         ));
     }
@@ -103,6 +105,8 @@ class InvoiceController extends Controller
             $request->waybillDatetime,
             $request->orderNumber,
             $request->orderDatetime,
+            $request->returnInvoiceNumber,
+            $request->description,
             $request->price
         ));
     }

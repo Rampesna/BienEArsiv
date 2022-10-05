@@ -115,6 +115,8 @@ class InvoiceService extends BaseService
      * @param string|null $waybillDatetime
      * @param string|null $orderDatetime
      * @param string|null $orderDatetime
+     * @param string|null $returnInvoiceNumber
+     * @param string|null $description
      * @param float|null $price
      */
     public function create(
@@ -133,6 +135,8 @@ class InvoiceService extends BaseService
         $waybillDatetime,
         $orderNumber,
         $orderDatetime,
+        $returnInvoiceNumber,
+        $description,
         $price
     )
     {
@@ -152,6 +156,8 @@ class InvoiceService extends BaseService
         $invoice->waybill_datetime = $waybillDatetime;
         $invoice->order_number = $orderNumber;
         $invoice->order_datetime = $orderDatetime;
+        $invoice->return_invoice_number = $returnInvoiceNumber;
+        $invoice->description = $description;
         $invoice->price = $price;
         $invoice->save();
 
@@ -173,8 +179,10 @@ class InvoiceService extends BaseService
      * @param int $vatIncluded
      * @param string|null $waybillNumber
      * @param string|null $waybillDatetime
+     * @param string|null $orderNumber
      * @param string|null $orderDatetime
-     * @param string|null $orderDatetime
+     * @param string|null $returnInvoiceNumber
+     * @param string|null $description
      * @param float|null $price
      */
     public function update(
@@ -194,6 +202,8 @@ class InvoiceService extends BaseService
         $waybillDatetime,
         $orderNumber,
         $orderDatetime,
+        $returnInvoiceNumber,
+        $description,
         $price
     )
     {
@@ -213,6 +223,8 @@ class InvoiceService extends BaseService
         $invoice->waybill_datetime = $waybillDatetime;
         $invoice->order_number = $orderNumber;
         $invoice->order_datetime = $orderDatetime;
+        $invoice->return_invoice_number = $returnInvoiceNumber;
+        $invoice->description = $description;
         $invoice->price = $price;
         $invoice->save();
 
@@ -290,6 +302,8 @@ class InvoiceService extends BaseService
         $gibInvoicePostCode = $invoice->company->post_code;
         $gibInvoicePhone = $invoice->company->phone;
         $gibInvoiceEmail = $invoice->company->email;
+        $gibInvoiceReturnInvoiceNumber = $invoice->return_invoice_number;
+        $gibInvoiceDescription = $invoice->description;
         $gibInvoiceType = 'İskonto';
 
         $baseTotal = 0;
@@ -318,24 +332,24 @@ class InvoiceService extends BaseService
 
             $gibInvoiceProducts[] = [
                 "malHizmet" => $invoiceProduct->product->name,
-                "miktar" => $invoiceProduct->quantity,
+                "miktar" => floatval($invoiceProduct->quantity),
                 "birim" => $invoiceProduct->unit->code,
-                "birimFiyat" => $invoiceProduct->unit_price,
-                "fiyat" => $rowBaseTotal,
-                "iskontoOrani" => $invoiceProduct->discount_rate,
-                "iskontoTutari" => $rowDiscount,
+                "birimFiyat" => floatval($invoiceProduct->unit_price),
+                "fiyat" => floatval($rowBaseTotal),
+                "iskontoOrani" => floatval($invoiceProduct->discount_rate),
+                "iskontoTutari" => floatval($rowDiscount),
                 "iskontoNedeni" => "",
-                "malHizmetTutari" => $rowServicesTotal,
-                "kdvOrani" => $invoiceProduct->vat_rate,
-                "vergiOrani" => $invoice->vat_discount_id == 0 ? 100 : $invoice->vatDiscount->percent,
-                "kdvTutari" => $rowVatWithoutVatDiscount - $rowVatTotal,
-                "vergininKdvTutari" => $rowVatWithoutVatDiscount - $rowVatTotal,
+                "malHizmetTutari" => floatval($rowServicesTotal),
+                "kdvOrani" => floatval($invoiceProduct->vat_rate),
+                "vergiOrani" => $invoice->vat_discount_id == 0 ? 100 : floatval($invoice->vatDiscount->percent),
+                "kdvTutari" => floatval($rowVatTotal),
+                "vergininKdvTutari" => floatval($rowVatWithoutVatDiscount - $rowVatTotal),
                 "ozelMatrahTutari" => "0",
             ];
         }
 
         $invoiceToGibInvoice = [
-            "belgeNumarasi" => "",
+            "belgeNumarasi" => $gibInvoiceReturnInvoiceNumber,
             "faturaTarihi" => $gibInvoiceDate,
             "saat" => $gibInvoiceHour,
             "paraBirimi" => $gibInvoiceCurrencyCode,
@@ -373,12 +387,12 @@ class InvoiceService extends BaseService
             "vergilerToplami" => $calculatedVat,
             "vergilerDahilToplamTutar" => $generalTotal,
             "odenecekTutar" => $generalTotal,
-            "not" => $invoice->company_statement_description ?? '',
+            "not" => $gibInvoiceDescription ?? '',
             "siparisNumarasi" => $invoice->order_number ?? '',
             "siparisTarihi" => $invoice->order_datetime ?? '',
             "irsaliyeNumarasi" => $invoice->waybill_number ?? '',
             "irsaliyeTarihi" => $invoice->waybill_datetime ?? '',
-            "fisNo" => "",
+            "fisNo" => $gibInvoiceReturnInvoiceNumber,
             "fisTarihi" => "",
             "fisSaati" => " ",
             "fisTipi" => " ",

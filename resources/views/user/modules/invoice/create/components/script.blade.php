@@ -377,6 +377,8 @@
         var waybillDatetime = $('#create_invoice_waybill_datetime').val();
         var orderNumber = $('#create_invoice_order_number').val();
         var orderDatetime = $('#create_invoice_order_datetime').val();
+        var returnInvoiceNumber = $('#create_invoice_return_invoice_number').val();
+        var description = $('#create_invoice_description').val();
 
         if (!companyId) {
             toastr.warning('Cari Seçmediniz!');
@@ -414,7 +416,9 @@
                         waybillNumber: waybillNumber,
                         waybillDatetime: waybillDatetime,
                         orderNumber: orderNumber,
-                        orderDatetime: orderDatetime
+                        orderDatetime: orderDatetime,
+                        returnInvoiceNumber: returnInvoiceNumber,
+                        description: description,
                     };
                     $('#CreateInvoiceModal').modal('show');
                 }
@@ -505,6 +509,8 @@
                 waybillDatetime: newInvoice.waybillDatetime,
                 orderNumber: newInvoice.orderNumber,
                 orderDatetime: newInvoice.orderDatetime,
+                returnInvoiceNumber: newInvoice.returnInvoiceNumber,
+                description: newInvoice.description,
                 price: $('#generalTotalSpan').val().replace(',', '')
             },
             success: function (response) {

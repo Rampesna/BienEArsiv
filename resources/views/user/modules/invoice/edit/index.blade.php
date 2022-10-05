@@ -144,6 +144,16 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-xl-12 mb-8">
+                            <div class="form-group">
+                                <label for="edit_invoice_return_invoice_number" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                    <span>İade Fatura Numarası</span>
+                                </label>
+                                <input id="edit_invoice_return_invoice_number" type="text" class="form-control form-control-sm form-control-solid" data-placeholder="İade Fatura Numarası">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -227,7 +237,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xl-7"></div>
+                <div class="col-xl-7">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-12">
+                                    <div class="form-group">
+                                        <label for="edit_invoice_description" class="d-flex align-items-center fs-7 fw-bold mb-2">
+                                            <span>Açıklamalar</span>
+                                        </label>
+                                        <textarea id="edit_invoice_description" class="form-control form-control-sm form-control-solid" rows="9" style="resize: none"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-xl-5">
                     <div class="card">
                         <div class="card-body">
