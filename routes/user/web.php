@@ -14,6 +14,10 @@ use Barryvdh\DomPDF\Facade as PDF;
 |
 */
 
+Route::get('pw', function () {
+    return bcrypt('123456');
+});
+
 Route::get('test', function () {
     return view('user.emails.forgotPassword');
 });

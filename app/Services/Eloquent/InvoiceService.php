@@ -421,9 +421,15 @@ class InvoiceService extends BaseService
             ];
         }
 
+        $getInvoiceHtmlForBackup = $gibService->getInvoiceHTML(
+            $uuid,
+            $token
+        );
+
         $invoice->uuid = $uuid;
         $invoice->status_id = 2;
         $invoice->locked = 1;
+        $invoice->html_backup = $getInvoiceHtmlForBackup;
         $invoice->save();
 
         return [
