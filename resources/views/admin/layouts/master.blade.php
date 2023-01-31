@@ -52,7 +52,35 @@
 
 <script>
 
-
+    var jqxGridGlobalTheme = 'metro';
+    var toggleDarkTheme = $('#toggleDarkTheme');
+    var token = 'Bearer {{ auth()->user()->apiToken() }}';
+    @if(auth()->user()->theme() == 1)
+        jqxGridGlobalTheme = 'metrodark';
+    @endif
+    toggleDarkTheme.change(function () {
+        $('#loader').fadeIn(250);
+        var theme = toggleDarkTheme.is(':checked') ? 1 : 0;
+        $.ajax({
+            type: 'post',
+            url: '{{ route('api.admin.theme') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                theme: theme
+            },
+            success: function () {
+                location.reload();
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Tema Değiştirilirken Hata Oluştu! Lütfen Daha Sonra Tekrar Deneyin.');
+                $('#loader').fadeOut(250);
+            }
+        });
+    });
 
 </script>
 

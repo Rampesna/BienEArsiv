@@ -6,8 +6,14 @@ use App\Models\Eloquent\User;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Hash;
 
+/**
+ *
+ */
 class UserService extends BaseService
 {
+    /**
+     *
+     */
     public function __construct()
     {
         parent::__construct(new User);
@@ -122,7 +128,7 @@ class UserService extends BaseService
         int    $id,
         string $name,
         string $surname,
-        string $phone
+        string $phone,
     )
     {
         $user = User::find($id);
@@ -179,4 +185,48 @@ class UserService extends BaseService
 
         return $user;
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getAll()
+    {
+        return User::all();
+    }
+
+    public function getById($id)
+    {
+        $user = User::find($id);
+        if (!$user) {
+            return 404;
+        }
+        return $user;
+    }
+
+    public function updateUser(
+        int   $id,
+        string $name,
+        string $surname,
+        string $email,
+        ?string $phone,
+        ?string $title,
+        ?int $suspend,
+    ){
+        $user = User::find($id);
+        if (!$user) {
+            return 404;
+        }
+        $user->name = $name;
+        $user->surname = $surname;
+        $user->email = $email;
+        $user->phone = $phone;
+        $user->title = $title;
+        $user->suspend = $suspend;
+        $user->save();
+
+        return $user;
+
+    }
+
+
 }
