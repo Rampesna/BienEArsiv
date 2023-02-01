@@ -43,4 +43,9 @@ class SubscriptionPaymentService extends BaseService
 
         return $subscriptionPayment;
     }
+
+    public function getByCustomerId($customerId)
+    {
+        return SubscriptionPayment::where('customer_id', $customerId)->get();
+    }
 }

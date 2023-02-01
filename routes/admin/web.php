@@ -32,5 +32,9 @@ Route::middleware([
         Route::get('index', [\App\Http\Controllers\Web\Admin\DashboardController::class, 'index'])->name('web.admin.dashboard.index');
     });
 
+    Route::prefix('user')->group(function () {
+        Route::get('index', [\App\Http\Controllers\Web\Admin\UserController::class, 'index'])->name('web.admin.user.index');
+    });
+
 
 });

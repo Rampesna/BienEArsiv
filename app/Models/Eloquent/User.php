@@ -48,7 +48,7 @@ class User extends Authenticatable
 
     public function getSubscriptionAttribute()
     {
-        return CustomerSubscription::where('customer_id', $this->customer_id)->orderBy('created_at', 'desc')->first();
+        return CustomerSubscription::where('customer_id', $this->customer_id)->with('subscription')->first();
     }
 
     public function wizard()

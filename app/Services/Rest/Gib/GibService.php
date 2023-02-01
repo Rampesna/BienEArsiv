@@ -53,7 +53,7 @@ class GibService
         $this->tokenEndpoint = "/earsiv-services/assos-login";
         $this->referrerEndpoint = "/intragiris.html";
         $this->client = new \GuzzleHttp\Client(['verify' => false]);
-//        $this->testMode = true;
+       $this->testMode = false;
     }
 
     public function checkResponse(
@@ -320,11 +320,14 @@ class GibService
         if (!file_exists($checkPath)) {
             mkdir($checkPath, 0777, true);
         }
-        $pdf = app()->make('dompdf.wrapper');
+        $wkp = new \mikehaertl\wkhtmlto\Pdf();
+        $wkp->addPage($invoiceHtml);
+        $wkp->saveAs($checkPath . $uuid . '.pdf');
+        /*$pdf = app()->make('dompdf.wrapper');
         $pdf->loadHTML($invoiceHtml);
         $pdf->save($checkPath . $uuid . '.pdf');
         $pdf = PDF::loadHTML($invoiceHtml);
-        $pdf->save($checkPath . $uuid . '.pdf');
+        $pdf->save($checkPath . $uuid . '.pdf');*/
 
         return $path . $uuid . '.pdf';
     }
