@@ -10,6 +10,7 @@ use App\Http\Requests\Api\User\InvoiceController\CreateRequest;
 use App\Http\Requests\Api\User\InvoiceController\UpdateRequest;
 use App\Http\Requests\Api\User\InvoiceController\DeleteRequest;
 use App\Http\Requests\Api\User\InvoiceController\SendToGibRequest;
+use App\Http\Requests\Api\User\InvoiceController\GetCustomerFromGibByTaxNumberRequest;
 use App\Services\Eloquent\InvoiceService;
 use App\Services\Eloquent\TransactionService;
 use App\Traits\Response;
@@ -142,5 +143,19 @@ class InvoiceController extends Controller
         }
 
         return $this->success('Invoice sent to Gib successfully.', $response['message']);
+    }
+
+    public function getCustomerFromGibByTaxNumber(GetCustomerFromGibByTaxNumberRequest $request)
+    {
+        $response = $this->invoiceService->getCustomerFromGibByTaxNumber(
+            $request->taxNumber,
+            $request->user()->customer->gib_token
+        );
+
+        if ($response['status'] == 'error') {
+            return $this->error('getCustomerFromGibByTaxNumber error', 400, $response);
+        }
+
+        return $this->success('Check success', $response);
     }
 }

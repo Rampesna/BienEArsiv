@@ -1,4 +1,3 @@
-
 <script src="{{ asset('assets/jqwidgets/jqxcore.js') }}"></script>
 <script src="{{ asset('assets/jqwidgets/jqxbuttons.js') }}"></script>
 <script src="{{ asset('assets/jqwidgets/jqxscrollbar.js') }}"></script>

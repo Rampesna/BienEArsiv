@@ -160,6 +160,7 @@ Route::middleware([
         Route::put('update', [\App\Http\Controllers\Api\User\InvoiceController::class, 'update'])->name('api.user.invoice.update');
         Route::delete('delete', [\App\Http\Controllers\Api\User\InvoiceController::class, 'delete'])->name('api.user.invoice.delete');
         Route::post('sendToGib', [\App\Http\Controllers\Api\User\InvoiceController::class, 'sendToGib'])->name('api.user.invoice.sendToGib');
+        Route::get('getCustomerFromGibByTaxNumber', [\App\Http\Controllers\Api\User\InvoiceController::class, 'getCustomerFromGibByTaxNumber'])->name('api.user.invoice.getCustomerFromGibByTaxNumber');
     });
 
     Route::prefix('eInvoice')->group(function () {

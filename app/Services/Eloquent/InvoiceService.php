@@ -441,4 +441,28 @@ class InvoiceService extends BaseService
             ]
         ];
     }
+
+    /**
+     * @param string $taxNumber
+     * @param string $token
+     */
+    public function getCustomerFromGibByTaxNumber(
+        string $taxNumber,
+        string $token
+    )
+    {
+        $gibService = new \App\Services\Rest\Gib\GibService;
+        $getCustomerFromGibByTaxNumberResponse = $gibService->getCustomerFromGibByTaxNumber(
+            $taxNumber,
+            $token
+        );
+
+        $getCustomerFromGibByTaxNumberResponseDecoded = json_decode($getCustomerFromGibByTaxNumberResponse->getContents());
+
+        return [
+            'status' => 'success',
+            'message' => $getCustomerFromGibByTaxNumberResponseDecoded->data,
+            'data' => json_decode($getCustomerFromGibByTaxNumberResponse->getContents())
+        ];
+    }
 }

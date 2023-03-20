@@ -219,6 +219,31 @@ class GibService
     }
 
     /**
+     * @param string $taxNumber
+     * @param string $token
+     */
+    public function getCustomerFromGibByTaxNumber(
+        string $taxNumber,
+        string $token
+    )
+    {
+        $parameters = [
+            "cmd" => "SICIL_VEYA_MERNISTEN_BILGILERI_GETIR",
+            "callid" => Uuid::uuid1()->toString(),
+            "pageName" => "RG_BASITFATURA",
+            "token" => $token,
+            "jp" => "" . json_encode(["vknTcknn" => $taxNumber,]) . ""
+        ];
+
+        $response = $this->client->post($this->getBaseUrl() . $this->dispatchEndpoint, [
+            "form_params" => $parameters,
+            "headers" => $this->headers
+        ]);
+
+        return $response->getBody();
+    }
+
+    /**
      * @param string $startDatetime
      * @param string $endDatetime
      * @param string $token

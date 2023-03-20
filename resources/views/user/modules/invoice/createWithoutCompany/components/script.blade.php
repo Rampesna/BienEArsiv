@@ -879,4 +879,41 @@
         }
     });
 
+    $('#create_invoice_tax_number').on('focusout', function () {
+        var taxNumber = $(this).val();
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.invoice.getCustomerFromGibByTaxNumber') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                taxNumber: taxNumber,
+            },
+            success: function (response) {
+                if (response.response.message.adi && response.response.message.soyadi) {
+                    $('#create_invoice_name').val(response.response.message.adi);
+                    $('#create_invoice_surname').val(response.response.message.soyadi);
+                } else if (response.response.message.unvan) {
+                    $('#create_invoice_name').val(response.response.message.unvan);
+                    $('#create_invoice_surname').val('');
+                } else {
+                    $('#create_invoice_name').val('');
+                    $('#create_invoice_surname').val('');
+                }
+            },
+            error: function (error) {
+                console.log(error);
+                if (parseInt(error.status) === 422) {
+                    $.each(error.responseJSON.response, function (i, error) {
+                        toastr.error(error[0]);
+                    });
+                } else {
+                    toastr.error(error.responseJSON.message);
+                }
+            }
+        });
+    });
+
 </script>
