@@ -14,6 +14,8 @@
 
 @section('content')
 
+    @include('user.modules.dashboard.modals.vatAnnouncement')
+
     <div class="row">
         <div class="col-xl-9 col-lg-12">
             <div class="row">

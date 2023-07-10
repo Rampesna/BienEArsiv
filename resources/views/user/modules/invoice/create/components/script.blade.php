@@ -26,6 +26,22 @@
     var CreateNewCompanyButton = $('#CreateNewCompanyButton');
     var CreateNewProductButton = $('#CreateNewProductButton');
 
+    $(document).delegate('.invoiceProductVatRate', 'keypress', function (e) {
+        if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+
+    $(document).delegate('.invoiceProductVatRate', 'keyup', function (e) {
+        if (this.value > 100) {
+            this.value = 100;
+            return false;
+        } else if (this.value < 0) {
+            this.value = 0;
+            return false;
+        }
+    });
+
     function getCompanies() {
         $.ajax({
             async: false,
@@ -226,13 +242,9 @@
                     </div>
                 </div>
                 <div class="col-xl-3 mb-5">
-                    <div class="form-group">
-                        <select class="form-select form-select-sm form-select-solid invoiceProductVatRate invoiceProductInput" data-control="select2" data-placeholder="KDV" data-hide-search="true">
-                            <option value="0">0 %</option>
-                            <option value="1">1 %</option>
-                            <option value="8">8 %</option>
-                            <option value="18" selected>18 %</option>
-                        </select>
+                    <div class="form-group input-group input-group-sm input-group-solid">
+                        <input type="text" class="form-control form-control-sm form-control-solid onlyNumber invoiceProductVatRate invoiceProductInput" placeholder="KDV">
+                        <span class="input-group-text">%</span>
                     </div>
                 </div>
                 <div class="col-xl-3 mb-5">
@@ -263,9 +275,6 @@
         `);
         $('.invoiceProductProductId').select2();
         $('.invoiceProductUnitId').select2();
-        $('.invoiceProductVatRate').select2({
-            minimumResultsForSearch: Infinity
-        });
         initializeDecimals();
         calculateTotals();
     }

@@ -30,6 +30,28 @@
     var CreateNewCompanyButton = $('#CreateNewCompanyButton');
     var CreateNewProductButton = $('#CreateNewProductButton');
 
+    // $(".onlyNumber").keypress(function (e) {
+    //     if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
+    //         return false;
+    //     }
+    // });
+
+    $(document).delegate('.invoiceProductVatRate', 'keypress', function (e) {
+        if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+
+    $(document).delegate('.invoiceProductVatRate', 'keyup', function (e) {
+        if (this.value > 100) {
+            this.value = 100;
+            return false;
+        } else if (this.value < 0) {
+            this.value = 0;
+            return false;
+        }
+    });
+
     function getCountries() {
         $.ajax({
             type: 'get',
@@ -242,13 +264,9 @@
                     </div>
                 </div>
                 <div class="col-xl-3 mb-5">
-                    <div class="form-group">
-                        <select class="form-select form-select-sm form-select-solid invoiceProductVatRate invoiceProductInput" data-control="select2" data-placeholder="KDV" data-hide-search="true">
-                            <option value="0">0 %</option>
-                            <option value="1">1 %</option>
-                            <option value="8">8 %</option>
-                            <option value="18" selected>18 %</option>
-                        </select>
+                    <div class="form-group input-group input-group-sm input-group-solid">
+                        <input type="text" class="form-control form-control-sm form-control-solid onlyNumber invoiceProductVatRate invoiceProductInput" placeholder="KDV">
+                        <span class="input-group-text">%</span>
                     </div>
                 </div>
                 <div class="col-xl-3 mb-5">
@@ -279,9 +297,6 @@
         `);
         $('.invoiceProductProductId').select2();
         $('.invoiceProductUnitId').select2();
-        $('.invoiceProductVatRate').select2({
-            minimumResultsForSearch: Infinity
-        });
         initializeDecimals();
         calculateTotals();
     }
@@ -556,6 +571,29 @@
     create_invoice_company_id.change(function () {
         var companyId = $(this).val();
         $('#create_invoice_tax_number').val(allCompanies.find(company => parseInt(company.id) === parseInt(companyId)).tax_number);
+    });
+
+    $('#create_invoice_tax_number').on('focusout', function () {
+        var taxNumber = $(this).val();
+        $.ajax({
+            type: 'get',
+            url: '{{ route('api.user.invoice.getCustomerFromGibByTaxNumber') }}',
+            headers: {
+                'Accept': 'application/json',
+                'Authorization': token
+            },
+            data: {
+                taxNumber: taxNumber,
+            },
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (error) {
+                console.log(error);
+                toastr.error('Fatura Oluşturulurken Serviste Bir Sorun Oluştu!');
+                $('#loader').fadeOut(250);
+            }
+        });
     });
 
     CreateInvoiceButton.click(function () {
@@ -877,43 +915,6 @@
                 }
             });
         }
-    });
-
-    $('#create_invoice_tax_number').on('focusout', function () {
-        var taxNumber = $(this).val();
-        $.ajax({
-            type: 'get',
-            url: '{{ route('api.user.invoice.getCustomerFromGibByTaxNumber') }}',
-            headers: {
-                'Accept': 'application/json',
-                'Authorization': token
-            },
-            data: {
-                taxNumber: taxNumber,
-            },
-            success: function (response) {
-                if (response.response.message.adi && response.response.message.soyadi) {
-                    $('#create_invoice_name').val(response.response.message.adi);
-                    $('#create_invoice_surname').val(response.response.message.soyadi);
-                } else if (response.response.message.unvan) {
-                    $('#create_invoice_name').val(response.response.message.unvan);
-                    $('#create_invoice_surname').val('');
-                } else {
-                    $('#create_invoice_name').val('');
-                    $('#create_invoice_surname').val('');
-                }
-            },
-            error: function (error) {
-                console.log(error);
-                if (parseInt(error.status) === 422) {
-                    $.each(error.responseJSON.response, function (i, error) {
-                        toastr.error(error[0]);
-                    });
-                } else {
-                    toastr.error(error.responseJSON.message);
-                }
-            }
-        });
     });
 
 </script>

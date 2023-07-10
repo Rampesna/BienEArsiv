@@ -4,7 +4,6 @@ namespace App\Services\Rest\Gib;
 
 use App\Services\Rest\Gib\Models\GibInvoice;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Dompdf\Dompdf;
 use Ramsey\Uuid\Uuid;
 
 class GibService
@@ -144,13 +143,15 @@ class GibService
             "userid" => $this->taxNumber,
             "sifre" => $this->password,
             "sifre2" => $this->password,
-            "parola" => $this->password
+            "parola" => 1
         ];
 
         $response = $this->client->post($this->getBaseUrl() . $this->tokenEndpoint, [
             "form_params" => $parameters,
             "headers" => $this->headers
         ]);
+
+        return $response;
 
         $check = $this->checkResponse(json_decode($response->getBody()));
 
@@ -340,48 +341,22 @@ class GibService
         $signed = true
     )
     {
-//        $invoiceHtml = $this->getInvoiceHTML($uuid, $token, $signed);
-//        $path = 'documents/eInvoices/';
-//        $checkPath = public_path($path);
-//        if (!file_exists($checkPath)) {
-//            mkdir($checkPath, 0777, true);
-//        }
-//        $wkp = new \mikehaertl\wkhtmlto\Pdf();
-//        $wkp->addPage($invoiceHtml);
-//        $wkp->saveAs($path . $uuid . '.pdf');
-//        $pdf = app()->make('dompdf.wrapper');
-//        $pdf->loadHTML($invoiceHtml);
-//        $pdf->save($checkPath . $uuid . '.pdf');
-//        $pdf = PDF::loadHTML($invoiceHtml);
-//        $pdf->save($checkPath . $uuid . '.pdf');
-
         $invoiceHtml = $this->getInvoiceHTML($uuid, $token, $signed);
-        $path = 'public/documents/eInvoices/';
+        $path = 'documents/eInvoices/';
         $checkPath = base_path($path);
         if (!file_exists($checkPath)) {
             mkdir($checkPath, 0777, true);
         }
-//        $wkp = new \mikehaertl\wkhtmlto\Pdf();
-//        $wkp->addPage($invoiceHtml);
-//        $wkp->saveAs($checkPath . $uuid . '.pdf');
-
-
-        $dompdf = new Dompdf();
-        $dompdf->loadHtmlFile($invoiceHtml);
-        $dompdf->setPaper('A4');
-        $dompdf->render();
-        $dompdf->stream($uuid . '.pdf', array("Attachment" => false));
-
-
-        $pdf = app()->make('dompdf.wrapper');
+        $wkp = new \mikehaertl\wkhtmlto\Pdf();
+        $wkp->addPage($invoiceHtml);
+        $wkp->saveAs($checkPath . $uuid . '.pdf');
+        /*$pdf = app()->make('dompdf.wrapper');
         $pdf->loadHTML($invoiceHtml);
         $pdf->save($checkPath . $uuid . '.pdf');
         $pdf = PDF::loadHTML($invoiceHtml);
-        $pdf->save($checkPath . $uuid . '.pdf');
+        $pdf->save($checkPath . $uuid . '.pdf');*/
 
-        return 'documents/eInvoices/' . $uuid . '.pdf';
-
-//        return $path . $uuid . '.pdf';
+        return $path . $uuid . '.pdf';
     }
 
     /**

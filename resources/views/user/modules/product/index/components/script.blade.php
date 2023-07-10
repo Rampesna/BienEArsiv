@@ -14,12 +14,28 @@
     var UpdateProductButton = $('#UpdateProductButton');
     var DeleteProductButton = $('#DeleteProductButton');
 
+    $(document).delegate('.vatRate', 'keypress', function (e) {
+        if (e.which !== 8 && e.which !== 0 && (e.which < 48 || e.which > 57)) {
+            return false;
+        }
+    });
+
+    $(document).delegate('.vatRate', 'keyup', function (e) {
+        if (this.value > 100) {
+            this.value = 100;
+            return false;
+        } else if (this.value < 0) {
+            this.value = 0;
+            return false;
+        }
+    });
+
     function createProduct() {
         create_product_unit_id.val('').select2();
         $('#create_product_code').val('');
         $('#create_product_name').val('');
         $('#create_product_price').val('');
-        $('#create_product_vat_rate').val('18').select2();
+        $('#create_product_vat_rate').val('18');
         $('#CreateProductModal').modal('show');
     }
 

@@ -118,4 +118,8 @@
 
     initializeDashboard();
 
+    $(document).ready(function () {
+        $('#VatAnnouncementModal').modal('show');
+    });
+
 </script>

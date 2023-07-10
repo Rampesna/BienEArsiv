@@ -58,12 +58,7 @@
                                     <label for="create_product_vat_rate" class="d-flex align-items-center fs-6 fw-bold mb-2">
                                         <span class="required">KDV Oranı</span>
                                     </label>
-                                    <select id="create_product_vat_rate" class="form-select form-select-solid select2Input" data-control="select2" data-placeholder="Birim" data-hide-search="true">
-                                        <option value="0">0 %</option>
-                                        <option value="1">1 %</option>
-                                        <option value="8">8 %</option>
-                                        <option value="18" selected>18 %</option>
-                                    </select>
+                                    <input id="create_product_vat_rate" type="text" class="form-control form-control-solid vatRate" placeholder="0">
                                 </div>
                             </div>
                         </div>

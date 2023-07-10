@@ -83,7 +83,7 @@ class EInvoiceController extends Controller
 
     public function getInvoicePDF(GetInvoicePdfRequest $request)
     {
-        return $this->gibService->getInvoicePDF(
+        $this->gibService->getInvoicePDF(
             $request->uuid,
             $request->user()->customer->gib_token
         );

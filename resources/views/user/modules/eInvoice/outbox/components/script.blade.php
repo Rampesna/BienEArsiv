@@ -129,8 +129,6 @@
     }
 
     function downloadEInvoice(uuid) {
-        var path = '{{ asset('documents/eInvoices/') }}';
-        web.user.eInvoice.invoicePdf
         $('#loader').fadeIn(250);
         $.ajax({
             type: 'get',
@@ -142,8 +140,7 @@
             data: {
                 uuid: uuid,
             },
-            success: function (response) {
-                // console.log(response);
+            success: function () {
                 var path = '{{ asset('documents/eInvoices/') }}';
                 window.open(path + '/' + uuid + '.pdf', '_blank');
                 $('#loader').fadeOut(250);

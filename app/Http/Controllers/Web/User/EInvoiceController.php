@@ -41,9 +41,4 @@ class EInvoiceController extends Controller
             )
         ]);
     }
-
-    public function invoicePdf(Request $request)
-    {
-        return $request;
-    }
 }
